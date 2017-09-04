@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">storj_hoststats_app</string>
+
+    <!-- MainActivity-->
+    <string name="timeout_rate_label">Timeout Rate:</string>
+    <string name="last_seen_label">Seen:</string>
+    <string name="last_seen_postfix">ago</string>
+    <string name="reponse_time_label">Response Time:</string>
 </resources>
