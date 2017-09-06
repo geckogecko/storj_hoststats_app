@@ -8,4 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="ListView" parent="Base.Widget.AppCompat.ListView">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:divider">@color/light_grey</item>
+        <item name="android:dividerHeight">2.0sp</item>
+    </style>
+
+    <style name="ListView.NodeId" parent="AppTheme">
+        <item name="android:layout_marginLeft">10sp</item>
+    </style>
+
+    <style name="ListView.NodeStats">
+        <item name="android:layout_marginLeft">10sp</item>
+    </style>
+
 </resources>

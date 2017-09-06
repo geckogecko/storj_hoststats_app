@@ -7,24 +7,23 @@
 
     <TextView
         android:id="@+id/textView_node_id"
+        style="@style/ListView.NodeId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
         android:text="TextView" />
 
     <!-- Timeout rate-->
     <TextView
         android:id="@+id/textView_timeout_rate_label"
+        style="@style/ListView.NodeStats"
         android:layout_below="@id/textView_node_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
         android:text="@string/timeout_rate_label" />
 
     <TextView
         android:id="@+id/textView_timeout_rate"
+        style="@style/ListView.NodeStats"
         android:layout_below="@id/textView_node_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,14 +32,15 @@
     <!-- Response Time -->
     <TextView
         android:id="@+id/textView_reponse_time_label"
-        android:layout_below="@id/textView_node_id"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_timeout_rate_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textView_timeout_rate"
         android:text="@string/reponse_time_label" />
 
     <TextView
         android:id="@+id/textView_reponse_time"
+        style="@style/ListView.NodeStats"
         android:layout_below="@id/textView_node_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,18 +49,19 @@
     <!-- Last seen-->
     <TextView
         android:id="@+id/textView_last_seen_label"
-        android:layout_below="@id/textView_node_id"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_reponse_time_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/textView_reponse_time"
         android:text="@string/last_seen_label" />
 
     <TextView
         android:id="@+id/textView_last_seen"
-        android:layout_below="@id/textView_node_id"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_reponse_time_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/textView_last_seen_label"
-        android:layout_marginRight="2dp" />
+        />
 
 </RelativeLayout>
