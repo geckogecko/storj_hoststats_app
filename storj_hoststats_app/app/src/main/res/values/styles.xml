@@ -22,5 +22,9 @@
     <style name="ListView.NodeStats">
         <item name="android:layout_marginLeft">10sp</item>
     </style>
+    
+    <style name="AddNewRow" parent="AppTheme">
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>

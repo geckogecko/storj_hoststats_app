@@ -6,4 +6,5 @@
     <string name="last_seen_label">Seen:</string>
     <string name="last_seen_postfix">ago</string>
     <string name="reponse_time_label">Response Time:</string>
+    <string name="add_new_row">Add new node</string>
 </resources>
