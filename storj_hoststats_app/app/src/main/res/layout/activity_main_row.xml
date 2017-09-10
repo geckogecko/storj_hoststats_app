@@ -64,4 +64,14 @@
         android:layout_toRightOf="@+id/textView_last_seen_label"
         />
 
+    <!-- Status -->
+    <TextView
+        android:id="@+id/textView_status"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_reponse_time_label"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="status" />
+
 </RelativeLayout>

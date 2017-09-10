@@ -1,6 +1,10 @@
 package steinbacher.georg.storj_hoststats_app;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -10,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +50,12 @@ public class MainActivity extends AppCompatActivity {
         StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, node_list);
         mListView.setAdapter(adapter);
 
-
+        //start alarm
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 100;
+        Intent alarmIntent = new Intent(mContext, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, alarmIntent, 0);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
     }
 
     public class StorjNodeAdapter extends ArrayAdapter<StorjNode>{
@@ -71,16 +81,29 @@ public class MainActivity extends AppCompatActivity {
             TextView txtNodeId = view.findViewById(R.id.textView_node_id);
             TextView txtTimeoutRate = view.findViewById(R.id.textView_timeout_rate);
             TextView txtLastSeen = view.findViewById(R.id.textView_last_seen);
+            TextView txtStatus = view.findViewById(R.id.textView_status);
 
+            //node id
             txtNodeId.setText(selectedNode.getNodeID());
+
+            //set timeout rate
             txtTimeoutRate.setText(Float.toString(selectedNode.getTimeoutRate()));
 
             //set last seen
             Date currentTime = Calendar.getInstance().getTime();
             Date lastSeen = selectedNode.getLastSeen();
             final long diff = currentTime.getTime() - lastSeen.getTime();
-
             txtLastSeen.setText(getDate(diff));
+
+            //set status status
+            long timeTillOffline = 1800; //30min
+            if ((currentTime.getTime() - selectedNode.getLastSeen().getTime()) < timeTillOffline) {
+                txtStatus.setText("offline");
+                txtStatus.setTextColor(getColor(R.color.red));
+            } else {
+                txtStatus.setText("online");
+                txtStatus.setTextColor(getColor(R.color.green));
+            }
 
             return view;
         }
@@ -91,6 +114,5 @@ public class MainActivity extends AppCompatActivity {
             String date = DateFormat.format("hh", cal).toString();
             return date;
         }
-
     }
 }

@@ -9,9 +9,8 @@
     </style>
 
 
-    <style name="ListView" parent="Base.Widget.AppCompat.ListView">
-        <item name="android:background">@drawable/listview_shape</item>
-        <item name="android:divider">@color/light_grey</item>
+    <style name="ListView" parent="AppTheme">
+        <item name="android:divider">@color/grey</item>
         <item name="android:dividerHeight">5.0sp</item>
         <item name="android:layout_marginLeft">3.0sp</item>
         <item name="android:layout_marginRight">3.0sp</item>
