@@ -25,7 +25,7 @@ public class StorjNode {
 
     public StorjNode(String nodeID) {
         mNodeID = nodeID;
-        mLastSeen = null;
+        mLastSeen = new Date();
         mPort = 0;
         mAddress = "";
         mUserAgent = null;

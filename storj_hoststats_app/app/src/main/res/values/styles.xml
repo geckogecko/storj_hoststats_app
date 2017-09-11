@@ -30,8 +30,8 @@
     </style>
 
     <style name="ListView.NodeStats.Status" parent="AppTheme">
-        <item name="android:layout_marginRight">5sp</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginRight">10sp</item>
+        <item name="android:textSize">17sp</item>
     </style>
     
     <style name="AddNewRow" parent="AppTheme">

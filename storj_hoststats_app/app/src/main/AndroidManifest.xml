@@ -3,6 +3,7 @@
     package="steinbacher.georg.storj_hoststats_app">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"

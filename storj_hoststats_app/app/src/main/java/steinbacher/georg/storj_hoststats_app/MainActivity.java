@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,19 +36,16 @@ public class MainActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.main_list_view);
 
-        ArrayList<StorjNode> node_list = new ArrayList();
+        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
+
         StorjNode testnode_1 = new StorjNode("3217206e6e00c336ddf164a0ad88df7f22c8891b");
-        testnode_1.setTimeoutRate("0.012");
-        testnode_1.setLastSeen("2017-09-03T15:53:59.927Z");
+        nodeHolder.add(testnode_1);
 
-        StorjNode testnode_2 = new StorjNode("32234206e6e00c3sdff164a0ad88dfg2c8891b34");
-        testnode_2.setTimeoutRate("12.5");
-        testnode_2.setLastSeen("2017-09-03T15:53:59.927Z");
+        StorjNode testnode_2 = new StorjNode("3217206e6e00c336ddf164a0ad88df7f22c8891b");
+        nodeHolder.add(testnode_2);
 
-        node_list.add(testnode_1);
-        node_list.add(testnode_2);
 
-        StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, node_list);
+        StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, nodeHolder.get());
         mListView.setAdapter(adapter);
 
         //start alarm
@@ -56,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
         Intent alarmIntent = new Intent(mContext, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, alarmIntent, 0);
         manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+    }
+
+    public static void redraw(String test) {
+        Log.i(TAG, "redraw: " + test);
     }
 
     public class StorjNodeAdapter extends ArrayAdapter<StorjNode>{
