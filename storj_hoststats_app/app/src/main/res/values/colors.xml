@@ -6,7 +6,8 @@
 
     <color name="light_grey">#fafafa</color>
     <color name="grey">#d6d7d7</color>
+    <color name="dark_grey">#d2d2d2</color>
 
     <color name="red">#df3b41</color>
-    <color name="green">#48de26</color>
+    <color name="green">#6ca802</color>
 </resources>

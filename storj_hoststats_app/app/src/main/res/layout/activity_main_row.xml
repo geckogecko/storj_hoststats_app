@@ -67,7 +67,7 @@
     <!-- Status -->
     <TextView
         android:id="@+id/textView_status"
-        style="@style/ListView.NodeStats"
+        style="@style/ListView.NodeStats.Status"
         android:layout_below="@id/textView_reponse_time_label"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
