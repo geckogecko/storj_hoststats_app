@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -17,15 +19,26 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private Context mContext;
     private ListView mListView;
+    private boolean mUIUpdateListenerRegisted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         StorjNode testnode_1 = new StorjNode("3217206e6e00c336ddf164a0ad88df7f22c8891b");
         nodeHolder.add(testnode_1);
 
-        StorjNode testnode_2 = new StorjNode("3217206e6e00c336ddf164a0ad88df7f22c8891b");
+        StorjNode testnode_2 = new StorjNode("3bb0db2373aac96501e807778759cf207b75c05e");
         nodeHolder.add(testnode_2);
 
 
@@ -50,15 +63,49 @@ public class MainActivity extends AppCompatActivity {
 
         //start alarm
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        int interval = 100;
+        int interval = 1;
         Intent alarmIntent = new Intent(mContext, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, alarmIntent, 0);
         manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
     }
 
-    public static void redraw(String test) {
-        Log.i(TAG, "redraw: " + test);
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!mUIUpdateListenerRegisted) {
+            IntentFilter intentFilter = new IntentFilter(Parameters.UPDATE_UI_ACTION);
+            registerReceiver(mUIUpdateListener, intentFilter);
+            mUIUpdateListenerRegisted = true;
+        }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if(mUIUpdateListenerRegisted) {
+            unregisterReceiver(mUIUpdateListener);
+            mUIUpdateListenerRegisted = false;
+        }
+    }
+
+    public void redrawListItem(String nodeID) {
+        Log.d(TAG, "redraw: " + nodeID);
+        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
+
+        StorjNodeAdapter adapter = new StorjNodeAdapter(mContext, R.layout.activity_main_row, nodeHolder.get());
+        mListView.setAdapter(adapter);
+        mListView.invalidateViews();
+
+    }
+    
+    private BroadcastReceiver mUIUpdateListener = new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            redrawListItem(intent.getStringExtra(Parameters.UPDATE_UI_NODEID));
+        }
+    };
 
     public class StorjNodeAdapter extends ArrayAdapter<StorjNode>{
         private static final String TAG = "StorjNodeAdapter";
@@ -82,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             TextView txtNodeId = view.findViewById(R.id.textView_node_id);
             TextView txtTimeoutRate = view.findViewById(R.id.textView_timeout_rate);
+            TextView txtResponseTime = view.findViewById(R.id.textView_reponse_time);
             TextView txtLastSeen = view.findViewById(R.id.textView_last_seen);
             TextView txtStatus = view.findViewById(R.id.textView_status);
 
@@ -90,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
 
             //set timeout rate
             txtTimeoutRate.setText(Float.toString(selectedNode.getTimeoutRate()));
+
+            // set response time
+            txtResponseTime.setText(Integer.toString(selectedNode.getResponseTime()));
+            Log.d(TAG, "getView: " + selectedNode.getResponseTime());
 
             //set last seen
             Date currentTime = Calendar.getInstance().getTime();

@@ -1,8 +1,10 @@
 package steinbacher.georg.storj_hoststats_app;
 
+import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PathPermission;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,6 +24,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private static final String STORJ_API_URL = "https://api.storj.io";
 
+    private Context mContext;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
@@ -29,33 +33,60 @@ public class AlarmReceiver extends BroadcastReceiver {
         StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
         List<StorjNode> storjNodes = nodeHolder.get();
 
-        for (StorjNode storjNode : storjNodes) {
-            new ApiCommunicationTask().execute(STORJ_API_URL + "/contacts/" + storjNode.getNodeID());
-        }
+        new StorjApiCommunicationTask().execute(storjNodes);
+
 
 
     }
 
-    private class ApiCommunicationTask extends AsyncTask<String, Integer, Boolean> {
+    private class StorjApiCommunicationTask extends AsyncTask<List<StorjNode>, String, StorjNode> {
+
         @Override
-        protected Boolean doInBackground(String... urls) {
-            try{
-                JSONObject jsonObject = getJSONObjectFromURL(urls[0]);
-                Log.d(TAG, "onReceive: " + jsonObject.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+        protected StorjNode doInBackground(List<StorjNode>... lists) {
+            StorjNode node = null;
+
+            for (StorjNode storjNode : lists[0]) {
+
+                try {
+                    JSONObject jsonObject = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID());
+                    Log.d(TAG, "onReceive: " + jsonObject.toString());
+
+                    node = new StorjNode(jsonObject);
+
+                    StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
+                    List<StorjNode> storjNodes = nodeHolder.get();
+
+                    for(int i=0; i<storjNodes.size(); i++) {
+                        if(storjNodes.get(i).getNodeID().equals(node.getNodeID())) {
+                            storjNodes.get(i).copyStorjNode(node);
+                            Log.i(TAG, "doInBackground: " + storjNodes.get(i).getResponseTime());
+                            break;
+                        }
+                    }
+
+                    publishProgress(node.getNodeID());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
-            return null;
+            return node;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
+        protected void onProgressUpdate(String... nodeId) {
+            super.onProgressUpdate(nodeId);
 
-            MainActivity.redraw("test");
+            Intent updateUIIntent = new Intent(Parameters.UPDATE_UI_ACTION);
+            updateUIIntent.putExtra(Parameters.UPDATE_UI_NODEID, nodeId[0]);
+            Application.getAppContext().sendBroadcast(updateUIIntent);
+        }
+
+        @Override
+        protected void onPostExecute(StorjNode receivedStorjNode) {
+            super.onPostExecute(receivedStorjNode);
         }
 
         private JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
