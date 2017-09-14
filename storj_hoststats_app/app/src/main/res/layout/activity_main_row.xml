@@ -10,7 +10,7 @@
         style="@style/ListView.NodeId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="" />
 
     <!-- Timeout rate-->
     <TextView
@@ -127,6 +127,6 @@
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="status" />
+        android:text="" />
 
 </RelativeLayout>

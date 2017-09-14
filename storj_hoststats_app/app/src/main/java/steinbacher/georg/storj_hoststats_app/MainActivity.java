@@ -182,6 +182,10 @@ public class MainActivity extends AppCompatActivity {
             //node id
             txtNodeId.setText(selectedNode.getNodeID());
 
+            if(selectedNode.getLastChecked() == null) {
+                return view;
+            }
+
             //set timeout rate
             txtTimeoutRate.setText(Float.toString(selectedNode.getTimeoutRate()));
 

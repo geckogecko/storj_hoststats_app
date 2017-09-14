@@ -27,17 +27,19 @@ public class StorjNode {
     private int mResponseTime;
     private Date mLastTimeout;
     private float mTimeoutRate;
+    private Date mLastChecked;
 
     public StorjNode(String nodeID) {
         mNodeID = nodeID;
-        mLastSeen = new Date();
+        mLastSeen = null;
         mPort = 0;
         mAddress = "";
         mUserAgent = null;
         mProtocol = null;
         mResponseTime = 0;
-        mLastTimeout = new Date();
+        mLastTimeout = null;
         mTimeoutRate = 0;
+        mLastChecked = null;
     }
 
     public StorjNode(JSONObject storjApiResponse) throws JSONException {
@@ -144,5 +146,13 @@ public class StorjNode {
 
     public Date getLastSeen() {
         return mLastSeen;
+    }
+
+    public void setLastChecked(Date date) {
+        mLastChecked = date;
+    }
+
+    public Date getLastChecked() {
+        return mLastChecked;
     }
 }

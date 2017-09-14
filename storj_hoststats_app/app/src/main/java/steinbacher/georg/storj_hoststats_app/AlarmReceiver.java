@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -59,6 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     for(int i=0; i<storjNodes.size(); i++) {
                         if(storjNodes.get(i).getNodeID().equals(node.getNodeID())) {
                             storjNodes.get(i).copyStorjNode(node);
+                            storjNodes.get(i).setLastChecked(Calendar.getInstance().getTime());
                             Log.i(TAG, "doInBackground: " + storjNodes.get(i).getResponseTime());
                             break;
                         }

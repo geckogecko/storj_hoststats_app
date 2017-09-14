@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import steinbacher.georg.storj_hoststats_app.util.Version;
@@ -135,5 +136,17 @@ public class StorjNodeTest {
         final String timeoutRate = "0.12";
         storjNode.setTimeoutRate(timeoutRate);
         assertEquals(storjNode.getTimeoutRate(), Float.parseFloat(timeoutRate), 0.001);
+    }
+
+    @Test
+    public void getLastChecked() {
+        StorjNode storjNode = new StorjNode(mTestNodeID);
+
+        //if no userAgent is set it should be mull
+        assertEquals(storjNode.getLastChecked(), null);
+
+        final Date currentDate = Calendar.getInstance().getTime();
+        storjNode.setLastChecked(currentDate);
+        assertEquals(storjNode.getLastChecked(), currentDate);
     }
 }
