@@ -12,12 +12,14 @@
         android:layout_height="wrap_content"
         style="@style/ListView"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/button_addNewNode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:drawableLeft="@android:drawable/ic_input_add"
-        android:layout_below="@id/main_list_view"
-        android:text="@string/add_new_row"
-        />
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add" />
+
 </RelativeLayout>

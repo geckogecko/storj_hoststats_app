@@ -4,17 +4,23 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private ListView mListView;
     private boolean mUIUpdateListenerRegisted = false;
+    private AlertDialog mAddNewNode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
         mListView = (ListView) findViewById(R.id.main_list_view);
+
+        FloatingActionButton addNodeButton = (FloatingActionButton) findViewById(R.id.button_addNewNode);
+        addNodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddNewNodeDialog();
+            }
+        });
 
         StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
 
@@ -107,6 +124,32 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void showAddNewNodeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.enter_nodeId);
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
+                StorjNode testnode_1 = new StorjNode(input.getText().toString());
+                nodeHolder.add(testnode_1);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
     public class StorjNodeAdapter extends ArrayAdapter<StorjNode>{
         private static final String TAG = "StorjNodeAdapter";
 
@@ -127,11 +170,14 @@ public class MainActivity extends AppCompatActivity {
 
             StorjNode selectedNode = mItems.get(position);
 
-            TextView txtNodeId = view.findViewById(R.id.textView_node_id);
-            TextView txtTimeoutRate = view.findViewById(R.id.textView_timeout_rate);
-            TextView txtResponseTime = view.findViewById(R.id.textView_reponse_time);
-            TextView txtLastSeen = view.findViewById(R.id.textView_last_seen);
-            TextView txtStatus = view.findViewById(R.id.textView_status);
+            TextView txtNodeId = (TextView) view.findViewById(R.id.textView_node_id);
+            TextView txtTimeoutRate = (TextView) view.findViewById(R.id.textView_timeout_rate);
+            TextView txtResponseTime = (TextView) view.findViewById(R.id.textView_reponse_time);
+            TextView txtLastSeen = (TextView) view.findViewById(R.id.textView_last_seen);
+            TextView txtStatus = (TextView) view.findViewById(R.id.textView_status);
+            TextView txtAddress = (TextView) view.findViewById(R.id.textView_address);
+            TextView txtUserAgent = (TextView) view.findViewById(R.id.textView_useragent);
+            TextView txtProtocol = (TextView) view.findViewById(R.id.textView_protocol);
 
             //node id
             txtNodeId.setText(selectedNode.getNodeID());
@@ -144,29 +190,38 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "getView: " + selectedNode.getResponseTime());
 
             //set last seen
-            Date currentTime = Calendar.getInstance().getTime();
             Date lastSeen = selectedNode.getLastSeen();
-            final long diff = currentTime.getTime() - lastSeen.getTime();
-            txtLastSeen.setText(getDate(diff));
+            final Calendar c = Calendar.getInstance();
+            c.setTime(lastSeen);
+            txtLastSeen.setText(c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR) + " " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE));
 
             //set status status
+            Date currentTime = Calendar.getInstance().getTime();
             long timeTillOffline = 1800; //30min
-            if ((currentTime.getTime() - selectedNode.getLastSeen().getTime()) < timeTillOffline) {
+            if ((currentTime.getTime() - selectedNode.getLastSeen().getTime()) > timeTillOffline) {
                 txtStatus.setText("offline");
-                txtStatus.setTextColor(getColor(R.color.red));
+                txtStatus.setTextColor(mContext.getResources().getColor(R.color.red));
             } else {
                 txtStatus.setText("online");
-                txtStatus.setTextColor(getColor(R.color.green));
+                txtStatus.setTextColor(mContext.getResources().getColor(R.color.green));
             }
 
-            return view;
-        }
+            //set Address + port
+            txtAddress.setText(selectedNode.getAddress() + ":" + selectedNode.getPort());
 
-        private String getDate(long time) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(time);
-            String date = DateFormat.format("hh", cal).toString();
-            return date;
+            //set UserAgent
+            if(selectedNode.getUserAgent() == null)
+                txtUserAgent.setText(R.string.unknown);
+            else
+                txtUserAgent.setText(selectedNode.getUserAgent().toString());
+
+            //setProtocol
+            if(selectedNode.getProtocol() == null)
+                txtProtocol.setText(R.string.unknown);
+            else
+                txtProtocol.setText(selectedNode.getProtocol().toString());
+
+            return view;
         }
     }
 }

@@ -3,8 +3,11 @@
 
     <!-- MainActivity-->
     <string name="timeout_rate_label">Timeout Rate:</string>
-    <string name="last_seen_label">Seen:</string>
-    <string name="last_seen_postfix">ago</string>
+    <string name="last_seen_label">Last seen:</string>
     <string name="reponse_time_label">Response Time:</string>
-    <string name="add_new_row">Add new node</string>
+    <string name="address">Address:</string>
+    <string name="userAgent">UserAgent:</string>
+    <string name="protocol">Protocol:</string>
+    <string name="unknown">unknown</string>
+    <string name="enter_nodeId">Enter NodeID</string>
 </resources>

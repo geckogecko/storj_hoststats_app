@@ -29,6 +29,25 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/textView_timeout_rate_label" />
 
+    <!-- Address-->
+    <TextView
+        android:id="@+id/textView_address_label"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_node_id"
+        android:layout_toRightOf="@id/textView_timeout_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/address" />
+
+    <TextView
+        android:id="@+id/textView_address"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_node_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/textView_address_label" />
+
+
     <!-- Response Time -->
     <TextView
         android:id="@+id/textView_reponse_time_label"
@@ -45,6 +64,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/textView_reponse_time_label"/>
+
+    <!-- UserAgent -->
+    <TextView
+        android:id="@+id/textView_useragent_label"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_timeout_rate_label"
+        android:layout_toRightOf="@+id/textView_reponse_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/userAgent" />
+
+    <TextView
+        android:id="@+id/textView_useragent"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_timeout_rate_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/textView_useragent_label"/>
 
 
     <!-- Last seen-->
@@ -63,6 +100,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/textView_last_seen_label" />
+
+    <!-- Protocol-->
+    <TextView
+        android:id="@+id/textView_protocol_label"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_reponse_time_label"
+        android:layout_toRightOf="@+id/textView_last_seen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/protocol" />
+
+    <TextView
+        android:id="@+id/textView_protocol"
+        style="@style/ListView.NodeStats"
+        android:layout_below="@id/textView_reponse_time_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/textView_protocol_label" />
 
     <!-- Status -->
     <TextView
