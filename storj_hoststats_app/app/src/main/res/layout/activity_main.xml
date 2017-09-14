@@ -20,6 +20,6 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:clickable="true"
-        android:src="@android:drawable/ic_input_add" />
+        android:src="@mipmap/ic_add_white_36dp" />
 
 </RelativeLayout>
