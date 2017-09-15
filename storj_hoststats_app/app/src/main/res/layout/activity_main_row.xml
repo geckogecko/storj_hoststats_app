@@ -8,9 +8,18 @@
     <TextView
         android:id="@+id/textView_node_id"
         style="@style/ListView.NodeId"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="" />
+
+    <android.support.v7.internal.widget.TintImageView
+        android:id="@+id/edit_imageview"
+        android:layout_width="25sp"
+        android:layout_height="25sp"
+        android:src="@mipmap/ic_edit_white_36dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5sp"
+        android:layout_marginTop="5sp"/>
 
     <!-- Timeout rate-->
     <TextView

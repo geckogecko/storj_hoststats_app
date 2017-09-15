@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.internal.widget.TintImageView;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -181,6 +182,14 @@ public class MainActivity extends AppCompatActivity {
 
             //node id
             txtNodeId.setText(selectedNode.getNodeID());
+
+            TintImageView edit_image = (TintImageView) view.findViewById(R.id.edit_imageview);
+            edit_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, "onclick", Toast.LENGTH_SHORT).show();
+                }
+            });
 
             if(selectedNode.getLastChecked() == null) {
                 return view;
