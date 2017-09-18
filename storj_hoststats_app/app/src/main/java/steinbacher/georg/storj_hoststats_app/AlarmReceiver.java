@@ -4,10 +4,13 @@ import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PathPermission;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +23,8 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class AlarmReceiver extends BroadcastReceiver {
     private static final String TAG = "AlarmReceiver";
 
@@ -29,16 +34,16 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        mContext = context;
         Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
 
         StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
         List<StorjNode> storjNodes = nodeHolder.get();
 
         new StorjApiCommunicationTask().execute(storjNodes);
-
-
-
     }
+
+
 
     private class StorjApiCommunicationTask extends AsyncTask<List<StorjNode>, String, StorjNode> {
 
@@ -66,6 +71,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
                     }
 
+                    nodeHolder.saveToSharedPreferences(mContext);
                     publishProgress(node.getNodeID());
                 } catch (IOException e) {
                     e.printStackTrace();
