@@ -5,12 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PathPermission;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,9 +19,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.POWER_SERVICE;
 
 public class AlarmReceiver extends BroadcastReceiver {
     private static final String TAG = "AlarmReceiver";
@@ -67,6 +67,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                             storjNodes.get(i).copyStorjNode(node);
                             storjNodes.get(i).setLastChecked(Calendar.getInstance().getTime());
                             Log.i(TAG, "doInBackground: " + storjNodes.get(i).getResponseTime());
+
+                            if(isNodeOffline(storjNodes.get(i)))
+                                sendNodeOfflineNotification(i,storjNodes.get(i));
+
                             break;
                         }
                     }
@@ -102,8 +106,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
-            urlConnection.setReadTimeout(10000 /* milliseconds */ );
-            urlConnection.setConnectTimeout(15000 /* milliseconds */ );
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);
             urlConnection.setDoOutput(true);
             urlConnection.connect();
 
@@ -118,6 +122,27 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             String jsonString = sb.toString();
             return new JSONObject(jsonString);
+        }
+
+        private void sendNodeOfflineNotification(int id, StorjNode storjNode) {
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
+                            .setSmallIcon(R.drawable.storj_symbol)
+                            .setContentTitle(storjNode.getNodeID())
+                            .setContentText(mContext.getString(R.string.node_is_offline));
+
+            NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(id, mBuilder.build());
+        }
+
+        private boolean isNodeOffline(StorjNode storjNode) {
+            Date currentTime = Calendar.getInstance().getTime();
+            return (currentTime.getTime() - storjNode.getLastSeen().getTime()) >= getNodeOfflineAfter();
+
+        }
+
+        private long getNodeOfflineAfter() {
+            SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
+            return prefs.getLong(Parameters.SHARED_PREF_OFLINE_AFTER, Parameters.SHARED_PREF_OFLINE_AFTER_DEFAULT);
         }
     }
 

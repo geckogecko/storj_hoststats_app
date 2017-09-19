@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -138,8 +139,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-                StorjNode testnode_1 = new StorjNode(input.getText().toString());
-                nodeHolder.add(testnode_1);
+                StorjNode newNode = new StorjNode(input.getText().toString());
+                nodeHolder.add(newNode);
+                redrawListItem(newNode.getNodeID());
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -210,9 +213,8 @@ public class MainActivity extends AppCompatActivity {
             txtLastSeen.setText(c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR) + " " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE));
 
             //set status status
-            Date currentTime = Calendar.getInstance().getTime();
-            long timeTillOffline = 1800; //30min
-            if ((currentTime.getTime() - selectedNode.getLastSeen().getTime()) > timeTillOffline) {
+
+            if (isNodeOffline(selectedNode)) {
                 txtStatus.setText("offline");
                 txtStatus.setTextColor(mContext.getResources().getColor(R.color.red));
             } else {
@@ -237,5 +239,17 @@ public class MainActivity extends AppCompatActivity {
 
             return view;
         }
+
+        private boolean isNodeOffline(StorjNode storjNode) {
+            Date currentTime = Calendar.getInstance().getTime();
+            return (currentTime.getTime() - storjNode.getLastSeen().getTime()) >= getNodeOfflineAfter();
+
+        }
+
+        private long getNodeOfflineAfter() {
+            SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
+            return prefs.getLong(Parameters.SHARED_PREF_OFLINE_AFTER, Parameters.SHARED_PREF_OFLINE_AFTER_DEFAULT);
+        }
+
     }
 }

@@ -10,4 +10,7 @@
     <string name="protocol">Protocol:</string>
     <string name="unknown">unknown</string>
     <string name="enter_nodeId">Enter NodeID</string>
+
+    <!-- Notification -->
+    <string name="node_is_offline">Storj-Node is offline</string>
 </resources>
