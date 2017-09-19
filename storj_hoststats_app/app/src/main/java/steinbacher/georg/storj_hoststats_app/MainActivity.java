@@ -68,14 +68,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //SharedPreferences preferences = getSharedPreferences(Parameters.SHARED_PREF, 0);
+        //preferences.edit().remove(Parameters.SHARED_PREF_NODE_HOLDER).commit();
+
         StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
         nodeHolder.getFromSharedPreferences(mContext);
 
         StorjNode testnode_1 = new StorjNode("3217206e6e00c336ddf164a0ad88df7f22c8891b");
-        //nodeHolder.add(testnode_1);
+        nodeHolder.add(testnode_1);
 
         StorjNode testnode_2 = new StorjNode("3bb0db2373aac96501e807778759cf207b75c05e");
-        //nodeHolder.add(testnode_2);
+        nodeHolder.add(testnode_2);
 
 
         StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, nodeHolder.get());

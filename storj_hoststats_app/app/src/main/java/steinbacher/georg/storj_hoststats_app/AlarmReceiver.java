@@ -78,13 +78,30 @@ public class AlarmReceiver extends BroadcastReceiver {
                     nodeHolder.saveToSharedPreferences(mContext);
                     publishProgress(node.getNodeID());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.i(TAG, "doInBackground: " + storjNode.getNodeID() + " not found");
+                    resetNode(storjNode);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
 
             return node;
+        }
+
+        private void resetNode(StorjNode storjNode) {
+            StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
+            List<StorjNode> storjNodes = nodeHolder.get();
+
+            for(int i=0; i<storjNodes.size(); i++) {
+                if(storjNodes.get(i).getNodeID().equals(storjNode.getNodeID())) {
+                    storjNodes.get(i).copyStorjNode(new StorjNode(storjNode.getNodeID()));
+                    storjNodes.get(i).setLastChecked(null);
+                    nodeHolder.saveToSharedPreferences(mContext);
+                    publishProgress(storjNodes.get(i).getNodeID());
+                    break;
+                }
+            }
+
         }
 
         @Override
