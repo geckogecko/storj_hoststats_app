@@ -79,6 +79,10 @@ public class StorjNode {
         return date;
     }
 
+    public void setNodeId(String nodeId) {
+        mNodeID = nodeId;
+    }
+
     public void setLastSeen(String dateString) {
         mLastSeen = parseDateString(dateString);
     }

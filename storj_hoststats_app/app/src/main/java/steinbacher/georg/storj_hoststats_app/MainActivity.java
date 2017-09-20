@@ -14,16 +14,20 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.internal.widget.TintImageView;
+import android.support.v7.widget.AppCompatButton;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //SharedPreferences preferences = getSharedPreferences(Parameters.SHARED_PREF, 0);
-        //preferences.edit().remove(Parameters.SHARED_PREF_NODE_HOLDER).commit();
+        SharedPreferences preferences = getSharedPreferences(Parameters.SHARED_PREF, 0);
+        preferences.edit().remove(Parameters.SHARED_PREF_NODE_HOLDER).commit();
 
         StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
         nodeHolder.getFromSharedPreferences(mContext);
@@ -158,6 +162,71 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void showEditNowDialog(StorjNode storjNode, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.edit_node));
+
+        View layout = getLayoutInflater().inflate(R.layout.activity_main_edit_node_popup, null);
+        TextView textView_nodeId = (TextView) layout.findViewById(R.id.textView_edit_nodeID);
+        textView_nodeId.setText(storjNode.getNodeID());
+
+        TintImageView deleteButton = (TintImageView) layout.findViewById(R.id.button_edit_delete_node);
+        deleteButton.setTag(position);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position=(Integer)v.getTag();
+                StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
+                deleteNode(selectedNode.getNodeID());
+            }
+        });
+
+        TintImageView saveButton = (TintImageView) layout.findViewById(R.id.button_edit_save_node);
+        saveButton.setTag(position);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position=(Integer)v.getTag();
+                StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
+
+                TextView textView_nodeId = (TextView) v.getRootView().findViewById(R.id.textView_edit_nodeID);
+                updateNode(selectedNode, textView_nodeId.getText().toString());
+            }
+        });
+
+        builder.setView(layout);
+        builder.show();
+    }
+
+    private void deleteNode(String nodeId) {
+        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
+        List<StorjNode> storjNodes = nodeHolder.get();
+
+        for(int i=0; i<storjNodes.size(); i++) {
+            if(storjNodes.get(i).getNodeID().equals(nodeId)) {
+                storjNodes.remove(i);
+                break;
+            }
+        }
+
+        mListView.invalidateViews();
+    }
+
+    private void updateNode(StorjNode storjNode, String newNodeId) {
+        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
+        List<StorjNode> storjNodes = nodeHolder.get();
+
+        for(int i=0; i<storjNodes.size(); i++) {
+            if(storjNodes.get(i).getNodeID().equals(storjNode.getNodeID())) {
+                storjNodes.get(i).setNodeId(newNodeId);
+                Log.i(TAG, "updateNode: " + storjNodes.get(i).getNodeID());
+                break;
+            }
+        }
+
+        mListView.invalidateViews();
+    }
+
     public class StorjNodeAdapter extends ArrayAdapter<StorjNode>{
         private static final String TAG = "StorjNodeAdapter";
 
@@ -169,14 +238,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             View view = convertView;
             if (view == null) {
                 LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = vi.inflate(R.layout.activity_main_row, null);
             }
 
-            StorjNode selectedNode = mItems.get(position);
+            final StorjNode selectedNode = mItems.get(position);
 
             TextView txtNodeId = (TextView) view.findViewById(R.id.textView_node_id);
             TextView txtTimeoutRate = (TextView) view.findViewById(R.id.textView_timeout_rate);
@@ -191,10 +260,14 @@ public class MainActivity extends AppCompatActivity {
             txtNodeId.setText(selectedNode.getNodeID());
 
             TintImageView edit_image = (TintImageView) view.findViewById(R.id.edit_imageview);
+            edit_image.setTag(position);
             edit_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, "onclick", Toast.LENGTH_SHORT).show();
+                    int position=(Integer)v.getTag();
+                    StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
+                    Log.i(TAG, "onClick: " + position);
+                    showEditNowDialog(selectedNode, position);
                 }
             });
 
