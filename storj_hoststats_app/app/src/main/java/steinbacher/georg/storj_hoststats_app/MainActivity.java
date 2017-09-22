@@ -47,6 +47,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import steinbacher.georg.storj_hoststats_app.views.ResponseTimeView;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
@@ -79,9 +81,11 @@ public class MainActivity extends AppCompatActivity {
         nodeHolder.getFromSharedPreferences(mContext);
 
         StorjNode testnode_1 = new StorjNode("3217206e6e00c336ddf164a0ad88df7f22c8891b");
+        testnode_1.setSimpleName("My testnode 1");
         nodeHolder.add(testnode_1);
 
         StorjNode testnode_2 = new StorjNode("3bb0db2373aac96501e807778759cf207b75c05e");
+        testnode_2.setSimpleName("My testnode 1");
         nodeHolder.add(testnode_2);
 
 
@@ -247,18 +251,15 @@ public class MainActivity extends AppCompatActivity {
 
             final StorjNode selectedNode = mItems.get(position);
 
-            TextView txtNodeId = (TextView) view.findViewById(R.id.textView_node_id);
-            TextView txtTimeoutRate = (TextView) view.findViewById(R.id.textView_timeout_rate);
-            TextView txtResponseTime = (TextView) view.findViewById(R.id.textView_reponse_time);
-            TextView txtLastSeen = (TextView) view.findViewById(R.id.textView_last_seen);
-            TextView txtStatus = (TextView) view.findViewById(R.id.textView_status);
+            TextView txtNodeSimpleName = (TextView) view.findViewById(R.id.textView_node_simpleName);
             TextView txtAddress = (TextView) view.findViewById(R.id.textView_address);
-            TextView txtUserAgent = (TextView) view.findViewById(R.id.textView_useragent);
-            TextView txtProtocol = (TextView) view.findViewById(R.id.textView_protocol);
+            TextView txtUserAgent = (TextView) view.findViewById(R.id.textView_userAgent);
+            ResponseTimeView responseTimeView = (ResponseTimeView) view.findViewById(R.id.responseTimeView);
 
-            //node id
-            txtNodeId.setText(selectedNode.getNodeID());
+            //node simplename
+            txtNodeSimpleName.setText(selectedNode.getSimpleName());
 
+            //edit
             TintImageView edit_image = (TintImageView) view.findViewById(R.id.edit_imageview);
             edit_image.setTag(position);
             edit_image.setOnClickListener(new View.OnClickListener() {
@@ -272,46 +273,19 @@ public class MainActivity extends AppCompatActivity {
             });
 
             if(selectedNode.getLastChecked() == null) {
+                responseTimeView.setResponseTime(0);
                 return view;
             }
 
-            //set timeout rate
-            txtTimeoutRate.setText(Float.toString(selectedNode.getTimeoutRate()));
-
             // set response time
-            txtResponseTime.setText(Integer.toString(selectedNode.getResponseTime()));
-            Log.d(TAG, "getView: " + selectedNode.getResponseTime());
-
-            //set last seen
-            Date lastSeen = selectedNode.getLastSeen();
-            final Calendar c = Calendar.getInstance();
-            c.setTime(lastSeen);
-            txtLastSeen.setText(c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR) + " " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE));
-
-            //set status status
-
-            if (isNodeOffline(selectedNode)) {
-                txtStatus.setText("offline");
-                txtStatus.setTextColor(mContext.getResources().getColor(R.color.red));
-            } else {
-                txtStatus.setText("online");
-                txtStatus.setTextColor(mContext.getResources().getColor(R.color.green));
-            }
+            responseTimeView.setResponseTime(selectedNode.getResponseTime());
 
             //set Address + port
-            txtAddress.setText(selectedNode.getAddress() + ":" + selectedNode.getPort());
-
-            //set UserAgent
-            if(selectedNode.getUserAgent() == null)
-                txtUserAgent.setText(R.string.unknown);
-            else
-                txtUserAgent.setText(selectedNode.getUserAgent().toString());
+            txtAddress.setText(getString(R.string.address, selectedNode.getAddress() + ":" + selectedNode.getPort()));
 
             //setProtocol
-            if(selectedNode.getProtocol() == null)
-                txtProtocol.setText(R.string.unknown);
-            else
-                txtProtocol.setText(selectedNode.getProtocol().toString());
+            if(selectedNode.getProtocol() != null)
+                txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getProtocol().toString()));
 
             return view;
         }

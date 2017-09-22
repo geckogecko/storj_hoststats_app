@@ -1,141 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-    <TextView
-        android:id="@+id/textView_node_id"
-        style="@style/ListView.NodeId"
+    <steinbacher.georg.storj_hoststats_app.views.ResponseTimeView
+        android:id="@+id/responseTimeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:background="@drawable/background_responsetime"
+        android:button="@null"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"/>
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textView_node_simpleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textView_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceSmall"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textView_userAgent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceSmall"/>
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <android.support.v7.internal.widget.TintImageView
         android:id="@+id/edit_imageview"
         android:layout_width="25sp"
-        android:layout_height="25sp"
-        android:src="@mipmap/ic_edit_white_36dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5sp"
-        android:layout_marginTop="5sp"/>
+        android:layout_height="match_parent"
+        android:src="@mipmap/ic_edit_black_36dp"
+        android:layout_marginRight="10sp"/>
 
-    <!-- Timeout rate-->
-    <TextView
-        android:id="@+id/textView_timeout_rate_label"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_node_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/timeout_rate_label" />
-
-    <TextView
-        android:id="@+id/textView_timeout_rate"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_node_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textView_timeout_rate_label" />
-
-    <!-- Address-->
-    <TextView
-        android:id="@+id/textView_address_label"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_node_id"
-        android:layout_toRightOf="@id/textView_timeout_rate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/address" />
-
-    <TextView
-        android:id="@+id/textView_address"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_node_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textView_address_label" />
-
-
-    <!-- Response Time -->
-    <TextView
-        android:id="@+id/textView_reponse_time_label"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_timeout_rate_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reponse_time_label" />
-
-    <TextView
-        android:id="@+id/textView_reponse_time"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_timeout_rate_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textView_reponse_time_label"/>
-
-    <!-- UserAgent -->
-    <TextView
-        android:id="@+id/textView_useragent_label"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_timeout_rate_label"
-        android:layout_toRightOf="@+id/textView_reponse_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/userAgent" />
-
-    <TextView
-        android:id="@+id/textView_useragent"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_timeout_rate_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textView_useragent_label"/>
-
-
-    <!-- Last seen-->
-    <TextView
-        android:id="@+id/textView_last_seen_label"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_reponse_time_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/last_seen_label" />
-
-    <TextView
-        android:id="@+id/textView_last_seen"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_reponse_time_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/textView_last_seen_label" />
-
-    <!-- Protocol-->
-    <TextView
-        android:id="@+id/textView_protocol_label"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_reponse_time_label"
-        android:layout_toRightOf="@+id/textView_last_seen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/protocol" />
-
-    <TextView
-        android:id="@+id/textView_protocol"
-        style="@style/ListView.NodeStats"
-        android:layout_below="@id/textView_reponse_time_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/textView_protocol_label" />
-
-    <!-- Status -->
-    <TextView
-        android:id="@+id/textView_status"
-        style="@style/ListView.NodeStats.Status"
-        android:layout_below="@id/textView_reponse_time_label"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="" />
-
-</RelativeLayout>
+</android.support.v7.widget.LinearLayoutCompat>

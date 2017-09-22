@@ -2,13 +2,8 @@
     <string name="app_name">storj_hoststats_app</string>
 
     <!-- MainActivity-->
-    <string name="timeout_rate_label">Timeout Rate:</string>
-    <string name="last_seen_label">Last seen:</string>
-    <string name="reponse_time_label">Response Time:</string>
-    <string name="address">Address:</string>
-    <string name="userAgent">UserAgent:</string>
-    <string name="protocol">Protocol:</string>
-    <string name="unknown">unknown</string>
+    <string name="address">Address: %1$s</string>
+    <string name="userAgent">UserAgent: %1$s</string>
     <string name="enter_nodeId">Enter NodeID</string>
     <string name="edit_node">Edit Node</string>
 

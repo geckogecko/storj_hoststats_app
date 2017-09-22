@@ -7,34 +7,4 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
-
-    <style name="ListView" parent="AppTheme">
-        <item name="android:background">@color/dark_grey</item>
-        <item name="android:divider">@color/light_grey</item>
-        <item name="android:dividerHeight">5.0sp</item>
-        <item name="android:layout_marginLeft">3.0sp</item>
-        <item name="android:layout_marginRight">3.0sp</item>
-        <item name="android:layout_marginTop">5.0sp</item>
-    </style>
-
-    <style name="ListView.NodeId" parent="AppTheme">
-        <item name="android:layout_marginTop">5.0sp</item>
-        <item name="android:layout_marginLeft">10sp</item>
-        <item name="android:layout_marginBottom">5.0sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="ListView.NodeStats" parent="AppTheme">
-        <item name="android:layout_marginLeft">10sp</item>
-    </style>
-
-    <style name="ListView.NodeStats.Status" parent="AppTheme">
-        <item name="android:layout_marginRight">10sp</item>
-        <item name="android:textSize">17sp</item>
-    </style>
-    
-    <style name="AddNewRow" parent="AppTheme">
-        <item name="android:gravity">center</item>
-    </style>
 </resources>

@@ -18,6 +18,7 @@ import steinbacher.georg.storj_hoststats_app.util.Version;
 public class StorjNode {
     private static final String TAG = "StorjNode";
 
+    private String mSimpleName;
     private String mNodeID;
     private Date mLastSeen;
     private int mPort;
@@ -40,6 +41,7 @@ public class StorjNode {
         mLastTimeout = null;
         mTimeoutRate = 0;
         mLastChecked = null;
+        mSimpleName = "";
     }
 
     public StorjNode(JSONObject storjApiResponse) throws JSONException {
@@ -158,5 +160,13 @@ public class StorjNode {
 
     public Date getLastChecked() {
         return mLastChecked;
+    }
+
+    public void setSimpleName(String simpleName) {
+        mSimpleName = simpleName;
+    }
+
+    public String getSimpleName() {
+        return mSimpleName;
     }
 }
