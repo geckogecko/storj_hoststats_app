@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/textView_add_simpleName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:hint="@string/edit_simpleName" />
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/textView_add_nodeID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:hint="@string/edit_NodeID"/>
+
+</android.support.v7.widget.LinearLayoutCompat>

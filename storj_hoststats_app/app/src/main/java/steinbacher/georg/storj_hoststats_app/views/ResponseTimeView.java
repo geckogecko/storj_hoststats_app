@@ -47,6 +47,7 @@ public class ResponseTimeView extends android.support.v7.widget.AppCompatRadioBu
             //set color
             GradientDrawable gd = (GradientDrawable) getBackground();
             gd.setColor(getResources().getColor(R.color.grey));
+            setText("");
         }
     }
 

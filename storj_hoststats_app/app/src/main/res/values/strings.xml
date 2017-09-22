@@ -4,8 +4,12 @@
     <!-- MainActivity-->
     <string name="address">Address: %1$s</string>
     <string name="userAgent">UserAgent: %1$s</string>
-    <string name="enter_nodeId">Enter NodeID</string>
     <string name="edit_node">Edit Node</string>
+
+    <!-- Add Node popup -->
+    <string name="add_node_popup_title">Add New Node</string>
+    <string name="edit_simpleName">StorjNode1</string>
+    <string name="edit_NodeID">3bb0db2373aac96501e807778759cf207b75c05e</string>
 
     <!-- Notification -->
     <string name="node_is_offline">Storj-Node is offline</string>

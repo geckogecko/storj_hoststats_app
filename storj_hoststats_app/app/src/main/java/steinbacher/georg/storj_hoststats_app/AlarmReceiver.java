@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -18,9 +19,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import steinbacher.georg.storj_hoststats_app.data.DatabaseManager;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.POWER_SERVICE;
@@ -37,8 +43,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         mContext = context;
         Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
 
-        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-        List<StorjNode> storjNodes = nodeHolder.get();
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        ArrayList<StorjNode> storjNodes = new ArrayList<>();
+        Cursor cursor = databaseManager.queryAllNodes("ASC");
+
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            storjNodes.add(new StorjNode(cursor));
+        }
 
         new StorjApiCommunicationTask().execute(storjNodes);
     }
@@ -52,34 +63,22 @@ public class AlarmReceiver extends BroadcastReceiver {
             StorjNode node = null;
 
             for (StorjNode storjNode : lists[0]) {
-
                 try {
                     JSONObject jsonObject = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID());
                     Log.d(TAG, "onReceive: " + jsonObject.toString());
 
                     node = new StorjNode(jsonObject);
+                    node.setLastChecked(Calendar.getInstance().getTime());
 
-                    StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-                    List<StorjNode> storjNodes = nodeHolder.get();
+                    DatabaseManager db = DatabaseManager.getInstance(mContext);
+                    db.updateNode(node);
 
-                    for(int i=0; i<storjNodes.size(); i++) {
-                        if(storjNodes.get(i).getNodeID().equals(node.getNodeID())) {
-                            storjNodes.get(i).copyStorjNode(node);
-                            storjNodes.get(i).setLastChecked(Calendar.getInstance().getTime());
-                            Log.i(TAG, "doInBackground: " + storjNodes.get(i).getResponseTime());
+                    if(isNodeOffline(node))
+                        sendNodeOfflineNotification(node);
 
-                            if(isNodeOffline(storjNodes.get(i)))
-                                sendNodeOfflineNotification(i,storjNodes.get(i));
-
-                            break;
-                        }
-                    }
-
-                    nodeHolder.saveToSharedPreferences(mContext);
                     publishProgress(node.getNodeID());
                 } catch (IOException e) {
                     Log.i(TAG, "doInBackground: " + storjNode.getNodeID() + " not found");
-                    resetNode(storjNode);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -88,21 +87,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             return node;
         }
 
-        private void resetNode(StorjNode storjNode) {
-            StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-            List<StorjNode> storjNodes = nodeHolder.get();
 
-            for(int i=0; i<storjNodes.size(); i++) {
-                if(storjNodes.get(i).getNodeID().equals(storjNode.getNodeID())) {
-                    storjNodes.get(i).copyStorjNode(new StorjNode(storjNode.getNodeID()));
-                    storjNodes.get(i).setLastChecked(null);
-                    nodeHolder.saveToSharedPreferences(mContext);
-                    publishProgress(storjNodes.get(i).getNodeID());
-                    break;
-                }
-            }
-
-        }
 
         @Override
         protected void onProgressUpdate(String... nodeId) {
@@ -141,14 +126,14 @@ public class AlarmReceiver extends BroadcastReceiver {
             return new JSONObject(jsonString);
         }
 
-        private void sendNodeOfflineNotification(int id, StorjNode storjNode) {
+        private void sendNodeOfflineNotification(StorjNode storjNode) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
                             .setSmallIcon(R.drawable.storj_symbol)
                             .setContentTitle(storjNode.getNodeID())
                             .setContentText(mContext.getString(R.string.node_is_offline));
 
             NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(id, mBuilder.build());
+            mNotificationManager.notify(0, mBuilder.build());
         }
 
         private boolean isNodeOffline(StorjNode storjNode) {

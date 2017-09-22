@@ -1,5 +1,6 @@
 package steinbacher.georg.storj_hoststats_app;
 
+import android.database.Cursor;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -9,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import steinbacher.georg.storj_hoststats_app.data.NodeReaderContract;
 import steinbacher.georg.storj_hoststats_app.util.Version;
 
 /**
@@ -44,6 +46,7 @@ public class StorjNode {
         mSimpleName = "";
     }
 
+
     public StorjNode(JSONObject storjApiResponse) throws JSONException {
         mNodeID = storjApiResponse.getString("nodeID");
         mLastSeen = parseDateString(storjApiResponse.getString("lastSeen"));
@@ -54,19 +57,45 @@ public class StorjNode {
         mResponseTime = storjApiResponse.getInt("responseTime");
         mLastTimeout = parseDateString(storjApiResponse.getString("lastTimeout"));
         mTimeoutRate = storjApiResponse.getInt("timeoutRate");
+        mLastChecked = null;
+        mSimpleName = "";
     }
 
-    public void copyStorjNode(StorjNode storjNode) {
-        mNodeID = storjNode.getNodeID();
-        mLastSeen = storjNode.getLastSeen();
-        mPort = storjNode.getPort();
-        mAddress = storjNode.getAddress();
-        mUserAgent = storjNode.getUserAgent();
-        mProtocol = storjNode.getProtocol();
-        mResponseTime = storjNode.getResponseTime();
-        Log.i(TAG, "copyStorjNode: " + mResponseTime);
-        mLastTimeout = storjNode.getLastTimeout();
-        mTimeoutRate = storjNode.getTimeoutRate();
+
+    public StorjNode(Cursor cursor)  {
+        mNodeID = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_SEEN)) != null)
+            mLastSeen = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_SEEN)));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PORT)) != null)
+            mPort = Integer.parseInt(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PORT)));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ADDRESS)) != null)
+            mAddress = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ADDRESS));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.USER_AGENT)) != null)
+            mUserAgent = new Version(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.USER_AGENT)));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PROTOCOL)) != null)
+            mProtocol = new Version(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PROTOCOL)));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.RESPONSE_TIME)) != null)
+            mResponseTime = Integer.parseInt(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.RESPONSE_TIME)));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_TIMEOUT)) != null)
+            mLastTimeout = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_TIMEOUT)));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.TIMEOUT_RATE)) != null)
+            mTimeoutRate = Float.parseFloat(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.TIMEOUT_RATE)));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CHECKED)) != null) {
+            mLastChecked = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CHECKED)));
+        }
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.FRIENDLY_NAME)) != null)
+            mSimpleName =  cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.FRIENDLY_NAME));
+
     }
 
     public Date parseDateString(String dateString) {
@@ -80,13 +109,13 @@ public class StorjNode {
 
         return date;
     }
-
-    public void setNodeId(String nodeId) {
-        mNodeID = nodeId;
-    }
-
+    
     public void setLastSeen(String dateString) {
         mLastSeen = parseDateString(dateString);
+    }
+
+    public void setLastSeen(Date date) {
+        mLastSeen = date;
     }
 
     public void setPort(int port) {
@@ -112,6 +141,10 @@ public class StorjNode {
 
     public void setLastTimeout(String lastTimeout) {
         mLastTimeout = parseDateString(lastTimeout);
+    }
+
+    public void setLastTimeout(Date lastTimeout) {
+        mLastTimeout = lastTimeout;
     }
 
     public void setTimeoutRate(String timeoutRate) {

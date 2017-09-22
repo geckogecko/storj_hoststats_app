@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/textView_edit_simpleName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:inputType="textPersonName" />
+
+    <android.support.v7.widget.AppCompatEditText
         android:id="@+id/textView_edit_nodeID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:inputType="textPersonName" />
 
-    <LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/LinearLayout02"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="20sp"
         android:layout_alignParentBottom="true">
         <android.support.v7.internal.widget.TintImageView
             android:id="@+id/button_edit_delete_node"
@@ -30,5 +43,5 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_save_black_36dp"
             android:layout_weight="1"/>
-        </LinearLayout>
-</LinearLayout>
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.v7.widget.LinearLayoutCompat>

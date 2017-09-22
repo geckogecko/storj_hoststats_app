@@ -8,45 +8,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.internal.widget.TintImageView;
-import android.support.v7.widget.AppCompatButton;
-import android.text.InputType;
-import android.text.format.DateFormat;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
+import steinbacher.georg.storj_hoststats_app.data.DatabaseManager;
 import steinbacher.georg.storj_hoststats_app.views.ResponseTimeView;
 
 public class MainActivity extends AppCompatActivity {
@@ -77,19 +58,43 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(Parameters.SHARED_PREF, 0);
         preferences.edit().remove(Parameters.SHARED_PREF_NODE_HOLDER).commit();
 
-        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-        nodeHolder.getFromSharedPreferences(mContext);
-
         StorjNode testnode_1 = new StorjNode("3217206e6e00c336ddf164a0ad88df7f22c8891b");
         testnode_1.setSimpleName("My testnode 1");
-        nodeHolder.add(testnode_1);
+        testnode_1.setUserAgent("7.0.0");
+        testnode_1.setAddress("123.123.123.12");
+        testnode_1.setPort(4000);
+        testnode_1.setResponseTime("5000");
+        testnode_1.setLastChecked(Calendar.getInstance().getTime());
+        testnode_1.setLastSeen(Calendar.getInstance().getTime());
+        testnode_1.setLastTimeout(Calendar.getInstance().getTime());
 
         StorjNode testnode_2 = new StorjNode("3bb0db2373aac96501e807778759cf207b75c05e");
-        testnode_2.setSimpleName("My testnode 1");
-        nodeHolder.add(testnode_2);
+        testnode_2.setSimpleName("My testnode 2");
+        testnode_2.setUserAgent("6.0.0");
+        testnode_2.setAddress("10.0.0.12");
+        testnode_2.setPort(4005);
+        testnode_2.setResponseTime("11123");
+        testnode_2.setLastChecked(Calendar.getInstance().getTime());
+        testnode_2.setLastSeen(Calendar.getInstance().getTime());
+        testnode_2.setLastTimeout(Calendar.getInstance().getTime());
 
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        databaseManager.dropNodeDB();
+        databaseManager.createNodeDB();
+        databaseManager.insertNode(testnode_1);
+        databaseManager.insertNode(testnode_2);
 
-        StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, nodeHolder.get());
+        ArrayList<StorjNode> storjNodes = new ArrayList<>();
+        databaseManager = DatabaseManager.getInstance(mContext);
+        Cursor cursor = databaseManager.queryAllNodes("ASC");
+
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            storjNodes.add(new StorjNode(cursor));
+        }
+
+        Log.i(TAG, "onCreate: " + storjNodes.size());
+
+        StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, storjNodes);
         mListView.setAdapter(adapter);
 
         //start alarm
@@ -121,39 +126,47 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void redrawListItem(String nodeID) {
-        Log.d(TAG, "redraw: " + nodeID);
-        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-
-        StorjNodeAdapter adapter = new StorjNodeAdapter(mContext, R.layout.activity_main_row, nodeHolder.get());
-        mListView.setAdapter(adapter);
-        mListView.invalidateViews();
-
-    }
-    
     private BroadcastReceiver mUIUpdateListener = new BroadcastReceiver(){
         @Override
         public void onReceive(Context context, Intent intent) {
-            redrawListItem(intent.getStringExtra(Parameters.UPDATE_UI_NODEID));
+            redrawList();
         }
     };
 
+    private void redrawList() {
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        ArrayList<StorjNode> storjNodes = new ArrayList<>();
+        Cursor cursor = databaseManager.queryAllNodes("ASC");
+
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            storjNodes.add(new StorjNode(cursor));
+        }
+
+        StorjNodeAdapter adapter = new StorjNodeAdapter(mContext, R.layout.activity_main_row, storjNodes);
+        mListView.setAdapter(adapter);
+        mListView.invalidateViews();
+    }
+
     private void showAddNewNodeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.enter_nodeId);
+        builder.setTitle(R.string.add_node_popup_title);
 
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.activity_main_add_node, null);
+        builder.setView(dialogView);
+        final AppCompatEditText textViewSimpleName = (AppCompatEditText) dialogView.findViewById(R.id.textView_add_simpleName);
+        final AppCompatEditText textViewNodeId = (AppCompatEditText) dialogView.findViewById(R.id.textView_add_nodeID);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-                StorjNode newNode = new StorjNode(input.getText().toString());
-                nodeHolder.add(newNode);
-                redrawListItem(newNode.getNodeID());
+                DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
 
+                StorjNode newNode = new StorjNode(textViewNodeId.getText().toString());
+                newNode.setSimpleName(textViewSimpleName.getText().toString());
+                databaseManager.insertNode(newNode);
+                redrawList();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -163,7 +176,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        builder.show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.black));
     }
 
     private void showEditNowDialog(StorjNode storjNode, int position) {
@@ -171,8 +187,14 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle(getString(R.string.edit_node));
 
         View layout = getLayoutInflater().inflate(R.layout.activity_main_edit_node_popup, null);
-        TextView textView_nodeId = (TextView) layout.findViewById(R.id.textView_edit_nodeID);
+        AppCompatEditText textView_nodeSimpleName = (AppCompatEditText) layout.findViewById(R.id.textView_edit_simpleName);
+        AppCompatEditText textView_nodeId = (AppCompatEditText) layout.findViewById(R.id.textView_edit_nodeID);
+
         textView_nodeId.setText(storjNode.getNodeID());
+        textView_nodeSimpleName.setText(storjNode.getSimpleName());
+
+        builder.setView(layout);
+        final AlertDialog alertDialog = builder.create();
 
         TintImageView deleteButton = (TintImageView) layout.findViewById(R.id.button_edit_delete_node);
         deleteButton.setTag(position);
@@ -181,7 +203,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int position=(Integer)v.getTag();
                 StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
-                deleteNode(selectedNode.getNodeID());
+                alertDialog.cancel();
+                deleteNode(selectedNode);
             }
         });
 
@@ -194,41 +217,31 @@ public class MainActivity extends AppCompatActivity {
                 StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
 
                 TextView textView_nodeId = (TextView) v.getRootView().findViewById(R.id.textView_edit_nodeID);
-                updateNode(selectedNode, textView_nodeId.getText().toString());
+                TextView textView_simpleName = (TextView) v.getRootView().findViewById(R.id.textView_edit_simpleName);
+
+                StorjNode updatedNode = new StorjNode(textView_nodeId.getText().toString());
+                updatedNode.setSimpleName(textView_simpleName.getText().toString());
+                alertDialog.cancel();
+                updateNode(selectedNode, updatedNode);
+
+
             }
         });
 
-        builder.setView(layout);
-        builder.show();
+
+        alertDialog.show();
     }
 
-    private void deleteNode(String nodeId) {
-        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-        List<StorjNode> storjNodes = nodeHolder.get();
-
-        for(int i=0; i<storjNodes.size(); i++) {
-            if(storjNodes.get(i).getNodeID().equals(nodeId)) {
-                storjNodes.remove(i);
-                break;
-            }
-        }
-
-        mListView.invalidateViews();
+    private void deleteNode(StorjNode storjNode) {
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        databaseManager.deleteNode(storjNode);
+        redrawList();
     }
 
-    private void updateNode(StorjNode storjNode, String newNodeId) {
-        StorjNodeHolder nodeHolder = StorjNodeHolder.getInstance();
-        List<StorjNode> storjNodes = nodeHolder.get();
-
-        for(int i=0; i<storjNodes.size(); i++) {
-            if(storjNodes.get(i).getNodeID().equals(storjNode.getNodeID())) {
-                storjNodes.get(i).setNodeId(newNodeId);
-                Log.i(TAG, "updateNode: " + storjNodes.get(i).getNodeID());
-                break;
-            }
-        }
-
-        mListView.invalidateViews();
+    private void updateNode(StorjNode storjNode, StorjNode updatedNode) {
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        databaseManager.updateNode(storjNode, updatedNode);
+        redrawList();
     }
 
     public class StorjNodeAdapter extends ArrayAdapter<StorjNode>{
@@ -274,8 +287,12 @@ public class MainActivity extends AppCompatActivity {
 
             if(selectedNode.getLastChecked() == null) {
                 responseTimeView.setResponseTime(0);
+                txtAddress.setText("");
+                txtUserAgent.setText("");
                 return view;
             }
+
+            Log.i(TAG, "getView: " + selectedNode.getNodeID());
 
             // set response time
             responseTimeView.setResponseTime(selectedNode.getResponseTime());
@@ -283,9 +300,9 @@ public class MainActivity extends AppCompatActivity {
             //set Address + port
             txtAddress.setText(getString(R.string.address, selectedNode.getAddress() + ":" + selectedNode.getPort()));
 
-            //setProtocol
-            if(selectedNode.getProtocol() != null)
-                txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getProtocol().toString()));
+            //setUserAgent
+            if(selectedNode.getUserAgent() != null)
+                txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
 
             return view;
         }
