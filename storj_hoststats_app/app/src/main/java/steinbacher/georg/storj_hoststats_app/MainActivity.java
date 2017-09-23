@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.nfc.Tag;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,11 +80,23 @@ public class MainActivity extends AppCompatActivity {
         testnode_2.setLastSeen(Calendar.getInstance().getTime());
         testnode_2.setLastTimeout(Calendar.getInstance().getTime());
 
+        StorjNode testnode_3 = new StorjNode("130f838a0b5ae311f1bae15bcb0df66be6339be4");
+        testnode_3.setSimpleName("My testnode 3");
+        testnode_3.setUserAgent("6.0.0");
+        testnode_3.setAddress("10.0.0.12");
+        testnode_3.setPort(4005);
+        testnode_3.setResponseTime("900");
+        testnode_3.setLastChecked(Calendar.getInstance().getTime());
+        testnode_3.setLastSeen(Calendar.getInstance().getTime());
+        testnode_3.setLastTimeout(Calendar.getInstance().getTime());
+
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         databaseManager.dropNodeDB();
         databaseManager.createNodeDB();
         databaseManager.insertNode(testnode_1);
         databaseManager.insertNode(testnode_2);
+        databaseManager.insertNode(testnode_3);
+
 
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
         databaseManager = DatabaseManager.getInstance(mContext);
@@ -266,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
 
             TextView txtNodeSimpleName = (TextView) view.findViewById(R.id.textView_node_simpleName);
             TextView txtAddress = (TextView) view.findViewById(R.id.textView_address);
-            TextView txtUserAgent = (TextView) view.findViewById(R.id.textView_userAgent);
+            final TextView txtUserAgent = (TextView) view.findViewById(R.id.textView_userAgent);
             ResponseTimeView responseTimeView = (ResponseTimeView) view.findViewById(R.id.responseTimeView);
 
             //node simplename
@@ -285,10 +299,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            if(selectedNode.getLastChecked() == null) {
+            if(selectedNode.getLastChecked() == null || selectedNode.getResponseTime() == -1) {
                 responseTimeView.setResponseTime(0);
-                txtAddress.setText("");
-                txtUserAgent.setText("");
+
+                txtAddress.setText(getString(R.string.address, selectedNode.getAddress() + ":" + selectedNode.getPort()));
+                txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+
                 return view;
             }
 
@@ -303,6 +319,15 @@ public class MainActivity extends AppCompatActivity {
             //setUserAgent
             if(selectedNode.getUserAgent() != null)
                 txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+
+            //set onclick listener
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
+                    Toast.makeText(MainActivity.this, selectedNode.getSimpleName(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
             return view;
         }

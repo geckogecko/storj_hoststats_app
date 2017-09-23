@@ -67,14 +67,26 @@ public class AlarmReceiver extends BroadcastReceiver {
                     JSONObject jsonObject = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID());
                     Log.d(TAG, "onReceive: " + jsonObject.toString());
 
+                    DatabaseManager db = DatabaseManager.getInstance(mContext);
+
                     node = new StorjNode(jsonObject);
                     node.setLastChecked(Calendar.getInstance().getTime());
 
-                    DatabaseManager db = DatabaseManager.getInstance(mContext);
-                    db.updateNode(node);
+                    StorjNode previusNode = new StorjNode(db.getNode(node.getNodeID()));
+                    node.setSimpleName(previusNode.getSimpleName());
 
-                    if(isNodeOffline(node))
-                        sendNodeOfflineNotification(node);
+                    if(isNodeOffline(node)) {
+                        node.setResponseTime(-1);
+                        node.setShouldSendNotification(false);
+
+                        if(previusNode.getShouldSendNotification())
+                            sendNodeOfflineNotification(node);
+                    } else if(previusNode.getResponseTime() == 0){
+                        //was the node offline before and went online now ?
+                        node.setShouldSendNotification(true);
+                    }
+
+                    db.updateNode(node);
 
                     publishProgress(node.getNodeID());
                 } catch (IOException e) {
@@ -129,11 +141,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         private void sendNodeOfflineNotification(StorjNode storjNode) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
                             .setSmallIcon(R.drawable.storj_symbol)
-                            .setContentTitle(storjNode.getNodeID())
-                            .setContentText(mContext.getString(R.string.node_is_offline));
+                            .setContentTitle(storjNode.getSimpleName())
+                            .setContentText(mContext.getString(R.string.node_is_offline, storjNode.getSimpleName()));
 
             NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(0, mBuilder.build());
+            mNotificationManager.notify(storjNode.getNodeID().hashCode(), mBuilder.build());
         }
 
         private boolean isNodeOffline(StorjNode storjNode) {

@@ -11,6 +11,7 @@
     <color name="red">#df3b41</color>
     <color name="green">#6ca802</color>
     <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
 
 
     <color name="storj_color_blue">#2683FF</color>
@@ -20,24 +21,24 @@
     <!-- Response Time colors -->
     <string-array name="responseTimeColors">
         <!-- level=1 -->
-        <item>#311b92</item>
+        <item>#acff48</item>
         <!-- level=2 -->
-        <item>#0d47a1</item>
+        <item>#9bfd25</item>
         <!-- level=3 -->
-        <item>#006064</item>
+        <item>#8bff00</item>
         <!-- level=4 -->
-        <item>#33691e</item>
+        <item>#6598ff</item>
         <!-- level=5 -->
-        <item>#1b5e20</item>
+        <item>#387aff</item>
         <!-- level=6 -->
-        <item>#004d40</item>
+        <item>#0055ff</item>
         <!-- level=7 -->
-        <item>#827717</item>
+        <item>#a67cff</item>
         <!-- level=8 -->
-        <item>#999900</item>
+        <item>#915ffc</item>
         <!-- level=9 -->
-        <item>#e65100</item>
+        <item>#8044ff</item>
         <!-- level=10 -->
-        <item>#bf360c</item>
+        <item>#6720fd</item>
     </string-array>
 </resources>

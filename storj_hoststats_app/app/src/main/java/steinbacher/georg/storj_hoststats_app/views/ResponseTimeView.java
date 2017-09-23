@@ -39,6 +39,7 @@ public class ResponseTimeView extends android.support.v7.widget.AppCompatRadioBu
             //set text
             Float responseTimeSeconds = (float) responseTime / 1000;
             setText(String.format("%.1f", responseTimeSeconds));
+            setTextColor(getResources().getColor(R.color.white));
 
             //set color
             GradientDrawable gd = (GradientDrawable) getBackground();
@@ -46,7 +47,7 @@ public class ResponseTimeView extends android.support.v7.widget.AppCompatRadioBu
         } else {
             //set color
             GradientDrawable gd = (GradientDrawable) getBackground();
-            gd.setColor(getResources().getColor(R.color.grey));
+            gd.setColor(getResources().getColor(R.color.red));
             setText("");
         }
     }
@@ -54,8 +55,10 @@ public class ResponseTimeView extends android.support.v7.widget.AppCompatRadioBu
     private int getReponseTimeColor(int responseTime) {
         String[] dangerColors = mContext.getResources().getStringArray(R.array.responseTimeColors);
 
-        if(responseTime >= 10000) {
+        if (responseTime >= 10000) {
             return Color.parseColor(dangerColors[9]);
+        } else if (responseTime < 1000) {
+            return Color.parseColor(dangerColors[0]);
         } else {
             int index = responseTime/1000;
             return Color.parseColor(dangerColors[index-1]);

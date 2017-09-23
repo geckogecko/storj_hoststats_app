@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 import java.text.Format;
@@ -50,7 +49,8 @@ public class DatabaseManager {
                 NodeReaderContract.NodeEntry.PROTOCOL,
                 NodeReaderContract.NodeEntry.RESPONSE_TIME,
                 NodeReaderContract.NodeEntry.TIMEOUT_RATE,
-                NodeReaderContract.NodeEntry.LAST_CHECKED
+                NodeReaderContract.NodeEntry.LAST_CHECKED,
+                NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION
         };
 
         String sort = NodeReaderContract.NodeEntry.RESPONSE_TIME + " " + sortOrder;
@@ -64,6 +64,16 @@ public class DatabaseManager {
                 null,                                           // don't filter by row groups
                 sort                                            // The sort order
         );
+
+        cursor.moveToFirst();
+        return cursor;
+    }
+
+    public Cursor getNode(String nodeID) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NodeReaderContract.NodeEntry.TABLE_NAME + " WHERE " +
+                NodeReaderContract.NodeEntry.NODE_ID+" = '"+ nodeID +"'", null);
 
         cursor.moveToFirst();
         return cursor;
@@ -110,6 +120,8 @@ public class DatabaseManager {
             insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(storjNode.getLastChecked()));
         }
 
+        insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
+
         db.insert(NodeReaderContract.NodeEntry.TABLE_NAME, null, insertValues);
     }
 
@@ -155,6 +167,8 @@ public class DatabaseManager {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(storjNode.getLastChecked()));
         }
+
+        insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
 
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
     }
@@ -205,6 +219,8 @@ public class DatabaseManager {
             insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(updatedNode.getLastChecked()));
         }
 
+        insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
+
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
     }
 
@@ -238,7 +254,8 @@ public class DatabaseManager {
                         NodeReaderContract.NodeEntry.PROTOCOL + " TEXT," +
                         NodeReaderContract.NodeEntry.RESPONSE_TIME + " INTEGER," +
                         NodeReaderContract.NodeEntry.TIMEOUT_RATE + " FLOAT," +
-                        NodeReaderContract.NodeEntry.LAST_CHECKED + " TEXT);";
+                        NodeReaderContract.NodeEntry.LAST_CHECKED + " TEXT," +
+                        NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION + " INTEGER);";
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         db.execSQL(SQL_CREATE_ENTRIES);

@@ -22,6 +22,7 @@ public class NodeReaderContract {
         public static final String RESPONSE_TIME = "reponseTime";
         public static final String TIMEOUT_RATE = "timeoutRate";
         public static final String LAST_CHECKED = "lastCHecked";
+        public static final String SHOULD_SEND_NOTIFICATION = "notificationSent";
 
     }
 }

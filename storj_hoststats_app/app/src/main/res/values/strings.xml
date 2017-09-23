@@ -12,5 +12,5 @@
     <string name="edit_NodeID">3bb0db2373aac96501e807778759cf207b75c05e</string>
 
     <!-- Notification -->
-    <string name="node_is_offline">Storj-Node is offline</string>
+    <string name="node_is_offline">%1$s is offline</string>
 </resources>

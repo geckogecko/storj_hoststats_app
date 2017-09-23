@@ -27,7 +27,8 @@ public class DbHelper extends SQLiteOpenHelper{
                     NodeReaderContract.NodeEntry.PROTOCOL + " TEXT," +
                     NodeReaderContract.NodeEntry.RESPONSE_TIME + " INTEGER," +
                     NodeReaderContract.NodeEntry.TIMEOUT_RATE + " FLOAT," +
-                    NodeReaderContract.NodeEntry.LAST_CHECKED + " TEXT);";
+                    NodeReaderContract.NodeEntry.LAST_CHECKED + " TEXT," +
+                    NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION + " INTEGER);";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME;

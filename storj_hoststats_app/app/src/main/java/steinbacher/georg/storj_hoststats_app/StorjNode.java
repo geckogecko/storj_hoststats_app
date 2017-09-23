@@ -1,7 +1,6 @@
 package steinbacher.georg.storj_hoststats_app;
 
 import android.database.Cursor;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +30,7 @@ public class StorjNode {
     private Date mLastTimeout;
     private float mTimeoutRate;
     private Date mLastChecked;
+    private boolean mShouldSendNotification;
 
     public StorjNode(String nodeID) {
         mNodeID = nodeID;
@@ -39,11 +39,12 @@ public class StorjNode {
         mAddress = "";
         mUserAgent = null;
         mProtocol = null;
-        mResponseTime = 0;
+        mResponseTime = -1;
         mLastTimeout = null;
         mTimeoutRate = 0;
         mLastChecked = null;
         mSimpleName = "";
+        mShouldSendNotification = true;
     }
 
 
@@ -54,16 +55,24 @@ public class StorjNode {
         mAddress = storjApiResponse.getString("address");
         mUserAgent = new Version(storjApiResponse.getString("userAgent"));
         mProtocol = new Version(storjApiResponse.getString("protocol"));
-        mResponseTime = storjApiResponse.getInt("responseTime");
+
+        if(storjApiResponse.has("responseTime"))
+            mResponseTime = storjApiResponse.getInt("responseTime");
+        else
+            mResponseTime = -1;
+
+
         mLastTimeout = parseDateString(storjApiResponse.getString("lastTimeout"));
         mTimeoutRate = storjApiResponse.getInt("timeoutRate");
         mLastChecked = null;
         mSimpleName = "";
+        mShouldSendNotification = true;
     }
 
 
     public StorjNode(Cursor cursor)  {
-        mNodeID = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID));
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID)) != null)
+            mNodeID = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID));
 
         if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_SEEN)) != null)
             mLastSeen = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_SEEN)));
@@ -96,6 +105,9 @@ public class StorjNode {
         if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.FRIENDLY_NAME)) != null)
             mSimpleName =  cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.FRIENDLY_NAME));
 
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION)) != null)
+            mShouldSendNotification =  cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION)) == 1;
+
     }
 
     public Date parseDateString(String dateString) {
@@ -108,6 +120,14 @@ public class StorjNode {
         }
 
         return date;
+    }
+
+    public void setShouldSendNotification(boolean shouldSend) {
+        mShouldSendNotification = shouldSend;
+    }
+
+    public boolean getShouldSendNotification() {
+        return mShouldSendNotification;
     }
     
     public void setLastSeen(String dateString) {
@@ -137,6 +157,10 @@ public class StorjNode {
     public void setResponseTime(String responseTime) {
         String split[] = responseTime.split("\\.");
         mResponseTime = Integer.parseInt(split[0]);
+    }
+
+    public void setResponseTime(int responseTime) {
+        mResponseTime = responseTime;
     }
 
     public void setLastTimeout(String lastTimeout) {
