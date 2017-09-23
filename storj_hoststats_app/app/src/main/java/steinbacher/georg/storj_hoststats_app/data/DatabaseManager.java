@@ -9,6 +9,7 @@ import android.util.Log;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 
+import steinbacher.georg.storj_hoststats_app.Parameters;
 import steinbacher.georg.storj_hoststats_app.StorjNode;
 
 /**
@@ -53,7 +54,12 @@ public class DatabaseManager {
                 NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION
         };
 
-        String sort = NodeReaderContract.NodeEntry.RESPONSE_TIME + " " + sortOrder;
+        String sort = "";
+
+        if(sortOrder.equals(Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC))
+            sort = NodeReaderContract.NodeEntry.RESPONSE_TIME + " ASC";
+        else if (sortOrder.equals(Parameters.SHARED_PREF_SORT_ORDER_NAME_ASC))
+            sort = NodeReaderContract.NodeEntry.FRIENDLY_NAME + " ASC";
 
         Cursor cursor = db.query(
                 NodeReaderContract.NodeEntry.TABLE_NAME,    // The table to query

@@ -45,13 +45,18 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
-        Cursor cursor = databaseManager.queryAllNodes("ASC");
+        Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
 
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             storjNodes.add(new StorjNode(cursor));
         }
 
         new StorjApiCommunicationTask().execute(storjNodes);
+    }
+
+    private String getSavedSortOrder() {
+        SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
+        return prefs.getString(Parameters.SHARED_PREF_SORT_ORDER, Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC);
     }
 
 

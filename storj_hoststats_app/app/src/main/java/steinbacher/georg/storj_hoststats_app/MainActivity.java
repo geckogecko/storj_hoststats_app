@@ -9,15 +9,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.nfc.Tag;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.internal.widget.TintImageView;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -44,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
 
         mContext = getApplicationContext();
 
@@ -100,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
         databaseManager = DatabaseManager.getInstance(mContext);
-        Cursor cursor = databaseManager.queryAllNodes("ASC");
+        Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
 
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             storjNodes.add(new StorjNode(cursor));
@@ -140,6 +146,55 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(TAG, "onOptionsItemSelected: ");
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+
+            case R.id.action_sort:
+                switchSortOrder();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void switchSortOrder() {
+        String newSortOrder = "";
+
+        //save to shared prefs
+        SharedPreferences.Editor prefsEditor = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE).edit();
+
+        if(getSavedSortOrder().equals(Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC)) {
+            newSortOrder = Parameters.SHARED_PREF_SORT_ORDER_NAME_ASC;
+        } else {
+            newSortOrder = Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC;
+        }
+
+        prefsEditor.putString(Parameters.SHARED_PREF_SORT_ORDER, newSortOrder);
+        prefsEditor.commit();
+
+        redrawList();
+    }
+
+    private String getSavedSortOrder() {
+        SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
+        Log.i(TAG, "getSavedSortOrder: " + prefs.getString(Parameters.SHARED_PREF_SORT_ORDER, Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC));
+        return prefs.getString(Parameters.SHARED_PREF_SORT_ORDER, Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC);
+    }
+
+
+
+
     private BroadcastReceiver mUIUpdateListener = new BroadcastReceiver(){
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -150,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
     private void redrawList() {
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
-        Cursor cursor = databaseManager.queryAllNodes("ASC");
+        Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
 
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             storjNodes.add(new StorjNode(cursor));

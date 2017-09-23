@@ -13,4 +13,8 @@
 
     <!-- Notification -->
     <string name="node_is_offline">%1$s is offline</string>
+
+    <!-- Settings -->
+    <string name="menu_settings">Settings</string>
+    <string name="menu_sort">Sort</string>
 </resources>
