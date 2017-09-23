@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         Intent alarmIntent = new Intent(mContext, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, alarmIntent, 0);
         manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+
     }
 
     @Override
@@ -157,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onOptionsItemSelected: ");
         switch (item.getItemId()) {
             case R.id.action_settings:
+                Intent i = new Intent(this, PreferencesActivity.class);
+                startActivity(i);
                 return true;
 
             case R.id.action_sort:
@@ -188,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String getSavedSortOrder() {
         SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
-        Log.i(TAG, "getSavedSortOrder: " + prefs.getString(Parameters.SHARED_PREF_SORT_ORDER, Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC));
         return prefs.getString(Parameters.SHARED_PREF_SORT_ORDER, Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC);
     }
 
