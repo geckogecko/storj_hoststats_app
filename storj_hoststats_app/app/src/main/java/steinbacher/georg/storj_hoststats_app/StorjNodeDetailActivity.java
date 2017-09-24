@@ -7,6 +7,9 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import steinbacher.georg.storj_hoststats_app.data.DatabaseManager;
 
 public class StorjNodeDetailActivity extends AppCompatActivity {
@@ -44,13 +47,15 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
         text_SimpleName.setText(getString(R.string.details_SimpleName, selectedNode.getSimpleName()));
 
         if(selectedNode.getAddress() != null) {
+            SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
             text_NodeID.setText(getString(R.string.details_NodeID, selectedNode.getNodeID()));
             String address = selectedNode.getAddress() + ":" + Integer.toString(selectedNode.getPort());
             text_Address.setText(getString(R.string.details_Address, address));
             text_UserAgent.setText(getString(R.string.details_UserAgent, selectedNode.getUserAgent()));
-            text_LastSeen.setText(getString(R.string.details_LastSeen, selectedNode.getLastSeen()));
+            text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(selectedNode.getLastSeen())));
             text_Protocol.setText(getString(R.string.details_Protocol, selectedNode.getProtocol()));
-            text_LastTimeout.setText(getString(R.string.details_LastTimeout, selectedNode.getLastTimeout()));
+            text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(selectedNode.getLastTimeout())));
             text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(selectedNode.getTimeoutRate())));
 
             text_Error.setVisibility(View.GONE);

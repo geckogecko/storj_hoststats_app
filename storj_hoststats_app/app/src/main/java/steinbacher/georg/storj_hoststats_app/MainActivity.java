@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
+
         SharedPreferences preferences = getSharedPreferences(Parameters.SHARED_PREF, 0);
         preferences.edit().remove(Parameters.SHARED_PREF_NODE_HOLDER).commit();
 
@@ -105,8 +107,10 @@ public class MainActivity extends AppCompatActivity {
         databaseManager.insertNode(testnode_2);
         databaseManager.insertNode(testnode_3);
 
+        */
 
 
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
         databaseManager = DatabaseManager.getInstance(mContext);
         Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
