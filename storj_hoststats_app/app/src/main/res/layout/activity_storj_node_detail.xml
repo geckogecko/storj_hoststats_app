@@ -25,7 +25,7 @@
     <android.support.v7.internal.widget.TintImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/storj_symbol"
+        android:src="@drawable/history_palceholder"
         android:layout_weight="6"/>
 
     <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
