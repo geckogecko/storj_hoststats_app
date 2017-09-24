@@ -97,12 +97,15 @@ public class MainActivity extends AppCompatActivity {
         testnode_3.setLastSeen(Calendar.getInstance().getTime());
         testnode_3.setLastTimeout(Calendar.getInstance().getTime());
 
+
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        /*
         databaseManager.dropNodeDB();
         databaseManager.createNodeDB();
         databaseManager.insertNode(testnode_1);
         databaseManager.insertNode(testnode_2);
         databaseManager.insertNode(testnode_3);
+        */
 
 
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
@@ -116,13 +119,8 @@ public class MainActivity extends AppCompatActivity {
         StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, storjNodes);
         mListView.setAdapter(adapter);
 
-        //start alarm
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        int interval = 1;
-        Intent alarmIntent = new Intent(mContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, alarmIntent, 0);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-
+        AlarmReceiver alarm = new AlarmReceiver();
+        alarm.scheduleAlarm(mContext);
     }
 
     @Override
@@ -236,6 +234,9 @@ public class MainActivity extends AppCompatActivity {
                 newNode.setSimpleName(textViewSimpleName.getText().toString());
                 databaseManager.insertNode(newNode);
                 redrawList();
+
+                AlarmReceiver alarm = new AlarmReceiver();
+                alarm.pullStorjNodesStats(mContext);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -274,6 +275,9 @@ public class MainActivity extends AppCompatActivity {
                 StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
                 alertDialog.cancel();
                 deleteNode(selectedNode);
+
+                AlarmReceiver alarm = new AlarmReceiver();
+                alarm.pullStorjNodesStats(mContext);
             }
         });
 
@@ -293,7 +297,8 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.cancel();
                 updateNode(selectedNode, updatedNode);
 
-
+                AlarmReceiver alarm = new AlarmReceiver();
+                alarm.pullStorjNodesStats(mContext);
             }
         });
 
@@ -370,8 +375,11 @@ public class MainActivity extends AppCompatActivity {
             if(selectedNode.getLastChecked() == null || selectedNode.getResponseTime() == -1) {
                 responseTimeView.setResponseTime(0);
 
-                txtAddress.setText(getString(R.string.address, selectedNode.getAddress() + ":" + selectedNode.getPort()));
-                txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+                if(selectedNode.getAddress() != null)
+                    txtAddress.setText(getString(R.string.address, selectedNode.getAddress() + ":" + selectedNode.getPort()));
+
+                if(selectedNode.getUserAgent() != null)
+                    txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
 
                 return view;
             }
@@ -388,17 +396,5 @@ public class MainActivity extends AppCompatActivity {
 
             return view;
         }
-
-        private boolean isNodeOffline(StorjNode storjNode) {
-            Date currentTime = Calendar.getInstance().getTime();
-            return (currentTime.getTime() - storjNode.getLastSeen().getTime()) >= getNodeOfflineAfter();
-
-        }
-
-        private long getNodeOfflineAfter() {
-            SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
-            return prefs.getLong(Parameters.SHARED_PREF_OFLINE_AFTER, Parameters.SHARED_PREF_OFLINE_AFTER_DEFAULT);
-        }
-
     }
 }

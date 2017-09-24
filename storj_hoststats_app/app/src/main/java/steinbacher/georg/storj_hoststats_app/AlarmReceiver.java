@@ -43,9 +43,25 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mContext = context;
-        Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
+        pullStorjNodesStats(context);
+        scheduleAlarm(context);
+    }
 
+    private String getSavedSortOrder() {
+        SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
+        return prefs.getString(Parameters.SHARED_PREF_SORT_ORDER, Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC);
+    }
+
+    public void scheduleAlarm(Context context) {
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        int interval = 1;
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+    }
+
+    public void pullStorjNodesStats(Context context) {
+        mContext = context;
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
         Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
@@ -55,11 +71,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         new StorjApiCommunicationTask().execute(storjNodes);
-    }
-
-    private String getSavedSortOrder() {
-        SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
-        return prefs.getString(Parameters.SHARED_PREF_SORT_ORDER, Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC);
     }
 
 
