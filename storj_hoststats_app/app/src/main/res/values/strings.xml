@@ -6,10 +6,13 @@
     <string name="userAgent">UserAgent: %1$s</string>
     <string name="edit_node">Edit Node</string>
 
-    <!-- Add Node popup -->
+    <!-- Add/edit Node popup -->
     <string name="add_node_popup_title">Add New Node</string>
     <string name="edit_simpleName">StorjNode1</string>
     <string name="edit_NodeID">3bb0db2373aac96501e807778759cf207b75c05e</string>
+    <string name="add_error_missing_nodeID">You forgot to enter a NodeID</string>
+    <string name="add_error_missing_SimpleName">Please enter a name for your node</string>
+    <string name="add_error_node_exists">This NodeID is already used</string>
 
     <!-- Notification -->
     <string name="node_is_offline">%1$s is offline</string>

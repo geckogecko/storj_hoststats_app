@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(Parameters.SHARED_PREF, 0);
         preferences.edit().remove(Parameters.SHARED_PREF_NODE_HOLDER).commit();
 
-        StorjNode testnode_1 = new StorjNode("3217206e6e00c336ddf164a0ad88df7f22c8891b");
+        StorjNode testnode_1 = new StorjNode("3f1f1ee1d1de9b23d7c7cc975f6bae8d93930c8f");
         testnode_1.setSimpleName("My testnode 1");
         testnode_1.setUserAgent("7.0.0");
         testnode_1.setAddress("123.123.123.12");
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         testnode_1.setLastSeen(Calendar.getInstance().getTime());
         testnode_1.setLastTimeout(Calendar.getInstance().getTime());
 
-        StorjNode testnode_2 = new StorjNode("3bb0db2373aac96501e807778759cf207b75c05e");
+        StorjNode testnode_2 = new StorjNode("bba8da2a4d91f9f187260444a35b68ba8566bbc8");
         testnode_2.setSimpleName("My testnode 2");
         testnode_2.setUserAgent("6.0.0");
         testnode_2.setAddress("10.0.0.12");
@@ -99,13 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
-        /*
         databaseManager.dropNodeDB();
         databaseManager.createNodeDB();
         databaseManager.insertNode(testnode_1);
         databaseManager.insertNode(testnode_2);
         databaseManager.insertNode(testnode_3);
-        */
+
 
 
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
@@ -228,15 +227,32 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                boolean error = false;
+
+                if(textViewNodeId.getText().toString().matches("")) {
+                    Toast.makeText(mContext, getString(R.string.add_error_missing_nodeID), Toast.LENGTH_SHORT).show();
+                    error = true;
+                } else if (textViewSimpleName.getText().toString().matches("")) {
+                    Toast.makeText(mContext, getString(R.string.add_error_missing_SimpleName), Toast.LENGTH_SHORT).show();
+                    error = true;
+                }
+
                 DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+                Cursor cursor = databaseManager.getNode(textViewNodeId.getText().toString());
+                if(cursor.getCount() >= 1) {
+                    Toast.makeText(mContext, getString(R.string.add_error_node_exists), Toast.LENGTH_SHORT).show();
+                    error = true;
+                }
 
-                StorjNode newNode = new StorjNode(textViewNodeId.getText().toString());
-                newNode.setSimpleName(textViewSimpleName.getText().toString());
-                databaseManager.insertNode(newNode);
-                redrawList();
+                if(!error) {
+                    StorjNode newNode = new StorjNode(textViewNodeId.getText().toString());
+                    newNode.setSimpleName(textViewSimpleName.getText().toString());
+                    databaseManager.insertNode(newNode);
+                    redrawList();
 
-                AlarmReceiver alarm = new AlarmReceiver();
-                alarm.pullStorjNodesStats(mContext);
+                    AlarmReceiver alarm = new AlarmReceiver();
+                    alarm.pullStorjNodesStats(mContext);
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -287,18 +303,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int position=(Integer)v.getTag();
+                boolean error = false;
+
                 StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
 
                 TextView textView_nodeId = (TextView) v.getRootView().findViewById(R.id.textView_edit_nodeID);
                 TextView textView_simpleName = (TextView) v.getRootView().findViewById(R.id.textView_edit_simpleName);
 
-                StorjNode updatedNode = new StorjNode(textView_nodeId.getText().toString());
-                updatedNode.setSimpleName(textView_simpleName.getText().toString());
-                alertDialog.cancel();
-                updateNode(selectedNode, updatedNode);
+                if(textView_nodeId.getText().toString().matches("")) {
+                    Toast.makeText(mContext, getString(R.string.add_error_missing_nodeID), Toast.LENGTH_SHORT).show();
+                    error = true;
+                } else if (textView_simpleName.getText().toString().matches("")) {
+                    Toast.makeText(mContext, getString(R.string.add_error_missing_SimpleName), Toast.LENGTH_SHORT).show();
+                    error = true;
+                }
 
-                AlarmReceiver alarm = new AlarmReceiver();
-                alarm.pullStorjNodesStats(mContext);
+                DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+                Cursor cursor = databaseManager.getNode(textView_nodeId.getText().toString());
+                if(cursor.getCount() >= 1) {
+                    Toast.makeText(mContext, getString(R.string.add_error_node_exists), Toast.LENGTH_SHORT).show();
+                    error = true;
+                }
+
+                if(!error) {
+                    StorjNode updatedNode = new StorjNode(textView_nodeId.getText().toString());
+                    updatedNode.setSimpleName(textView_simpleName.getText().toString());
+                    updateNode(selectedNode, updatedNode);
+
+                    AlarmReceiver alarm = new AlarmReceiver();
+                    alarm.pullStorjNodesStats(mContext);
+                }
+
+                alertDialog.cancel();
             }
         });
 
