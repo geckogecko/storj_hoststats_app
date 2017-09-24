@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
 
                 DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
                 Cursor cursor = databaseManager.getNode(textView_nodeId.getText().toString());
-                if(cursor.getCount() >= 1) {
+                if(cursor.getCount() >= 1 && !(textView_nodeId.getText().toString().equals(selectedNode.getNodeID()))) {
                     Toast.makeText(mContext, getString(R.string.add_error_node_exists), Toast.LENGTH_SHORT).show();
                     error = true;
                 }
@@ -390,7 +390,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     int position=(Integer)v.getTag();
                     StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
-                    Log.i(TAG, "onClick: " + position);
                     showEditNowDialog(selectedNode, position);
                 }
             });
@@ -399,7 +398,6 @@ public class MainActivity extends AppCompatActivity {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "onClick: ");
                     StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
 
                     Intent storjNodeDetailIntent = new Intent(MainActivity.this, StorjNodeDetailActivity.class);
