@@ -113,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
             storjNodes.add(new StorjNode(cursor));
         }
 
-        Log.i(TAG, "onCreate: " + storjNodes.size());
-
         StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, storjNodes);
         mListView.setAdapter(adapter);
 
@@ -156,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "onOptionsItemSelected: ");
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent i = new Intent(this, PreferencesActivity.class);
@@ -357,6 +354,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            //set onclick listener
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "onClick: ");
+                    StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
+
+                    Intent storjNodeDetailIntent = new Intent(MainActivity.this, StorjNodeDetailActivity.class);
+                    storjNodeDetailIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, selectedNode.getNodeID());
+                    mContext.startActivity(storjNodeDetailIntent);
+                }
+            });
+
             if(selectedNode.getLastChecked() == null || selectedNode.getResponseTime() == -1) {
                 responseTimeView.setResponseTime(0);
 
@@ -365,8 +375,6 @@ public class MainActivity extends AppCompatActivity {
 
                 return view;
             }
-
-            Log.i(TAG, "getView: " + selectedNode.getNodeID());
 
             // set response time
             responseTimeView.setResponseTime(selectedNode.getResponseTime());
@@ -377,15 +385,6 @@ public class MainActivity extends AppCompatActivity {
             //setUserAgent
             if(selectedNode.getUserAgent() != null)
                 txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
-
-            //set onclick listener
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
-                    Toast.makeText(MainActivity.this, selectedNode.getSimpleName(), Toast.LENGTH_SHORT).show();
-                }
-            });
 
             return view;
         }

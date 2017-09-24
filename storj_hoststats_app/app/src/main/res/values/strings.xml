@@ -22,4 +22,16 @@
 
     <!-- AlarmReceiver -->
     <string name="no_connection">No internet connection</string>
+
+    <!-- StorjNode details Activity -->
+    <string name="details_SimpleName">%1$s</string>
+    <string name="details_online">Online</string>
+    <string name="details_offline">Offline</string>
+    <string name="details_NodeID">NodeID: %1$s</string>
+    <string name="details_Address">Address: %1$s</string>
+    <string name="details_LastSeen">Last Seen: %1$s</string>
+    <string name="details_UserAgent">UserAgent: %1$s</string>
+    <string name="details_Protocol">Protocol: %1$s</string>
+    <string name="details_LastTimeout">Last Timeout: %1$s</string>
+    <string name="details_TimeoutRate">Timeout Rate: %1$s</string>
 </resources>
