@@ -32,6 +32,7 @@
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="10sp"
         android:layout_marginLeft="10sp"
         android:layout_weight="4">
 
@@ -44,6 +45,7 @@
                 android:id="@+id/storjNode_details_SimpleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:textAppearance="?android:textAppearanceMedium"/>
 
             <View
@@ -55,6 +57,7 @@
                 android:id="@+id/storjNode_details_Status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:layout_marginRight="10sp"/>
 
@@ -63,6 +66,7 @@
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/storjNode_details_NodeID"
             android:layout_width="match_parent"
+            android:layout_marginTop="5sp"
             android:layout_height="wrap_content" />
 
         <android.support.v7.widget.AppCompatTextView

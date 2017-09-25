@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-
         mContext = getApplicationContext();
 
         mListView = (ListView) findViewById(R.id.main_list_view);
@@ -64,55 +63,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
-
-        SharedPreferences preferences = getSharedPreferences(Parameters.SHARED_PREF, 0);
-        preferences.edit().remove(Parameters.SHARED_PREF_NODE_HOLDER).commit();
-
-        StorjNode testnode_1 = new StorjNode("3f1f1ee1d1de9b23d7c7cc975f6bae8d93930c8f");
-        testnode_1.setSimpleName("My testnode 1");
-        testnode_1.setUserAgent("7.0.0");
-        testnode_1.setAddress("123.123.123.12");
-        testnode_1.setPort(4000);
-        testnode_1.setResponseTime("5000");
-        testnode_1.setLastChecked(Calendar.getInstance().getTime());
-        testnode_1.setLastSeen(Calendar.getInstance().getTime());
-        testnode_1.setLastTimeout(Calendar.getInstance().getTime());
-
-        StorjNode testnode_2 = new StorjNode("bba8da2a4d91f9f187260444a35b68ba8566bbc8");
-        testnode_2.setSimpleName("My testnode 2");
-        testnode_2.setUserAgent("6.0.0");
-        testnode_2.setAddress("10.0.0.12");
-        testnode_2.setPort(4005);
-        testnode_2.setResponseTime("11123");
-        testnode_2.setLastChecked(Calendar.getInstance().getTime());
-        testnode_2.setLastSeen(Calendar.getInstance().getTime());
-        testnode_2.setLastTimeout(Calendar.getInstance().getTime());
-
-        StorjNode testnode_3 = new StorjNode("130f838a0b5ae311f1bae15bcb0df66be6339be4");
-        testnode_3.setSimpleName("My testnode 3");
-        testnode_3.setUserAgent("6.0.0");
-        testnode_3.setAddress("10.0.0.12");
-        testnode_3.setPort(4005);
-        testnode_3.setResponseTime("900");
-        testnode_3.setLastChecked(Calendar.getInstance().getTime());
-        testnode_3.setLastSeen(Calendar.getInstance().getTime());
-        testnode_3.setLastTimeout(Calendar.getInstance().getTime());
-
-
-        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
-        databaseManager.dropNodeDB();
-        databaseManager.createNodeDB();
-        databaseManager.insertNode(testnode_1);
-        databaseManager.insertNode(testnode_2);
-        databaseManager.insertNode(testnode_3);
-
-        */
-
-
-        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
-        databaseManager = DatabaseManager.getInstance(mContext);
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
 
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {

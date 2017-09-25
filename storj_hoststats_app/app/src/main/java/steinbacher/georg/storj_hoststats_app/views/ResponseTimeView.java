@@ -59,9 +59,11 @@ public class ResponseTimeView extends android.support.v7.widget.AppCompatRadioBu
             return Color.parseColor(dangerColors[9]);
         } else if (responseTime < 1000) {
             return Color.parseColor(dangerColors[0]);
+        } else if (responseTime >= 1000 && responseTime <= 2000) {
+            return Color.parseColor(dangerColors[1]);
         } else {
             int index = responseTime/1000;
-            return Color.parseColor(dangerColors[index-1]);
+            return Color.parseColor(dangerColors[index]);
         }
     }
 }

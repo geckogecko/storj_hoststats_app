@@ -20,21 +20,21 @@
     <!-- Response Time colors -->
     <string-array name="responseTimeColors">
         <!-- level=1 -->
-        <item>#acff48</item>
+        <item>#89c427</item>
         <!-- level=2 -->
-        <item>#9bfd25</item>
+        <item>#72a321</item>
         <!-- level=3 -->
-        <item>#8bff00</item>
+        <item>#4f7118</item>
         <!-- level=4 -->
         <item>#6598ff</item>
         <!-- level=5 -->
         <item>#387aff</item>
         <!-- level=6 -->
-        <item>#0055ff</item>
+        <item>#004be2</item>
         <!-- level=7 -->
-        <item>#a67cff</item>
+        <item>#af89ff</item>
         <!-- level=8 -->
-        <item>#915ffc</item>
+        <item>#9969fd</item>
         <!-- level=9 -->
         <item>#8044ff</item>
         <!-- level=10 -->
