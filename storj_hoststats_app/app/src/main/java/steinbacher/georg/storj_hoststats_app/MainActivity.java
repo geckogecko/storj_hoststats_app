@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+
         Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
 
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {

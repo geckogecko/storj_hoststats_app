@@ -103,9 +103,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                             if (previusNode.getShouldSendNotification())
                                 sendNodeOfflineNotification(node);
-                        } else if (previusNode.getResponseTime() == 0) {
-                            //was the node offline before and went online now ?
-                            node.setShouldSendNotification(true);
+                        } else {
+                            db.insertNodeResponseTimeEntry(node);
+
+                            if (previusNode.getResponseTime() == -1) {
+                                //was the node offline before and went online now ?
+                                node.setShouldSendNotification(true);
+                            }
                         }
 
                         db.updateNode(node);

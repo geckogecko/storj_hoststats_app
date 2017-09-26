@@ -238,33 +238,46 @@ public class DatabaseManager {
         db.delete(NodeReaderContract.NodeEntry.TABLE_NAME, whereClause, whereArgs);
     }
 
-    public void dropNodeDB() {
-        final String SQL_DELETE_ENTRIES =
-                "DROP TABLE IF EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME;
-
+    public void insertNodeResponseTimeEntry(StorjNode storjNode) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        db.execSQL(SQL_DELETE_ENTRIES);
+
+        ContentValues insertValues = new ContentValues();
+        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.NODE_ID, storjNode.getNodeID());
+        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME, storjNode.getResponseTime());
+        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP, storjNode.getLastChecked().getTime());
+        db.insert(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, null, insertValues);
+    }
+
+    public Cursor getNodeResponseTime(String nodeID) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME + " WHERE " +
+                NodeReaderContract.NodeResponseTimeEntry.NODE_ID+" = '"+ nodeID +"'", null);
+
+        cursor.moveToFirst();
+
+        int responseTime = cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME);
+        return cursor;
+    }
+
+    public void dropNodeDB() {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        db.execSQL(DbHelper.SQL_DELETE_ENTRIES_NODE_ENTRY);
+    }
+
+    public void dropNodeResponseTimeDB() {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        db.execSQL(DbHelper.SQL_DELETE_ENTRIES_NODE__RESPONSE_TIME_ENTRY);
     }
 
     public void createNodeDB() {
-        final String SQL_CREATE_ENTRIES =
-                "CREATE TABLE " + NodeReaderContract.NodeEntry.TABLE_NAME + " (" +
-                        NodeReaderContract.NodeEntry._ID + " INTEGER PRIMARY KEY," +
-                        NodeReaderContract.NodeEntry.NODE_ID + " TEXT," +
-                        NodeReaderContract.NodeEntry.FRIENDLY_NAME + " TEXT," +
-                        NodeReaderContract.NodeEntry.PORT + " INTEGER," +
-                        NodeReaderContract.NodeEntry.ADDRESS + " TEXT," +
-                        NodeReaderContract.NodeEntry.USER_AGENT + " TEXT," +
-                        NodeReaderContract.NodeEntry.LAST_SEEN + " TEXT," +
-                        NodeReaderContract.NodeEntry.LAST_TIMEOUT + " TEXT," +
-                        NodeReaderContract.NodeEntry.PROTOCOL + " TEXT," +
-                        NodeReaderContract.NodeEntry.RESPONSE_TIME + " INTEGER," +
-                        NodeReaderContract.NodeEntry.TIMEOUT_RATE + " FLOAT," +
-                        NodeReaderContract.NodeEntry.LAST_CHECKED + " TEXT," +
-                        NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION + " INTEGER);";
-
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(DbHelper.SQL_CREATE_ENTRIES_NODE_ENTRY);
+    }
+
+    public void createNodeResponseTimeDB() {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        db.execSQL(DbHelper.SQL_CREATE_ENTRIES_NODE_RESPONSE_TIME_ENTRY);
     }
 
 }

@@ -23,6 +23,13 @@ public class NodeReaderContract {
         public static final String TIMEOUT_RATE = "timeoutRate";
         public static final String LAST_CHECKED = "lastCHecked";
         public static final String SHOULD_SEND_NOTIFICATION = "notificationSent";
+    }
+
+    public static class NodeResponseTimeEntry implements BaseColumns {
+        public static final String TABLE_NAME = "responseTimeHistory";
+        public static final String NODE_ID = "nodeID";
+        public static final String RESPONSE_TIME = "responseTime";
+        public static final String TIMESTAMP = "timestamp";
 
     }
 }

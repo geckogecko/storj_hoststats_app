@@ -22,11 +22,20 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.internal.widget.TintImageView
+    <org.eazegraph.lib.charts.ValueLineChart
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cubiclinechart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/history_placeholder"
-        android:layout_weight="6"/>
+        app:egUseCubic="true"
+        app:egUseOverlapFill="true"
+        app:egCurveSmoothness="0.4"
+        app:egIndicatorLineColor="#FE6DA8"
+        app:egLegendHeight="40dp"
+        app:egShowStandardValue="true"
+        android:layout_weight="6"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"/>
 
     <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="match_parent"
