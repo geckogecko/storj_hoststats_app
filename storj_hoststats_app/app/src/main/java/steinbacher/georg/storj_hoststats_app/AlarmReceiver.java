@@ -1,6 +1,7 @@
 package steinbacher.georg.storj_hoststats_app;
 
 import android.app.*;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.*;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -171,9 +172,19 @@ public class AlarmReceiver extends BroadcastReceiver {
         private void sendNodeOfflineNotification(StorjNode storjNode) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             if(prefs.getBoolean(mContext.getString(R.string.pref_enable_notifications),true)) {
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
+                stackBuilder.addParentStack(MainActivity.class);
+
+                Intent detailNotificationIntent = new Intent(mContext, StorjNodeDetailActivity.class);
+                detailNotificationIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, storjNode.getNodeID());
+                stackBuilder.addNextIntent(detailNotificationIntent);
+
+                PendingIntent operation = stackBuilder.getPendingIntent(storjNode.getNodeID().hashCode(), PendingIntent.FLAG_CANCEL_CURRENT);
+
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
                         .setSmallIcon(R.drawable.storj_symbol)
                         .setContentTitle(storjNode.getSimpleName())
+                        .setContentIntent(operation)
                         .setContentText(mContext.getString(R.string.node_is_offline, storjNode.getSimpleName()));
 
                 NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -163,11 +163,11 @@ public class MainActivity extends AppCompatActivity {
 
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             storjNodes.add(new StorjNode(cursor));
+            Log.i(TAG, "redrawList: " + new StorjNode(cursor).getAddress());
         }
 
         StorjNodeAdapter adapter = new StorjNodeAdapter(mContext, R.layout.activity_main_row, storjNodes);
         mListView.setAdapter(adapter);
-        mListView.invalidateViews();
     }
 
     private void showAddNewNodeDialog() {
@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                     StorjNode newNode = new StorjNode(textViewNodeId.getText().toString());
                     newNode.setSimpleName(textViewSimpleName.getText().toString());
                     databaseManager.insertNode(newNode);
+                    Log.i(TAG, "onClick: " + newNode.getAddress());
                     redrawList();
 
                     AlarmReceiver alarm = new AlarmReceiver();
@@ -368,12 +369,17 @@ public class MainActivity extends AppCompatActivity {
 
                 if(selectedNode.getAddress() != null)
                     txtAddress.setText(getString(R.string.address, selectedNode.getAddress() + ":" + selectedNode.getPort()));
+                else
+                    txtAddress.setText("");
 
                 if(selectedNode.getUserAgent() != null)
                     txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+                else
+                    txtUserAgent.setText("");
 
                 return view;
-            }
+            } else
+                Log.i(TAG, "getView: " + selectedNode.getSimpleName());
 
             // set response time
             responseTimeView.setResponseTime(selectedNode.getResponseTime());
