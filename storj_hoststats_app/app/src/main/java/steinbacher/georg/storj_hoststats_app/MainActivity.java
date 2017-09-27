@@ -378,8 +378,7 @@ public class MainActivity extends AppCompatActivity {
                     txtUserAgent.setText("");
 
                 return view;
-            } else
-                Log.i(TAG, "getView: " + selectedNode.getSimpleName());
+            }
 
             // set response time
             responseTimeView.setResponseTime(selectedNode.getResponseTime());

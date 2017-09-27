@@ -34,6 +34,7 @@
         app:egLegendHeight="40dp"
         app:egShowStandardValue="true"
         android:layout_weight="6"
+        android:layout_marginTop="10sp"
         android:layout_marginLeft="10sp"
         android:layout_marginRight="10sp"/>
 
