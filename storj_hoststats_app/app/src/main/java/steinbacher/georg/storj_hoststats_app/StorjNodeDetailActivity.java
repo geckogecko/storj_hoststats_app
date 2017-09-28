@@ -56,7 +56,6 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
         AppCompatTextView text_Status = (AppCompatTextView) findViewById(R.id.storjNode_details_Status);
         AppCompatTextView text_Error = (AppCompatTextView) findViewById(R.id.storjNode_details_Error);
 
-
         ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
 
         ValueLineSeries series = new ValueLineSeries();

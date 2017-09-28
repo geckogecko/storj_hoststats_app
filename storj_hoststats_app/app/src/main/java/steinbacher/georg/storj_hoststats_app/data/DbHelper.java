@@ -12,7 +12,7 @@ public class DbHelper extends SQLiteOpenHelper{
     private static final String TAG = "DbHelper";
 
     private static final String DATABASE_NAME = "nodes.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
 
     public static final String SQL_CREATE_ENTRIES_NODE_ENTRY =
             "CREATE TABLE IF NOT EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME + " (" +
