@@ -252,11 +252,9 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME + " WHERE " +
-                NodeReaderContract.NodeResponseTimeEntry.NODE_ID+" = '"+ nodeID +"'", null);
+                NodeReaderContract.NodeResponseTimeEntry.NODE_ID+" = '"+ nodeID +"' limit 1000", null);
 
         cursor.moveToFirst();
-
-        int responseTime = cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME);
         return cursor;
     }
 

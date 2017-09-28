@@ -11,8 +11,8 @@ public class Parameters {
     public static final String SHARED_PREF = "sharedPrefs";
     public static final String SHARED_PREF_NODE_HOLDER = "StorjNodeHolder";
 
-    public static final String SHARED_PREF_OFLINE_AFTER = "OfflineAfter";
-    public static final long SHARED_PREF_OFLINE_AFTER_DEFAULT = 10800000;
+    public static final String SHARED_PREF_OFFLINE_AFTER = "OfflineAfter";
+    public static final long SHARED_PREF_OFFLINE_AFTER_DEFAULT = 10800000;
 
     public static final String SHARED_PREF_SORT_ORDER = "sortOrder";
     public static final String SHARED_PREF_SORT_ORDER_NAME_ASC = "name_asc";

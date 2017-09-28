@@ -68,13 +68,11 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
             String timestamp = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP));
             int responseTime = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME));
             String timeDate = getDate(Long.parseLong(timestamp));
-            Log.i(TAG, "onCreate: "+ timeDate);
             series.addPoint(new ValueLinePoint(timeDate, responseTime));
         }
 
         mCubicValueLineChart.addSeries(series);
         mCubicValueLineChart.startAnimation();
-
 
         text_SimpleName.setText(getString(R.string.details_SimpleName, selectedNode.getSimpleName()));
 

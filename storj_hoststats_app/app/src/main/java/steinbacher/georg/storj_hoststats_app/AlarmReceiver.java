@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +31,6 @@ import java.util.List;
 import steinbacher.georg.storj_hoststats_app.data.DatabaseManager;
 
 import static android.content.Context.MODE_PRIVATE;
-import static android.content.Context.POWER_SERVICE;
 
 public class AlarmReceiver extends BroadcastReceiver {
     private static final String TAG = "AlarmReceiver";
@@ -45,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         pullStorjNodesStats(context);
-        scheduleAlarm(context);
+        //scheduleAlarm(context);
     }
 
     private String getSavedSortOrder() {
@@ -55,10 +52,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     public void scheduleAlarm(Context context) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        int interval = 1;
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
 
     public void pullStorjNodesStats(Context context) {
@@ -200,7 +196,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         private long getNodeOfflineAfter() {
             SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
-            return prefs.getLong(Parameters.SHARED_PREF_OFLINE_AFTER, Parameters.SHARED_PREF_OFLINE_AFTER_DEFAULT);
+            return prefs.getLong(Parameters.SHARED_PREF_OFFLINE_AFTER, Parameters.SHARED_PREF_OFFLINE_AFTER_DEFAULT);
         }
 
         public boolean hasActiveInternetConnection() {
