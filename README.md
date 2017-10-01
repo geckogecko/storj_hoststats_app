@@ -1,7 +1,7 @@
 # storj_hoststats_app
 
-<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/Screenshot_from_2017-09-25_18-37-03.png" alt="MainActivity" style="height: 20px;"/>
-<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/Screenshot_from_2017-09-28_16-55-34.png" alt="DetailActivity" style="height: 20px;"/>
+<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/Screenshot_from_2017-09-25_18-37-03.png" alt="MainActivity" width="200" height="200"/>
+<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/Screenshot_from_2017-09-28_16-55-34.png" alt="DetailActivity" width="200" height="200"/>
 
 ---
 ##### Donate
