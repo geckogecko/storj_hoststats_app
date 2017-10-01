@@ -42,8 +42,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         pullStorjNodesStats(context);
-        scheduleAlarm(context);
     }
+
 
     private String getSavedSortOrder() {
         SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
@@ -53,8 +53,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void scheduleAlarm(Context context) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, alarmIntent, 0);
+        manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                AlarmManager.INTERVAL_HOUR,
+                AlarmManager.INTERVAL_HOUR,
+                pendingIntent);
     }
 
     public void pullStorjNodesStats(Context context) {

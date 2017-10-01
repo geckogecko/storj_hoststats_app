@@ -9,7 +9,6 @@ public class Parameters {
     public static final String UPDATE_UI_NODEID = "nodeID";
 
     public static final String SHARED_PREF = "sharedPrefs";
-    public static final String SHARED_PREF_NODE_HOLDER = "StorjNodeHolder";
 
     public static final String SHARED_PREF_OFFLINE_AFTER = "OfflineAfter";
     public static final long SHARED_PREF_OFFLINE_AFTER_DEFAULT = 10800000;
