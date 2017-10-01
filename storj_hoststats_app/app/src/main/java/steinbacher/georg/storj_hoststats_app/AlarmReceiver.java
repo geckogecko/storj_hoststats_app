@@ -42,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         pullStorjNodesStats(context);
-        //scheduleAlarm(context);
+        scheduleAlarm(context);
     }
 
     private String getSavedSortOrder() {
