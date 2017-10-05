@@ -13,6 +13,9 @@ Monitors the following stats of your Storj-Nodes with the help of the official S
 - Last Timeout 
 - TimeoutRate
 
+##### Test the app
+https://play.google.com/apps/testing/com.steinbacher.storj_hoststats_app
+
 ---
 ##### Donate
 
