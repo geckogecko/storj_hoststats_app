@@ -1,4 +1,4 @@
-package steinbacher.georg.storj_hoststats_app.data;
+package com.steinbacher.storj_hoststats_app.data;
 
 import android.provider.BaseColumns;
 

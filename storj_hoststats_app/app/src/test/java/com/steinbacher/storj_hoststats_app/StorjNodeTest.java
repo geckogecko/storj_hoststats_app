@@ -1,4 +1,4 @@
-package steinbacher.georg.storj_hoststats_app;
+package com.steinbacher.storj_hoststats_app;
 
 import org.junit.Test;
 
@@ -6,8 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import steinbacher.georg.storj_hoststats_app.util.Version;
 
 import static org.junit.Assert.*;
 

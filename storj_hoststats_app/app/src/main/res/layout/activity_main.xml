@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="steinbacher.georg.storj_hoststats_app.MainActivity">
+    tools:context="com.steinbacher.storj_hoststats_app.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"

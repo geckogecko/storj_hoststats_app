@@ -1,4 +1,4 @@
-package steinbacher.georg.storj_hoststats_app.util;
+package com.steinbacher.storj_hoststats_app.util;
 
 import org.junit.Test;
 

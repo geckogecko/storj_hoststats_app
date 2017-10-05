@@ -1,4 +1,4 @@
-package steinbacher.georg.storj_hoststats_app;
+package com.steinbacher.storj_hoststats_app;
 
 /**
  * Created by georg on 13.09.17.

@@ -1,4 +1,4 @@
-package steinbacher.georg.storj_hoststats_app;
+package com.steinbacher.storj_hoststats_app;
 
 import android.database.Cursor;
 
@@ -9,8 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import steinbacher.georg.storj_hoststats_app.data.NodeReaderContract;
-import steinbacher.georg.storj_hoststats_app.util.Version;
+import com.steinbacher.storj_hoststats_app.data.NodeReaderContract;
+import com.steinbacher.storj_hoststats_app.util.Version;
 
 /**
  * Created by georg on 03.09.17.

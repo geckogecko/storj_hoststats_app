@@ -1,11 +1,11 @@
-package steinbacher.georg.storj_hoststats_app.views;
+package com.steinbacher.storj_hoststats_app.views;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
-import steinbacher.georg.storj_hoststats_app.R;
+import com.steinbacher.storj_hoststats_app.R;
 
 /**
  * Created by georg on 22.09.17.

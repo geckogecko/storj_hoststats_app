@@ -1,4 +1,4 @@
-package steinbacher.georg.storj_hoststats_app.data;
+package com.steinbacher.storj_hoststats_app.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,8 +9,8 @@ import android.util.Log;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 
-import steinbacher.georg.storj_hoststats_app.Parameters;
-import steinbacher.georg.storj_hoststats_app.StorjNode;
+import com.steinbacher.storj_hoststats_app.Parameters;
+import com.steinbacher.storj_hoststats_app.StorjNode;
 
 /**
  * Created by georg on 22.09.17.

@@ -1,8 +1,4 @@
-package steinbacher.georg.storj_hoststats_app.util;
-
-import android.util.Log;
-
-import java.util.regex.Pattern;
+package com.steinbacher.storj_hoststats_app.util;
 
 /**
  * Created by georg on 03.09.17.

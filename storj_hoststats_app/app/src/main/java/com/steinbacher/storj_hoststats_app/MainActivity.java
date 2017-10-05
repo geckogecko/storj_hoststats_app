@@ -1,7 +1,5 @@
-package steinbacher.georg.storj_hoststats_app;
+package com.steinbacher.storj_hoststats_app;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,11 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
-import steinbacher.georg.storj_hoststats_app.data.DatabaseManager;
-import steinbacher.georg.storj_hoststats_app.views.ResponseTimeView;
+import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
+import com.steinbacher.storj_hoststats_app.views.ResponseTimeView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";

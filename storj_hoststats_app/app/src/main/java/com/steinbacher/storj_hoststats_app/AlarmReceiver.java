@@ -1,4 +1,4 @@
-package steinbacher.georg.storj_hoststats_app;
+package com.steinbacher.storj_hoststats_app;
 
 import android.app.*;
 import android.app.TaskStackBuilder;
@@ -28,7 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import steinbacher.georg.storj_hoststats_app.data.DatabaseManager;
+import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 
 import static android.content.Context.MODE_PRIVATE;
 

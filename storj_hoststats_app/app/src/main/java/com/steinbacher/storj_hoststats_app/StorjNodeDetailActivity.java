@@ -1,4 +1,4 @@
-package steinbacher.georg.storj_hoststats_app;
+package com.steinbacher.storj_hoststats_app;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,23 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 
-import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.ValueLineChart;
-import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.ValueLinePoint;
 import org.eazegraph.lib.models.ValueLineSeries;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
-import steinbacher.georg.storj_hoststats_app.data.DatabaseManager;
-import steinbacher.georg.storj_hoststats_app.data.NodeReaderContract;
+import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
+import com.steinbacher.storj_hoststats_app.data.NodeReaderContract;
 
 public class StorjNodeDetailActivity extends AppCompatActivity {
     private static final String TAG = "StorjNodeDetailActivity";

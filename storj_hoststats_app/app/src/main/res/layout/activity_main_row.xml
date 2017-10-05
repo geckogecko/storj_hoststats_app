@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <steinbacher.georg.storj_hoststats_app.views.ResponseTimeView
+    <com.steinbacher.storj_hoststats_app.views.ResponseTimeView
         android:id="@+id/responseTimeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
