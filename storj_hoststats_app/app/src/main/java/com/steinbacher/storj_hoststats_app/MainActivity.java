@@ -355,6 +355,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Intent storjNodeDetailIntent = new Intent(MainActivity.this, StorjNodeDetailActivity.class);
                     storjNodeDetailIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, selectedNode.getNodeID());
+                    storjNodeDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(storjNodeDetailIntent);
                 }
             });
