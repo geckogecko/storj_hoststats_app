@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 
@@ -194,7 +195,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         private boolean isNodeOffline(StorjNode storjNode) {
             Date currentTime = Calendar.getInstance().getTime();
-            return (currentTime.getTime() - storjNode.getLastSeen().getTime()) >= getNodeOfflineAfter();
+            int gmtOffset = TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
+            return (currentTime.getTime() - (storjNode.getLastSeen().getTime() + gmtOffset)) >= getNodeOfflineAfter();
 
         }
 
@@ -211,7 +213,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);
                     urlc.connect();
-                    return (urlc.getResponseCode() == 200);
+                    int responseCode = urlc.getResponseCode();
+                    urlc.disconnect();
+                    return (responseCode == 200);
                 } catch (IOException e) {
                     Log.e(TAG, "Error checking internet connection", e);
                 }
