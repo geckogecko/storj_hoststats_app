@@ -94,7 +94,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                         node = new StorjNode(jsonObject);
                         node.setLastChecked(Calendar.getInstance().getTime());
 
-                        StorjNode previusNode = new StorjNode(db.getNode(node.getNodeID()));
+                        Cursor cursor = db.getNode(node.getNodeID());
+                        StorjNode previusNode = new StorjNode(cursor);
                         node.setSimpleName(previusNode.getSimpleName());
 
                         if (isNodeOffline(node)) {
@@ -215,7 +216,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                     Log.e(TAG, "Error checking internet connection", e);
                 }
             } else {
-                Toast.makeText(mContext, mContext.getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+                //TODO notify the user about "No internet connection"
+                //Dont use a toast
+                Log.e(TAG, "hasActiveInternetConnection: No internet connection");
             }
             return false;
         }
