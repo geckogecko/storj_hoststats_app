@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.*;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,12 +22,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import com.stealthcopter.networktools.PortScan;
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -195,8 +196,31 @@ public class AlarmReceiver extends BroadcastReceiver {
         private boolean isNodeOffline(StorjNode storjNode) {
             Date currentTime = Calendar.getInstance().getTime();
             int gmtOffset = TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
-            return (currentTime.getTime() - (storjNode.getLastSeen().getTime() + gmtOffset)) >= getNodeOfflineAfter();
 
+
+            if ((currentTime.getTime() - (storjNode.getLastSeen().getTime() + gmtOffset)) >= getNodeOfflineAfter()) {
+                //regarding to bridge the node is offline
+                // lets check the port manually to be sure the node is offline
+                if (isPortOpen(storjNode)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        private boolean isPortOpen(StorjNode storjNode) {
+            try {
+                ArrayList<Integer> openPorts = PortScan.onAddress(storjNode.getAddress()).setPort(storjNode.getPort()).doScan();
+                if(openPorts.get(0) == storjNode.getPort())
+                    return true;
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+
+            return false;
         }
 
         private long getNodeOfflineAfter() {
