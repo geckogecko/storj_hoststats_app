@@ -3,6 +3,7 @@ package com.steinbacher.storj_hoststats_app.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by georg on 22.09.17.
@@ -12,7 +13,7 @@ public class DbHelper extends SQLiteOpenHelper{
     private static final String TAG = "DbHelper";
 
     private static final String DATABASE_NAME = "nodes.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String SQL_CREATE_ENTRIES_NODE_ENTRY =
             "CREATE TABLE IF NOT EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME + " (" +
@@ -28,7 +29,8 @@ public class DbHelper extends SQLiteOpenHelper{
                     NodeReaderContract.NodeEntry.RESPONSE_TIME + " INTEGER," +
                     NodeReaderContract.NodeEntry.TIMEOUT_RATE + " FLOAT," +
                     NodeReaderContract.NodeEntry.LAST_CHECKED + " TEXT," +
-                    NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION + " INTEGER);";
+                    NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION + " INTEGER," +
+                    NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT + "INTEGER);";
 
     public static final String SQL_DELETE_ENTRIES_NODE_ENTRY =
             "DROP TABLE IF EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME;
@@ -55,6 +57,8 @@ public class DbHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onCreate(db);
+        Log.i(TAG, "onUpgrade: ");
+        db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
+                NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT +" INTEGER;");
     }
 }
