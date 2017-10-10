@@ -113,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
                 switchSortOrder();
                 return true;
 
+            case R.id.action_refresh:
+                refresh(mContext);
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -134,6 +137,11 @@ public class MainActivity extends AppCompatActivity {
         prefsEditor.commit();
 
         redrawList();
+    }
+
+    private void refresh(Context context) {
+        AlarmReceiver alarm = new AlarmReceiver();
+        alarm.pullStorjNodesStats(context);
     }
 
     private String getSavedSortOrder() {
@@ -200,11 +208,9 @@ public class MainActivity extends AppCompatActivity {
                     StorjNode newNode = new StorjNode(textViewNodeId.getText().toString());
                     newNode.setSimpleName(textViewSimpleName.getText().toString());
                     databaseManager.insertNode(newNode);
-                    Log.i(TAG, "onClick: " + newNode.getAddress());
                     redrawList();
 
-                    AlarmReceiver alarm = new AlarmReceiver();
-                    alarm.pullStorjNodesStats(mContext);
+                    refresh(mContext);
                 }
             }
         });
@@ -245,8 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.cancel();
                 deleteNode(selectedNode);
 
-                AlarmReceiver alarm = new AlarmReceiver();
-                alarm.pullStorjNodesStats(mContext);
+                refresh(mContext);
             }
         });
 
@@ -283,8 +288,7 @@ public class MainActivity extends AppCompatActivity {
                     updatedNode.setSimpleName(textView_simpleName.getText().toString());
                     updateNode(selectedNode, updatedNode);
 
-                    AlarmReceiver alarm = new AlarmReceiver();
-                    alarm.pullStorjNodesStats(mContext);
+                    refresh(mContext);
                 }
 
                 alertDialog.cancel();
