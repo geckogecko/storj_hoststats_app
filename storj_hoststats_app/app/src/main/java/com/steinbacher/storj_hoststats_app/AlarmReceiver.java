@@ -174,11 +174,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             if(prefs.getBoolean(mContext.getString(R.string.pref_enable_notifications),true)) {
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
-                stackBuilder.addParentStack(MainActivity.class);
 
                 Intent detailNotificationIntent = new Intent(mContext, StorjNodeDetailActivity.class);
                 detailNotificationIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, storjNode.getNodeID());
-                stackBuilder.addNextIntent(detailNotificationIntent);
+                stackBuilder.addNextIntentWithParentStack(detailNotificationIntent);
 
                 PendingIntent operation = stackBuilder.getPendingIntent(storjNode.getNodeID().hashCode(), PendingIntent.FLAG_CANCEL_CURRENT);
 
