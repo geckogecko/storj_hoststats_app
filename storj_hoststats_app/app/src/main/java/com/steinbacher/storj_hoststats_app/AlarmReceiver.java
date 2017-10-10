@@ -137,7 +137,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             if(nodeId[0] != null) {
                 Intent updateUIIntent = new Intent(Parameters.UPDATE_UI_ACTION);
-                updateUIIntent.putExtra(Parameters.UPDATE_UI_NODEID, nodeId[0]);
                 Application.getAppContext().sendBroadcast(updateUIIntent);
             }
 
