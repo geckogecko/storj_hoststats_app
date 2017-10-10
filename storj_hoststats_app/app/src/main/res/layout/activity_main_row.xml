@@ -44,17 +44,4 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceSmall"/>
     </android.support.v7.widget.LinearLayoutCompat>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <android.support.v7.internal.widget.TintImageView
-        android:id="@+id/edit_imageview"
-        android:layout_width="25sp"
-        android:layout_height="match_parent"
-        android:src="@mipmap/ic_edit_black_36dp"
-        android:layout_marginRight="15sp"/>
-
 </android.support.v7.widget.LinearLayoutCompat>

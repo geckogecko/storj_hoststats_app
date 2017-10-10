@@ -335,18 +335,6 @@ public class MainActivity extends AppCompatActivity {
             //node simplename
             txtNodeSimpleName.setText(selectedNode.getSimpleName());
 
-            //edit
-            TintImageView edit_image = (TintImageView) view.findViewById(R.id.edit_imageview);
-            edit_image.setTag(position);
-            edit_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position=(Integer)v.getTag();
-                    StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
-                    showEditNowDialog(selectedNode, position);
-                }
-            });
-
             //set onclick listener
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -357,6 +345,16 @@ public class MainActivity extends AppCompatActivity {
                     storjNodeDetailIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, selectedNode.getNodeID());
                     storjNodeDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(storjNodeDetailIntent);
+                }
+            });
+
+            //edit on long click
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    StorjNode selectedNode = (StorjNode) mListView.getAdapter().getItem(position);
+                    showEditNowDialog(selectedNode, position);
+                    return true;
                 }
             });
 
