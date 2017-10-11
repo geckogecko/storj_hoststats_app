@@ -30,7 +30,8 @@ public class DbHelper extends SQLiteOpenHelper{
                     NodeReaderContract.NodeEntry.TIMEOUT_RATE + " FLOAT," +
                     NodeReaderContract.NodeEntry.LAST_CHECKED + " TEXT," +
                     NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION + " INTEGER," +
-                    NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT + "INTEGER);";
+                    NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT + " INTEGER," +
+                    NodeReaderContract.NodeEntry.REPUTATION + " INTEGER);";
 
     public static final String SQL_DELETE_ENTRIES_NODE_ENTRY =
             "DROP TABLE IF EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME;
@@ -58,7 +59,12 @@ public class DbHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i(TAG, "onUpgrade: ");
+
+        //version 1 -> 2
         db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
                 NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT +" INTEGER;");
+
+        db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
+                NodeReaderContract.NodeEntry.REPUTATION +" INTEGER;");
     }
 }

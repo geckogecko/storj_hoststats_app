@@ -31,6 +31,8 @@ public class StorjNode {
     private float mTimeoutRate;
     private Date mLastChecked;
     private boolean mShouldSendNotification;
+    private long mLastContractSent;
+    private int mReputation;
 
     public StorjNode(String nodeID) {
         mNodeID = nodeID;
@@ -45,6 +47,8 @@ public class StorjNode {
         mLastChecked = null;
         mSimpleName = "";
         mShouldSendNotification = true;
+        mLastContractSent = -1;
+        mReputation = -1;
     }
 
 
@@ -67,6 +71,8 @@ public class StorjNode {
         mLastChecked = null;
         mSimpleName = "";
         mShouldSendNotification = true;
+        mLastContractSent = storjApiResponse.getLong("lastContractSent");
+        mReputation = storjApiResponse.getInt("reputation");
     }
 
 
@@ -108,6 +114,11 @@ public class StorjNode {
         if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION)) != null)
             mShouldSendNotification =  cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION)) == 1;
 
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT)) != null)
+            mLastContractSent =  cursor.getLong(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.REPUTATION)) != null)
+            mReputation =  cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.REPUTATION));
     }
 
     public Date parseDateString(String dateString) {
@@ -225,5 +236,21 @@ public class StorjNode {
 
     public String getSimpleName() {
         return mSimpleName;
+    }
+
+    public void setLastContractSent(long lastContractSent) {
+        mLastContractSent = lastContractSent;
+    }
+
+    public long getLastContractSent() {
+        return mLastContractSent;
+    }
+
+    public void setReputation(int reputation) {
+        mReputation = reputation;
+    }
+
+    public int getReputation() {
+        return mReputation;
     }
 }

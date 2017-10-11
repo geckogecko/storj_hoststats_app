@@ -1,6 +1,7 @@
 package com.steinbacher.storj_hoststats_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,6 +51,8 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
         AppCompatTextView text_TimeoutRate = (AppCompatTextView) findViewById(R.id.storjNode_details_TimeoutRate);
         AppCompatTextView text_Status = (AppCompatTextView) findViewById(R.id.storjNode_details_Status);
         AppCompatTextView text_Error = (AppCompatTextView) findViewById(R.id.storjNode_details_Error);
+        AppCompatTextView text_LastContractSent = (AppCompatTextView) findViewById(R.id.storjNode_details_LastContractSent);
+        AppCompatTextView text_Reputation = (AppCompatTextView) findViewById(R.id.storjNode_details_Reputation);
 
         ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
 
@@ -81,6 +84,8 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
             text_Protocol.setText(getString(R.string.details_Protocol, selectedNode.getProtocol()));
             text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(selectedNode.getLastTimeout())));
             text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(selectedNode.getTimeoutRate())));
+            text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(selectedNode.getLastContractSent())));
+            text_Reputation.setText(getString(R.string.details_Reputation, Integer.toString(selectedNode.getReputation())));
 
             text_Error.setVisibility(View.GONE);
 
@@ -94,6 +99,8 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
             text_Protocol.setVisibility(View.GONE);
             text_LastTimeout.setVisibility(View.GONE);
             text_TimeoutRate.setVisibility(View.GONE);
+            text_LastContractSent.setVisibility(View.GONE);
+            text_Reputation.setVisibility(View.GONE);
         }
 
         //set status

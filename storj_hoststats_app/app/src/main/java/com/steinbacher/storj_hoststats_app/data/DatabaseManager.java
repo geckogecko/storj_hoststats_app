@@ -51,7 +51,10 @@ public class DatabaseManager {
                 NodeReaderContract.NodeEntry.RESPONSE_TIME,
                 NodeReaderContract.NodeEntry.TIMEOUT_RATE,
                 NodeReaderContract.NodeEntry.LAST_CHECKED,
-                NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION
+                NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION,
+                NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT,
+                NodeReaderContract.NodeEntry.REPUTATION
+
         };
 
         String sort = "";
@@ -126,6 +129,14 @@ public class DatabaseManager {
             insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(storjNode.getLastChecked()));
         }
 
+        if(storjNode.getLastContractSent() != -1) {
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, storjNode.getLastContractSent());
+        }
+
+        if(storjNode.getReputation() != -1) {
+            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, storjNode.getReputation());
+        }
+
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
 
         db.insert(NodeReaderContract.NodeEntry.TABLE_NAME, null, insertValues);
@@ -172,6 +183,14 @@ public class DatabaseManager {
         if(storjNode.getLastChecked() != null) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(storjNode.getLastChecked()));
+        }
+
+        if(storjNode.getLastContractSent() != -1) {
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, storjNode.getLastContractSent());
+        }
+
+        if(storjNode.getReputation() != -1) {
+            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, storjNode.getReputation());
         }
 
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
@@ -223,6 +242,14 @@ public class DatabaseManager {
         if(updatedNode.getLastChecked() != null) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(updatedNode.getLastChecked()));
+        }
+
+        if(storjNode.getLastContractSent() != -1) {
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, updatedNode.getLastContractSent());
+        }
+
+        if(storjNode.getReputation() != -1) {
+            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, updatedNode.getReputation());
         }
 
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
