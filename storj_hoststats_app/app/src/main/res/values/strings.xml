@@ -4,7 +4,7 @@
     <!-- MainActivity-->
     <string name="address">Address: %1$s</string>
     <string name="userAgent">UserAgent: %1$s</string>
-    <string name="userAgent_outdated">UserAgent: %1$s (outdated Version)</string>
+    <string name="userAgent_outdated">UserAgent: %1$s (Outdated Version)</string>
     <string name="edit_node">Edit Node</string>
 
     <!-- Add/edit Node popup -->
@@ -17,6 +17,8 @@
 
     <!-- Notification -->
     <string name="node_is_offline">%1$s is offline</string>
+    <string name="new_useragent_version">Update your Storj-Nodes</string>
+    <string name="new_useragent_version_details">A new Version got released!</string>
 
     <!-- Settings -->
     <string name="menu_settings">Settings</string>

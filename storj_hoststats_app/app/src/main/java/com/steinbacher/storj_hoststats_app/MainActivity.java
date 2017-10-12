@@ -28,6 +28,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
+import com.steinbacher.storj_hoststats_app.util.Version;
 import com.steinbacher.storj_hoststats_app.views.ResponseTimeView;
 
 public class MainActivity extends AppCompatActivity {

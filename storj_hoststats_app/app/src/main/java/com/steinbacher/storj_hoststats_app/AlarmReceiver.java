@@ -99,8 +99,16 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         //check if node is outdated
                         JSONObject releaseInfoJson = getJSONObjectFromURL("https://api.github.com/repos/Storj/core/releases/latest");
-                        Version newestVersion = new Version(releaseInfoJson.getString("name").replace("v",""));
-                        node.setIsOutdated(!node.getUserAgent().isEqualTo(newestVersion));
+                        Version newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v",""));
+                        node.setIsOutdated(!node.getUserAgent().isEqualTo(newestGithubVersion));
+
+                        //check if we should send a notification about a new version
+                        if(getSavedUserAgentVersion().equals("")) {
+                            saveNewUserAgentVersion(newestGithubVersion);
+                        } else if (getSavedUserAgentVersion().isLowerThan(newestGithubVersion)) {
+                            saveNewUserAgentVersion(newestGithubVersion);
+                            sendNewUseragentVersionNotification();
+                        }
 
                         Cursor cursor = db.getNode(node.getNodeID());
                         StorjNode previusNode = new StorjNode(cursor);
@@ -198,6 +206,25 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }
 
+        private void sendNewUseragentVersionNotification() {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            if(prefs.getBoolean(mContext.getString(R.string.pref_enable_notifications),true)) {
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
+                stackBuilder.addNextIntentWithParentStack(new Intent(mContext, MainActivity.class));
+
+                PendingIntent operation = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
+                        .setSmallIcon(R.drawable.storj_symbol)
+                        .setContentTitle(mContext.getResources().getString(R.string.new_useragent_version))
+                        .setContentIntent(operation)
+                        .setContentText(mContext.getResources().getString(R.string.new_useragent_version_details));
+
+                NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(1, mBuilder.build());
+            }
+        }
+
         private boolean isNodeOffline(StorjNode storjNode) {
             Date currentTime = Calendar.getInstance().getTime();
             int gmtOffset = TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
@@ -260,6 +287,17 @@ public class AlarmReceiver extends BroadcastReceiver {
                     = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             return activeNetworkInfo != null;
+        }
+
+        private void saveNewUserAgentVersion(Version version) {
+            SharedPreferences.Editor prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE).edit();
+            prefs.putString(Parameters.SHARED_PREF_NEWEST_USERAGENT_VERSION, version.toString());
+            prefs.commit();
+        }
+
+        private Version getSavedUserAgentVersion() {
+            SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
+            return new Version(prefs.getString(Parameters.SHARED_PREF_NEWEST_USERAGENT_VERSION, ""));
         }
     }
 
