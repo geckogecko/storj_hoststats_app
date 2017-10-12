@@ -79,7 +79,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
             text_NodeID.setText(getString(R.string.details_NodeID, selectedNode.getNodeID()));
             String address = selectedNode.getAddress() + ":" + Integer.toString(selectedNode.getPort());
             text_Address.setText(getString(R.string.details_Address, address));
-            
+
             if (selectedNode.isOutdated()) {
                 text_UserAgent.setText(getString(R.string.userAgent_outdated, selectedNode.getUserAgent().toString()));
                 text_UserAgent.setTextColor(getResources().getColor(R.color.error_color));
