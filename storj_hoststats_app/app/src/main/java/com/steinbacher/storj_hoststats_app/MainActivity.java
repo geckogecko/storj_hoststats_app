@@ -372,7 +372,6 @@ public class MainActivity extends AppCompatActivity {
                     txtAddress.setText("");
 
                 if(selectedNode.getUserAgent() != null)
-                    if(selectedNode.isOutdated())
                     txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
                 else
                     txtUserAgent.setText("");
