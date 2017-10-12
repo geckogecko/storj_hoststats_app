@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">@color/storj_color_green</color>
 
+    <color name="textColor">@android:color/tab_indicator_text</color>
+
     <color name="light_grey">#fafafa</color>
     <color name="grey">#d6d7d7</color>
     <color name="dark_grey">#d2d2d2</color>

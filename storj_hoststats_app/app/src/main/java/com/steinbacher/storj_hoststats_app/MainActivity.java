@@ -371,6 +371,7 @@ public class MainActivity extends AppCompatActivity {
                     txtAddress.setText("");
 
                 if(selectedNode.getUserAgent() != null)
+                    if(selectedNode.isOutdated())
                     txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
                 else
                     txtUserAgent.setText("");
@@ -386,7 +387,14 @@ public class MainActivity extends AppCompatActivity {
 
             //setUserAgent
             if(selectedNode.getUserAgent() != null)
-                txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+                if (selectedNode.isOutdated()) {
+                    txtUserAgent.setText(getString(R.string.userAgent_outdated, selectedNode.getUserAgent().toString()));
+                    txtUserAgent.setTextColor(getResources().getColor(R.color.error_color));
+                } else {
+                    txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+                    txtUserAgent.setTextColor(getResources().getColor(R.color.textColor));
+                }
+
 
             return view;
         }

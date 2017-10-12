@@ -31,6 +31,7 @@ import java.util.TimeZone;
 
 import com.stealthcopter.networktools.PortScan;
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
+import com.steinbacher.storj_hoststats_app.util.Version;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -88,13 +89,18 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 for (StorjNode storjNode : lists[0]) {
                     try {
-                        JSONObject jsonObject = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID());
-                        Log.d(TAG, "onReceive: " + jsonObject.toString());
+                        JSONObject storjApiReponse = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID());
+                        Log.d(TAG, "onReceive: " + storjApiReponse.toString());
 
                         DatabaseManager db = DatabaseManager.getInstance(mContext);
 
-                        node = new StorjNode(jsonObject);
+                        node = new StorjNode(storjApiReponse);
                         node.setLastChecked(Calendar.getInstance().getTime());
+
+                        //check if node is outdated
+                        JSONObject releaseInfoJson = getJSONObjectFromURL("https://api.github.com/repos/Storj/core/releases/latest");
+                        Version newestVersion = new Version(releaseInfoJson.getString("name").replace("v",""));
+                        node.setIsOutdated(!node.getUserAgent().isEqualTo(newestVersion));
 
                         Cursor cursor = db.getNode(node.getNodeID());
                         StorjNode previusNode = new StorjNode(cursor);

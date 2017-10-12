@@ -33,6 +33,7 @@ public class StorjNode {
     private boolean mShouldSendNotification;
     private long mLastContractSent;
     private int mReputation;
+    private boolean mIsOutdated;
 
     public StorjNode(String nodeID) {
         mNodeID = nodeID;
@@ -49,6 +50,7 @@ public class StorjNode {
         mShouldSendNotification = true;
         mLastContractSent = -1;
         mReputation = -1;
+        mIsOutdated = false;
     }
 
 
@@ -119,6 +121,9 @@ public class StorjNode {
 
         if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.REPUTATION)) != null)
             mReputation =  cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.REPUTATION));
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.IS_OUTDATED)) != null)
+            mIsOutdated = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.IS_OUTDATED)) == 1;
     }
 
     public Date parseDateString(String dateString) {
@@ -252,5 +257,13 @@ public class StorjNode {
 
     public int getReputation() {
         return mReputation;
+    }
+
+    public void setIsOutdated(boolean outdated) {
+        mIsOutdated = outdated;
+    }
+
+    public boolean isOutdated() {
+        return mIsOutdated;
     }
 }
