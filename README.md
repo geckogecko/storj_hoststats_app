@@ -16,6 +16,11 @@ Monitors the following stats of your Storj-Nodes with the help of the official S
 - Last Contract Sent
 - Reputation
 
+Sends an alert if:
+
+- one of your nodes went offline
+- a new storj version got released
+
 
 ---
 ##### Donate

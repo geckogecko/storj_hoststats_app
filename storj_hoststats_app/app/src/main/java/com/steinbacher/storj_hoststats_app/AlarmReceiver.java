@@ -107,7 +107,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             saveNewUserAgentVersion(newestGithubVersion);
                         } else if (getSavedUserAgentVersion().isLowerThan(newestGithubVersion)) {
                             saveNewUserAgentVersion(newestGithubVersion);
-                            sendNewUseragentVersionNotification();
+                            sendNewUserAgentVersionNotification();
                         }
 
                         Cursor cursor = db.getNode(node.getNodeID());
@@ -206,7 +206,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }
 
-        private void sendNewUseragentVersionNotification() {
+        private void sendNewUserAgentVersionNotification() {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             if(prefs.getBoolean(mContext.getString(R.string.pref_enable_notifications),true)) {
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
