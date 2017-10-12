@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,12 +20,13 @@ import java.util.Date;
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 import com.steinbacher.storj_hoststats_app.data.NodeReaderContract;
 
-public class StorjNodeDetailActivity extends AppCompatActivity {
+public class StorjNodeDetailActivity extends AppCompatActivity{
     private static final String TAG = "StorjNodeDetailActivity";
 
     public static final String EXTRA_NODEID = "selectedNode";
 
     private Context mContext;
+    private StorjNode mSelectedNode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
         DatabaseManager db = DatabaseManager.getInstance(mContext);
-        StorjNode selectedNode = new StorjNode(db.getNode(getIntent().getStringExtra(EXTRA_NODEID)));
+        mSelectedNode = new StorjNode(db.getNode(getIntent().getStringExtra(EXTRA_NODEID)));
 
         AppCompatTextView text_SimpleName = (AppCompatTextView) findViewById(R.id.storjNode_details_SimpleName);
         AppCompatTextView text_NodeID = (AppCompatTextView) findViewById(R.id.storjNode_details_NodeID);
@@ -51,52 +53,42 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
         AppCompatTextView text_Status = (AppCompatTextView) findViewById(R.id.storjNode_details_Status);
         AppCompatTextView text_Error = (AppCompatTextView) findViewById(R.id.storjNode_details_Error);
         AppCompatTextView text_LastContractSent = (AppCompatTextView) findViewById(R.id.storjNode_details_LastContractSent);
-        AppCompatTextView text_Reputation = (AppCompatTextView) findViewById(R.id.storjNode_details_Reputation);
+
+        AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
+        AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
 
         ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
 
-        ValueLineSeries seriesResponseTime = new ValueLineSeries();
-        seriesResponseTime.setColor(0xFF56B7F1);
-
-        Cursor cursor = db.getNodeResponseTime(selectedNode.getNodeID());
-        while (cursor.moveToNext()) {
-            String timestamp = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP));
-            int responseTime = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME));
-            String timeDate = getDate(Long.parseLong(timestamp));
-            seriesResponseTime.addPoint(new ValueLinePoint(timeDate, responseTime));
-        }
-
-        mCubicValueLineChart.addSeries(seriesResponseTime);
+        mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID()));
         mCubicValueLineChart.startAnimation();
 
-        text_SimpleName.setText(getString(R.string.details_SimpleName, selectedNode.getSimpleName()));
+        text_SimpleName.setText(getString(R.string.details_SimpleName, mSelectedNode.getSimpleName()));
 
-        if(selectedNode.getAddress() != null) {
+        if(mSelectedNode.getAddress() != null) {
             SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-            text_NodeID.setText(getString(R.string.details_NodeID, selectedNode.getNodeID()));
-            String address = selectedNode.getAddress() + ":" + Integer.toString(selectedNode.getPort());
+            text_NodeID.setText(getString(R.string.details_NodeID, mSelectedNode.getNodeID()));
+            String address = mSelectedNode.getAddress() + ":" + Integer.toString(mSelectedNode.getPort());
             text_Address.setText(getString(R.string.details_Address, address));
 
-            if (selectedNode.isOutdated()) {
-                text_UserAgent.setText(getString(R.string.userAgent_outdated, selectedNode.getUserAgent().toString()));
-                text_UserAgent.setTextColor(getResources().getColor(R.color.error_color));
+            if (mSelectedNode.isOutdated()) {
+                text_UserAgent.setText(getString(R.string.userAgent_outdated, mSelectedNode.getUserAgent().toString()));
+                text_UserAgent.setTextColor(getResources().getColor(R.color.red));
             } else {
-                text_UserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+                text_UserAgent.setText(getString(R.string.userAgent, mSelectedNode.getUserAgent().toString()));
                 text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
             }
 
-            text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(selectedNode.getLastSeen())));
-            text_Protocol.setText(getString(R.string.details_Protocol, selectedNode.getProtocol()));
-            text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(selectedNode.getLastTimeout())));
-            text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(selectedNode.getTimeoutRate())));
-            text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(selectedNode.getLastContractSent())));
-            text_Reputation.setText(getString(R.string.details_Reputation, Integer.toString(selectedNode.getReputation())));
+            text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(mSelectedNode.getLastSeen())));
+            text_Protocol.setText(getString(R.string.details_Protocol, mSelectedNode.getProtocol()));
+            text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout())));
+            text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(mSelectedNode.getTimeoutRate())));
+            text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent())));
 
             text_Error.setVisibility(View.GONE);
 
         } else {
-            text_Error.setText(getString(R.string.details_Error, selectedNode.getNodeID()));
+            text_Error.setText(getString(R.string.details_Error, mSelectedNode.getNodeID()));
 
             text_NodeID.setVisibility(View.GONE);
             text_Address.setVisibility(View.GONE);
@@ -106,17 +98,84 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
             text_LastTimeout.setVisibility(View.GONE);
             text_TimeoutRate.setVisibility(View.GONE);
             text_LastContractSent.setVisibility(View.GONE);
-            text_Reputation.setVisibility(View.GONE);
         }
 
         //set status
-        if(selectedNode.getResponseTime() == -1) {
+        if(mSelectedNode.getResponseTime() == -1) {
             text_Status.setText(getString(R.string.details_offline));
             text_Status.setTextColor(getResources().getColor(R.color.red));
         } else {
             text_Status.setText(getString(R.string.details_online));
             text_Status.setTextColor(getResources().getColor(R.color.storj_color_green));
         }
+
+        //set onclick listeners
+        btn_ResponseTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
+                AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
+                AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
+
+                mCubicValueLineChart.clearChart();
+
+                mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID()));
+                mCubicValueLineChart.startAnimation();
+
+                btn_ResponseTime.setTextColor(getResources().getColor(R.color.storj_color_blue));
+                btn_Reputation.setTextColor(getResources().getColor(R.color.grey));
+            }
+        });
+
+        btn_Reputation.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
+                  AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
+                  AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
+
+                  mCubicValueLineChart.clearChart();
+
+                  mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeReputationEntry.TABLE_NAME, mSelectedNode.getNodeID()));
+                  mCubicValueLineChart.startAnimation();
+
+                  btn_Reputation.setTextColor(getResources().getColor(R.color.storj_color_green));
+                  btn_ResponseTime.setTextColor(getResources().getColor(R.color.dark_grey));
+              }
+          }
+        );
+
+        btn_ResponseTime.setTextColor(getResources().getColor(R.color.storj_color_blue));
+        btn_Reputation.setTextColor(getResources().getColor(R.color.grey));
+    }
+
+    private ValueLineSeries getSeriesFromDB(String dbname,  String nodeID) {
+        ValueLineSeries series = new ValueLineSeries();
+
+
+        DatabaseManager db = DatabaseManager.getInstance(mContext);
+
+        if(dbname.equals(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME)) {
+            series.setColor(0xFF56B7F1);
+            Cursor cursor = db.getNodeResponseTime(nodeID);
+            while (cursor.moveToNext()) {
+                String timestamp = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP));
+                int responseTime = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME));
+                String timeDate = getDate(Long.parseLong(timestamp));
+                series.addPoint(new ValueLinePoint(timeDate, responseTime));
+            }
+        } else if (dbname.equals(NodeReaderContract.NodeReputationEntry.TABLE_NAME)) {
+            series.setColor(0xFF88C425);
+            Cursor cursor = db.getNodeReputations(nodeID);
+            while (cursor.moveToNext()) {
+                String timestamp = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeReputationEntry.TIMESTAMP));
+                int responseTime = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeReputationEntry.REPUTATION));
+                String timeDate = getDate(Long.parseLong(timestamp));
+                series.addPoint(new ValueLinePoint(timeDate, responseTime));
+            }
+        }
+
+        return series;
     }
 
     private String getDate(long timeStamp){

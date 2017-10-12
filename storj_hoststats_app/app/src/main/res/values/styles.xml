@@ -13,6 +13,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="ButtonStyleBlue" parent="Widget.AppCompat.Button.Borderless.Colored">
+
+    </style>
+
+    <style name="ButtonStyleGreen" parent="Widget.AppCompat.Button.Borderless.Colored">
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 

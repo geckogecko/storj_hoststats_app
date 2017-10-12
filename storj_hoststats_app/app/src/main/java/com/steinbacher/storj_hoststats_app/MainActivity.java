@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.internal.widget.TintImageView;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(layout);
         final AlertDialog alertDialog = builder.create();
 
-        TintImageView deleteButton = (TintImageView) layout.findViewById(R.id.button_edit_delete_node);
+        ImageView deleteButton = (ImageView) layout.findViewById(R.id.button_edit_delete_node);
         deleteButton.setTag(position);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TintImageView saveButton = (TintImageView) layout.findViewById(R.id.button_edit_save_node);
+        ImageView saveButton = (ImageView) layout.findViewById(R.id.button_edit_save_node);
         saveButton.setTag(position);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
             if(selectedNode.getUserAgent() != null)
                 if (selectedNode.isOutdated()) {
                     txtUserAgent.setText(getString(R.string.userAgent_outdated, selectedNode.getUserAgent().toString()));
-                    txtUserAgent.setTextColor(getResources().getColor(R.color.error_color));
+                    txtUserAgent.setTextColor(getResources().getColor(R.color.red));
                 } else {
                     txtUserAgent.setText(getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
                     txtUserAgent.setTextColor(getResources().getColor(R.color.textColor));

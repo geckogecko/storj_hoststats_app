@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="11">
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
@@ -21,6 +22,27 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_responseTime"
+            style="@style/ButtonStyleBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_responseTime"/>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_reputation"
+            style="@style/ButtonStyleGreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_reputation"/>
+
+    </android.support.v7.widget.LinearLayoutCompat>
 
     <org.eazegraph.lib.charts.ValueLineChart
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -111,11 +133,6 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/storjNode_details_LastContractSent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_Reputation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
