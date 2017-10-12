@@ -33,6 +33,12 @@ public class NodeReaderContract {
         public static final String NODE_ID = "nodeID";
         public static final String RESPONSE_TIME = "responseTime";
         public static final String TIMESTAMP = "timestamp";
+    }
 
+    public static class NodeReputationEntry implements BaseColumns {
+        public static final String TABLE_NAME = "reputationHistory";
+        public static final String NODE_ID = "nodeID";
+        public static final String REPUTATION = "reputation";
+        public static final String TIMESTAMP = "timestamp";
     }
 }

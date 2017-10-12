@@ -47,6 +47,16 @@ public class DbHelper extends SQLiteOpenHelper{
     public static final String SQL_DELETE_ENTRIES_NODE__RESPONSE_TIME_ENTRY =
             "DROP TABLE IF EXISTS " + NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME;
 
+    public static final String SQL_CREATE_ENTRIES_NODE_REPUTATION_ENTRY =
+            "CREATE TABLE IF NOT EXISTS " + NodeReaderContract.NodeReputationEntry.TABLE_NAME + " (" +
+                    NodeReaderContract.NodeReputationEntry._ID + " INTEGER PRIMARY KEY," +
+                    NodeReaderContract.NodeReputationEntry.NODE_ID + " TEXT," +
+                    NodeReaderContract.NodeReputationEntry.REPUTATION + " INTEGER," +
+                    NodeReaderContract.NodeReputationEntry.TIMESTAMP + " STRING);";
+
+    public static final String SQL_DELETE_ENTRIES_NODE_REPUTATION_ENTRY =
+            "DROP TABLE IF EXISTS " + NodeReaderContract.NodeReputationEntry.TABLE_NAME;
+
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -55,6 +65,7 @@ public class DbHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES_NODE_ENTRY);
         db.execSQL(SQL_CREATE_ENTRIES_NODE_RESPONSE_TIME_ENTRY);
+        db.execSQL(SQL_CREATE_ENTRIES_NODE_REPUTATION_ENTRY);
     }
 
     @Override
@@ -70,5 +81,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
         db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
                 NodeReaderContract.NodeEntry.IS_OUTDATED +" INTEGER;");
+
+        db.execSQL(SQL_CREATE_ENTRIES_NODE_REPUTATION_ENTRY);
     }
 }

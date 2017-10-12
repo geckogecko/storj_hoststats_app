@@ -289,6 +289,26 @@ public class DatabaseManager {
         return cursor;
     }
 
+    public void insertNodeReputationEntry(StorjNode storjNode) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        ContentValues insertValues = new ContentValues();
+        insertValues.put(NodeReaderContract.NodeReputationEntry.NODE_ID, storjNode.getNodeID());
+        insertValues.put(NodeReaderContract.NodeReputationEntry.REPUTATION, storjNode.getReputation());
+        insertValues.put(NodeReaderContract.NodeReputationEntry.TIMESTAMP, storjNode.getLastChecked().getTime());
+        db.insert(NodeReaderContract.NodeReputationEntry.TABLE_NAME, null, insertValues);
+    }
+
+    public Cursor getNodeReputations(String nodeID) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NodeReaderContract.NodeReputationEntry.TABLE_NAME + " WHERE " +
+                NodeReaderContract.NodeReputationEntry.NODE_ID+" = '"+ nodeID +"' limit 1000", null);
+
+        cursor.moveToFirst();
+        return cursor;
+    }
+
     public void dropNodeDB() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         db.execSQL(DbHelper.SQL_DELETE_ENTRIES_NODE_ENTRY);

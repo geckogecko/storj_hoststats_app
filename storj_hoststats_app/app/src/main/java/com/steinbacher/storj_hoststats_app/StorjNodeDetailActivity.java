@@ -1,7 +1,6 @@
 package com.steinbacher.storj_hoststats_app;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -56,19 +55,18 @@ public class StorjNodeDetailActivity extends AppCompatActivity {
 
         ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
 
-        ValueLineSeries series = new ValueLineSeries();
-        series.setColor(0xFF56B7F1);
+        ValueLineSeries seriesResponseTime = new ValueLineSeries();
+        seriesResponseTime.setColor(0xFF56B7F1);
 
         Cursor cursor = db.getNodeResponseTime(selectedNode.getNodeID());
-
         while (cursor.moveToNext()) {
             String timestamp = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP));
             int responseTime = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME));
             String timeDate = getDate(Long.parseLong(timestamp));
-            series.addPoint(new ValueLinePoint(timeDate, responseTime));
+            seriesResponseTime.addPoint(new ValueLinePoint(timeDate, responseTime));
         }
 
-        mCubicValueLineChart.addSeries(series);
+        mCubicValueLineChart.addSeries(seriesResponseTime);
         mCubicValueLineChart.startAnimation();
 
         text_SimpleName.setText(getString(R.string.details_SimpleName, selectedNode.getSimpleName()));

@@ -103,7 +103,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         node.setIsOutdated(!node.getUserAgent().isEqualTo(newestGithubVersion));
 
                         //check if we should send a notification about a new version
-                        if(getSavedUserAgentVersion().equals("")) {
+                        if(getSavedUserAgentVersion() == null) {
                             saveNewUserAgentVersion(newestGithubVersion);
                         } else if (getSavedUserAgentVersion().isLowerThan(newestGithubVersion)) {
                             saveNewUserAgentVersion(newestGithubVersion);
@@ -121,7 +121,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                             if (previusNode.getShouldSendNotification())
                                 sendNodeOfflineNotification(node);
                         } else {
+                            //insert into history dbs
                             db.insertNodeResponseTimeEntry(node);
+                            db.insertNodeReputationEntry(node);
 
                             if (previusNode.getResponseTime() == -1) {
                                 //was the node offline before and went online now ?
@@ -297,7 +299,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         private Version getSavedUserAgentVersion() {
             SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
-            return new Version(prefs.getString(Parameters.SHARED_PREF_NEWEST_USERAGENT_VERSION, ""));
+            String savedVersion = prefs.getString(Parameters.SHARED_PREF_NEWEST_USERAGENT_VERSION, "");
+
+            if(savedVersion.equals(""))
+                return null;
+            else
+                return new Version(savedVersion);
         }
     }
 
