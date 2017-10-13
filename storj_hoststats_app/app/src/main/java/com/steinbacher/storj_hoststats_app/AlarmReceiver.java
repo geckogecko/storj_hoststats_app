@@ -111,6 +111,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             sendNewUserAgentVersionNotification();
                         }
 
+                        //get the "old" information about this node
                         Cursor cursor = db.getNode(node.getNodeID());
                         StorjNode previusNode = new StorjNode(cursor);
                         node.setSimpleName(previusNode.getSimpleName());
