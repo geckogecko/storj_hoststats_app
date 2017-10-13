@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    style="@style/AppTheme">
 
     <com.steinbacher.storj_hoststats_app.views.ResponseTimeView
         android:id="@+id/responseTimeView"
