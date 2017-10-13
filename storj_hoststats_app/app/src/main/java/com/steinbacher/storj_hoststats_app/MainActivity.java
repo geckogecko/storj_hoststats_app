@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.main_list_view);
 
+        //Add node button
         FloatingActionButton addNodeButton = (FloatingActionButton) findViewById(R.id.button_addNewNode);
         addNodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,18 +61,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<StorjNode> storjNodes = new ArrayList<>();
-        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        //Query all nodes and insert them into the listview
+        redrawList();
 
-        Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
-
-        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            storjNodes.add(new StorjNode(cursor));
-        }
-
-        StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, storjNodes);
-        mListView.setAdapter(adapter);
-
+        //start pulling all nodes every x hours if
+        //only if this is the first time the app got started
         AlarmReceiver alarm = new AlarmReceiver();
         alarm.scheduleAlarm(mContext);
     }
@@ -150,9 +145,6 @@ public class MainActivity extends AppCompatActivity {
         return prefs.getString(Parameters.SHARED_PREF_SORT_ORDER, Parameters.SHARED_PREF_SORT_ORDER_RESPONSE_ASC);
     }
 
-
-
-
     private BroadcastReceiver mUIUpdateListener = new BroadcastReceiver(){
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -167,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
 
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             storjNodes.add(new StorjNode(cursor));
-            Log.i(TAG, "redrawList: " + new StorjNode(cursor).getAddress());
         }
 
         StorjNodeAdapter adapter = new StorjNodeAdapter(mContext, R.layout.activity_main_row, storjNodes);
@@ -178,14 +169,13 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.add_node_popup_title);
 
-
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.activity_main_add_node, null);
         builder.setView(dialogView);
         final AppCompatEditText textViewSimpleName = (AppCompatEditText) dialogView.findViewById(R.id.textView_add_simpleName);
         final AppCompatEditText textViewNodeId = (AppCompatEditText) dialogView.findViewById(R.id.textView_add_nodeID);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 boolean error = false;
@@ -215,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -295,7 +285,6 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.cancel();
             }
         });
-
 
         alertDialog.show();
     }

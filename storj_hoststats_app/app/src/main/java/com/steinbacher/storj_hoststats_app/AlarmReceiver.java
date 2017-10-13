@@ -54,6 +54,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void scheduleAlarm(Context context) {
+        //TODO check if alarm already triggered and trigger only if not
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, alarmIntent, 0);
