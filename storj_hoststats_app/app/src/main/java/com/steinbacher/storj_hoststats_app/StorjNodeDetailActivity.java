@@ -81,7 +81,12 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
             text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(mSelectedNode.getLastSeen())));
             text_Protocol.setText(getString(R.string.details_Protocol, mSelectedNode.getProtocol()));
-            text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout())));
+
+            if(mSelectedNode.getLastTimeout() == null)
+                text_LastTimeout.setText(getString(R.string.details_LastTimeout, getString(R.string.details_No_Timeout)));
+            else
+                text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout())));
+
             text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(mSelectedNode.getTimeoutRate())));
             text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent())));
 
@@ -179,7 +184,6 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
     }
 
     private String getDate(long timeStamp){
-        Log.i(TAG, "getDate: " + timeStamp);
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date netDate = (new Date(timeStamp));

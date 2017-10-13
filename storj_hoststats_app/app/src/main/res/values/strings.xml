@@ -46,6 +46,7 @@
     <string name="details_LastContractSent">Last Contract Sent: %1$s</string>
     <string name="details_Reputation">Reputation: %1$s</string>
     <string name="details_Error">Unable to find node: %1$s</string>
+    <string name="details_No_Timeout">No Timeout so far</string>
 
     <string name="btn_responseTime">Response time</string>
     <string name="btn_reputation">Reputation</string>

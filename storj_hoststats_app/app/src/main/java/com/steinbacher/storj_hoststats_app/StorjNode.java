@@ -67,9 +67,12 @@ public class StorjNode {
         else
             mResponseTime = -1;
 
+        if(storjApiResponse.has("lastTimeout"))
+            mLastTimeout = parseDateString(storjApiResponse.getString("lastTimeout"));
 
-        mLastTimeout = parseDateString(storjApiResponse.getString("lastTimeout"));
-        mTimeoutRate = storjApiResponse.getInt("timeoutRate");
+        if(storjApiResponse.has("timeoutRate"))
+            mTimeoutRate = storjApiResponse.getInt("timeoutRate");
+
         mLastChecked = null;
         mSimpleName = "";
         mShouldSendNotification = true;
