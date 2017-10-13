@@ -188,6 +188,8 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
     private void deleteNode(StorjNode storjNode) {
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         databaseManager.deleteNode(storjNode);
+        databaseManager.deleteNodeNodeResponseTimeEntries(storjNode);
+        databaseManager.deleteNodeNodeReputationEntries(storjNode);
 
         Intent updateUIIntent = new Intent(Parameters.UPDATE_UI_ACTION);
         mContext.sendBroadcast(updateUIIntent);

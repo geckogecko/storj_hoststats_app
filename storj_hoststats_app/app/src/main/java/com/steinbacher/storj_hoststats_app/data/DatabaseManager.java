@@ -269,6 +269,22 @@ public class DatabaseManager {
         db.delete(NodeReaderContract.NodeEntry.TABLE_NAME, whereClause, whereArgs);
     }
 
+    public void deleteNodeNodeResponseTimeEntries(StorjNode node) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String whereClause = NodeReaderContract.NodeResponseTimeEntry.NODE_ID + "=?";
+        String[] whereArgs = new String[] { String.valueOf(node.getNodeID()) };
+        db.delete(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, whereClause, whereArgs);
+    }
+
+    public void deleteNodeNodeReputationEntries(StorjNode node) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String whereClause = NodeReaderContract.NodeReputationEntry.NODE_ID + "=?";
+        String[] whereArgs = new String[] { String.valueOf(node.getNodeID()) };
+        db.delete(NodeReaderContract.NodeReputationEntry.TABLE_NAME, whereClause, whereArgs);
+    }
+
     public void insertNodeResponseTimeEntry(StorjNode storjNode) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
