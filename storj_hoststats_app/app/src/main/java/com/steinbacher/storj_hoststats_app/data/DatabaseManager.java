@@ -54,7 +54,8 @@ public class DatabaseManager {
                 NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION,
                 NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT,
                 NodeReaderContract.NodeEntry.REPUTATION,
-                NodeReaderContract.NodeEntry.IS_OUTDATED
+                NodeReaderContract.NodeEntry.IS_OUTDATED,
+                NodeReaderContract.NodeEntry.SPACE_AVAILABLE
 
         };
 
@@ -140,6 +141,7 @@ public class DatabaseManager {
 
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
         insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, storjNode.isOutdated()? 1:0);
+        insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, storjNode.isSpaceAvailable()? 1:0);
 
         db.insert(NodeReaderContract.NodeEntry.TABLE_NAME, null, insertValues);
     }
@@ -197,6 +199,7 @@ public class DatabaseManager {
 
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
         insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, storjNode.isOutdated()? 1:0);
+        insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, storjNode.isSpaceAvailable()? 1:0);
 
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
     }
@@ -257,6 +260,7 @@ public class DatabaseManager {
 
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, updatedNode.getShouldSendNotification()? 1:0);
         insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, updatedNode.isOutdated()? 1:0);
+        insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, updatedNode.isSpaceAvailable()? 1:0);
 
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
     }

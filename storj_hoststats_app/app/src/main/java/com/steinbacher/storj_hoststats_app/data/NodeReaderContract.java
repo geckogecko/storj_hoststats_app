@@ -26,6 +26,7 @@ public class NodeReaderContract {
         public static final String LAST_CONTRACT_SENT = "lastContractSent";
         public static final String REPUTATION = "reputation";
         public static final String IS_OUTDATED = "isOutdated";
+        public static final String SPACE_AVAILABLE = "spaceAvailable";
     }
 
     public static class NodeResponseTimeEntry implements BaseColumns {

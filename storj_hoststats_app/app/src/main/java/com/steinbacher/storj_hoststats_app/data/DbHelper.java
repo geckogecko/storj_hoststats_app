@@ -32,7 +32,8 @@ public class DbHelper extends SQLiteOpenHelper{
                     NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION + " INTEGER," +
                     NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT + " INTEGER," +
                     NodeReaderContract.NodeEntry.REPUTATION + " INTEGER," +
-                    NodeReaderContract.NodeEntry.IS_OUTDATED + " INTEGER)";
+                    NodeReaderContract.NodeEntry.IS_OUTDATED + " INTEGER," +
+                    NodeReaderContract.NodeEntry.SPACE_AVAILABLE + " INTEGER)";
 
     public static final String SQL_DELETE_ENTRIES_NODE_ENTRY =
             "DROP TABLE IF EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME;
@@ -81,6 +82,9 @@ public class DbHelper extends SQLiteOpenHelper{
 
         db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
                 NodeReaderContract.NodeEntry.IS_OUTDATED +" INTEGER;");
+
+        db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
+                NodeReaderContract.NodeEntry.SPACE_AVAILABLE +" INTEGER;");
 
         db.execSQL(SQL_CREATE_ENTRIES_NODE_REPUTATION_ENTRY);
     }

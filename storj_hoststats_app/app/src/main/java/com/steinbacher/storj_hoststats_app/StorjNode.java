@@ -1,6 +1,7 @@
 package com.steinbacher.storj_hoststats_app;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +35,7 @@ public class StorjNode {
     private long mLastContractSent;
     private int mReputation;
     private boolean mIsOutdated;
+    private boolean mSpaceAvailable;
 
     public StorjNode(String nodeID) {
         mNodeID = nodeID;
@@ -51,6 +53,7 @@ public class StorjNode {
         mLastContractSent = -1;
         mReputation = -1;
         mIsOutdated = false;
+        mSpaceAvailable = true;
     }
 
 
@@ -78,6 +81,8 @@ public class StorjNode {
         mShouldSendNotification = true;
         mLastContractSent = storjApiResponse.getLong("lastContractSent");
         mReputation = storjApiResponse.getInt("reputation");
+
+        mSpaceAvailable = storjApiResponse.getBoolean("spaceAvailable");
     }
 
 
@@ -127,6 +132,9 @@ public class StorjNode {
 
         if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.IS_OUTDATED)) != null)
             mIsOutdated = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.IS_OUTDATED)) == 1;
+
+        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SPACE_AVAILABLE)) != null)
+            mSpaceAvailable = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SPACE_AVAILABLE)) == 1;
     }
 
     public Date parseDateString(String dateString) {
@@ -268,5 +276,13 @@ public class StorjNode {
 
     public boolean isOutdated() {
         return mIsOutdated;
+    }
+
+    public void setSpaceAvailable(boolean spaceAvailable) {
+        mSpaceAvailable = spaceAvailable;
+    }
+
+    public boolean isSpaceAvailable() {
+        return mSpaceAvailable;
     }
 }

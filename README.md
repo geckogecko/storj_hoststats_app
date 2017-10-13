@@ -15,6 +15,7 @@ Monitors the following stats of your Storj-Nodes with the help of the official S
 - TimeoutRate
 - Last Contract Sent
 - Reputation
+- Space available
 
 Sends an alert if:
 

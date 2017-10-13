@@ -53,6 +53,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
         AppCompatTextView text_Status = (AppCompatTextView) findViewById(R.id.storjNode_details_Status);
         AppCompatTextView text_Error = (AppCompatTextView) findViewById(R.id.storjNode_details_Error);
         AppCompatTextView text_LastContractSent = (AppCompatTextView) findViewById(R.id.storjNode_details_LastContractSent);
+        AppCompatTextView text_SpaceAvailable = (AppCompatTextView) findViewById(R.id.storjNode_details_SpaceAvailable);
 
         AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
         AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
@@ -89,6 +90,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
             text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(mSelectedNode.getTimeoutRate())));
             text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent())));
+            text_SpaceAvailable.setText(getString(R.string.details_SpaceAvailable, Boolean.toString(mSelectedNode.isSpaceAvailable())));
 
             text_Error.setVisibility(View.GONE);
 
