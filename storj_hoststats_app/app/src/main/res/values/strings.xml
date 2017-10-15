@@ -19,8 +19,8 @@
 
     <!-- Notification -->
     <string name="node_is_offline">%1$s is offline</string>
-    <string name="new_useragent_version">Update your Storj-Nodes</string>
-    <string name="new_useragent_version_details">A new Version got released!</string>
+    <string name="new_useragent_version">A new Storj-Core Version got released</string>
+    <string name="new_useragent_version_details">Expect a new storjshare-daemon version in the next days</string>
 
     <!-- Settings -->
     <string name="menu_settings">Settings</string>
