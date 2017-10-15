@@ -74,7 +74,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
             if (mSelectedNode.isOutdated()) {
                 text_UserAgent.setText(getString(R.string.userAgent_outdated, mSelectedNode.getUserAgent().toString()));
-                text_UserAgent.setTextColor(getResources().getColor(R.color.red));
+                text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
             } else {
                 text_UserAgent.setText(getString(R.string.userAgent, mSelectedNode.getUserAgent().toString()));
                 text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));

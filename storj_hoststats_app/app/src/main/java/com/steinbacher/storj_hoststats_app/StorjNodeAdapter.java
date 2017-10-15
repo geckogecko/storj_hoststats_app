@@ -103,7 +103,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
         if(selectedNode.getUserAgent() != null)
             if (selectedNode.isOutdated()) {
                 txtUserAgent.setText(mContext.getString(R.string.userAgent_outdated, selectedNode.getUserAgent().toString()));
-                txtUserAgent.setTextColor(mContext.getResources().getColor(R.color.red));
+                txtUserAgent.setTextColor(mContext.getResources().getColor(R.color.textColor));
             } else {
                 txtUserAgent.setText(mContext.getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
                 txtUserAgent.setTextColor(mContext.getResources().getColor(R.color.textColor));

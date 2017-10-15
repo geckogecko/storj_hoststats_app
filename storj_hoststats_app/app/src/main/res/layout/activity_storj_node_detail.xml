@@ -44,108 +44,121 @@
 
     </android.support.v7.widget.LinearLayoutCompat>
 
-    <org.eazegraph.lib.charts.ValueLineChart
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cubiclinechart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:egUseCubic="true"
-        app:egUseOverlapFill="true"
-        app:egCurveSmoothness="0.4"
-        app:egIndicatorLineColor="#FE6DA8"
-        app:egLegendHeight="40dp"
-        app:egShowStandardValue="true"
-        android:layout_weight="6"
-        android:layout_marginTop="10sp"
-        android:layout_marginLeft="10sp"
-        android:layout_marginRight="10sp"/>
 
-    <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="10sp"
-        android:layout_marginLeft="10sp"
-        android:layout_weight="4">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/storjNode_details_SimpleName"
-                android:layout_width="wrap_content"
+            <org.eazegraph.lib.charts.ValueLineChart
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cubiclinechart"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textAppearance="?android:textAppearanceMedium"/>
+                app:egUseCubic="true"
+                app:egUseOverlapFill="true"
+                app:egCurveSmoothness="0.4"
+                app:egIndicatorLineColor="#FE6DA8"
+                app:egLegendHeight="40dp"
+                app:egShowStandardValue="true"
+                android:layout_marginTop="10sp"
+                android:layout_marginLeft="10sp"
+                android:layout_weight="6"
+                android:layout_marginRight="10sp"
+                android:minHeight="200sp"/>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/storjNode_details_Status"
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:layout_marginRight="10sp"/>
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="10sp"
+                android:layout_marginLeft="10sp"
+                android:layout_weight="4">
 
+                <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/storjNode_details_SimpleName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textAppearance="?android:textAppearanceMedium"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/storjNode_details_Status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:layout_marginRight="10sp"/>
+
+                </android.support.v7.widget.LinearLayoutCompat>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_NodeID"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5sp"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_Address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_LastSeen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_UserAgent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_Protocol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_LastTimeout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_TimeoutRate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_LastContractSent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_SpaceAvailable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/storjNode_details_Error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.v7.widget.LinearLayoutCompat>
         </android.support.v7.widget.LinearLayoutCompat>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_NodeID"
-            android:layout_width="match_parent"
-            android:layout_marginTop="5sp"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_Address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_LastSeen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_UserAgent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_Protocol"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_LastTimeout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_TimeoutRate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_LastContractSent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_SpaceAvailable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/storjNode_details_Error"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </android.support.v7.widget.LinearLayoutCompat>
-
+    </ScrollView>
 </android.support.v7.widget.LinearLayoutCompat>
+

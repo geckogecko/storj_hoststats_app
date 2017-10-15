@@ -1,7 +1,7 @@
 ##### Test the app
 https://play.google.com/apps/testing/com.steinbacher.storj_hoststats_app
 
-<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/Screenshot_from_2017-09-25_18-37-03.png" alt="MainActivity" height="500"/> <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/Screenshot_from_2017-09-28_16-55-34.png" alt="DetailActivity" height="500"/>
+<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/main_screen.png" alt="MainActivity" height="500"/> <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/details_response_time.png" alt="DetailActivity_response" height="500"/> <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/details_reputation.png" alt="DetailActivity_reputation" height="500"/>
 
 
 Monitors the following stats of your Storj-Nodes with the help of the official Storj Api:
