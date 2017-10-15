@@ -89,7 +89,11 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout())));
 
             text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(mSelectedNode.getTimeoutRate())));
-            text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent())));
+
+            if(mSelectedNode.getLastContractSent() == -1)
+                text_LastContractSent.setText(getString(R.string.details_LastContractSent_no_value));
+            else
+                text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent())));
             text_SpaceAvailable.setText(getString(R.string.details_SpaceAvailable, Boolean.toString(mSelectedNode.isSpaceAvailable())));
 
             text_Error.setVisibility(View.GONE);

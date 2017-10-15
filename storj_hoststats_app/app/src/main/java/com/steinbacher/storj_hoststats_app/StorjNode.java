@@ -79,7 +79,10 @@ public class StorjNode {
         mLastChecked = null;
         mSimpleName = "";
         mShouldSendNotification = true;
-        mLastContractSent = storjApiResponse.getLong("lastContractSent");
+
+        if(storjApiResponse.has("lastContractSent"))
+            mLastContractSent = storjApiResponse.getLong("lastContractSent");
+
         mReputation = storjApiResponse.getInt("reputation");
 
         mSpaceAvailable = storjApiResponse.getBoolean("spaceAvailable");
