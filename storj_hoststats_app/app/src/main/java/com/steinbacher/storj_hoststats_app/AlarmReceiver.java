@@ -251,8 +251,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         private boolean isPortOpen(StorjNode storjNode) {
             try {
                 ArrayList<Integer> openPorts = PortScan.onAddress(storjNode.getAddress()).setPort(storjNode.getPort()).doScan();
-                if(openPorts.get(0) == storjNode.getPort())
+                if(openPorts.size() > 1 && openPorts.get(0) == storjNode.getPort())
                     return true;
+                else 
+                    return false;
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
