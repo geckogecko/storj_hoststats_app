@@ -73,19 +73,21 @@ public class DbHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i(TAG, "onUpgrade: ");
 
-        //version 1 -> 2
-        db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
-                NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT +" INTEGER;");
+        switch(oldVersion) {
+            case 1:
+                db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
+                        NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT +" INTEGER;");
 
-        db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
-                NodeReaderContract.NodeEntry.REPUTATION +" INTEGER;");
+                db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
+                        NodeReaderContract.NodeEntry.REPUTATION +" INTEGER;");
 
-        db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
-                NodeReaderContract.NodeEntry.IS_OUTDATED +" INTEGER;");
+                db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
+                        NodeReaderContract.NodeEntry.IS_OUTDATED +" INTEGER;");
 
-        db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
-                NodeReaderContract.NodeEntry.SPACE_AVAILABLE +" INTEGER;");
+                db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
+                        NodeReaderContract.NodeEntry.SPACE_AVAILABLE +" INTEGER;");
 
-        db.execSQL(SQL_CREATE_ENTRIES_NODE_REPUTATION_ENTRY);
+                db.execSQL(SQL_CREATE_ENTRIES_NODE_REPUTATION_ENTRY);
+        }
     }
 }
