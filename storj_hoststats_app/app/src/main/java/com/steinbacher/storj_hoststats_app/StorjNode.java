@@ -56,7 +56,6 @@ public class StorjNode {
         mSpaceAvailable = true;
     }
 
-
     public StorjNode(JSONObject storjApiResponse) throws JSONException {
         mNodeID = storjApiResponse.getString("nodeID");
         mLastSeen = parseDateString(storjApiResponse.getString("lastSeen"));
@@ -88,55 +87,54 @@ public class StorjNode {
         mSpaceAvailable = storjApiResponse.getBoolean("spaceAvailable");
     }
 
-
     public StorjNode(Cursor cursor)  {
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID)) != null)
-            mNodeID = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_SEEN)) != null)
+        //node id must exist
+        mNodeID = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID));
+
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_SEEN) != -1)
             mLastSeen = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_SEEN)));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PORT)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PORT) != -1)
             mPort = Integer.parseInt(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PORT)));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ADDRESS)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ADDRESS) != -1)
             mAddress = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ADDRESS));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.USER_AGENT)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.USER_AGENT) != -1)
             mUserAgent = new Version(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.USER_AGENT)));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PROTOCOL)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PROTOCOL) != -1)
             mProtocol = new Version(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PROTOCOL)));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.RESPONSE_TIME)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.RESPONSE_TIME) != -1)
             mResponseTime = Integer.parseInt(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.RESPONSE_TIME)));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_TIMEOUT)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_TIMEOUT) != -1)
             mLastTimeout = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_TIMEOUT)));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.TIMEOUT_RATE)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.TIMEOUT_RATE) != -1)
             mTimeoutRate = Float.parseFloat(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.TIMEOUT_RATE)));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CHECKED)) != null) {
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CHECKED) != -1)
             mLastChecked = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CHECKED)));
-        }
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.FRIENDLY_NAME)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.FRIENDLY_NAME) != -1)
             mSimpleName =  cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.FRIENDLY_NAME));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION) != -1)
             mShouldSendNotification =  cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION)) == 1;
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT) != -1)
             mLastContractSent =  cursor.getLong(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.REPUTATION)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.REPUTATION) != -1)
             mReputation =  cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.REPUTATION));
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.IS_OUTDATED)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.IS_OUTDATED) != -1)
             mIsOutdated = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.IS_OUTDATED)) == 1;
 
-        if(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SPACE_AVAILABLE)) != null)
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SPACE_AVAILABLE) != -1)
             mSpaceAvailable = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SPACE_AVAILABLE)) == 1;
     }
 
