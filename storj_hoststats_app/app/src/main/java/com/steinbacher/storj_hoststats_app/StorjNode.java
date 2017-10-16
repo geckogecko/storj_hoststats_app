@@ -96,7 +96,7 @@ public class StorjNode {
             mLastSeen = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_SEEN)));
 
         if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PORT) != -1)
-            mPort = Integer.parseInt(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PORT)));
+            mPort = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PORT));
 
         if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ADDRESS) != -1)
             mAddress = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ADDRESS));
@@ -108,13 +108,13 @@ public class StorjNode {
             mProtocol = new Version(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.PROTOCOL)));
 
         if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.RESPONSE_TIME) != -1)
-            mResponseTime = Integer.parseInt(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.RESPONSE_TIME)));
+            mResponseTime = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.RESPONSE_TIME));
 
         if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_TIMEOUT) != -1)
             mLastTimeout = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_TIMEOUT)));
 
         if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.TIMEOUT_RATE) != -1)
-            mTimeoutRate = Float.parseFloat(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.TIMEOUT_RATE)));
+            mTimeoutRate = cursor.getFloat(cursor.getColumnIndex(NodeReaderContract.NodeEntry.TIMEOUT_RATE));
 
         if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CHECKED) != -1)
             mLastChecked = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CHECKED)));
