@@ -94,54 +94,57 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues insertValues = new ContentValues();
-        insertValues.put(NodeReaderContract.NodeEntry.NODE_ID, storjNode.getNodeID());
-        insertValues.put(NodeReaderContract.NodeEntry.FRIENDLY_NAME, storjNode.getSimpleName());
+        insertValues.put(NodeReaderContract.NodeEntry.NODE_ID, storjNode.getNodeID().getValue());
 
-        if(storjNode.getPort() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.PORT, storjNode.getPort());
+        if(storjNode.getSimpleName().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.FRIENDLY_NAME, storjNode.getSimpleName().getValue());
 
-        if(storjNode.getAddress() != "")
-            insertValues.put(NodeReaderContract.NodeEntry.ADDRESS, storjNode.getAddress());
+        if(storjNode.getPort().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.PORT, storjNode.getPort().getValue());
 
-        if(storjNode.getUserAgent() != null)
-            insertValues.put(NodeReaderContract.NodeEntry.USER_AGENT, storjNode.getUserAgent().toString());
+        if(storjNode.getAddress().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.ADDRESS, storjNode.getAddress().getValue());
 
-        if(storjNode.getLastSeen() != null) {
+        if(storjNode.getUserAgent().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.USER_AGENT, storjNode.getUserAgent().getValue().toString());
+
+        if(storjNode.getLastSeen().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_SEEN, df.format(storjNode.getLastSeen()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_SEEN, df.format(storjNode.getLastSeen().getValue()));
         }
 
-        if(storjNode.getLastTimeout() != null) {
+        if(storjNode.getLastTimeout().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            Log.i(TAG, "insertNode: "+ df.format(storjNode.getLastTimeout()));
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_TIMEOUT, df.format(storjNode.getLastTimeout()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_TIMEOUT, df.format(storjNode.getLastTimeout().getValue()));
         }
 
-        if(storjNode.getProtocol() != null)
-            insertValues.put(NodeReaderContract.NodeEntry.PROTOCOL, storjNode.getProtocol().toString());
+        if(storjNode.getProtocol().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.PROTOCOL, storjNode.getProtocol().getValue().toString());
 
-        if(storjNode.getResponseTime() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.RESPONSE_TIME, storjNode.getResponseTime());
+        if(storjNode.getResponseTime().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.RESPONSE_TIME, storjNode.getResponseTime().getValue());
 
-        if(storjNode.getTimeoutRate() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.TIMEOUT_RATE, storjNode.getTimeoutRate());
+        if(storjNode.getTimeoutRate().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.TIMEOUT_RATE, storjNode.getTimeoutRate().getValue());
 
-        if(storjNode.getLastChecked() != null) {
+        if(storjNode.getLastChecked().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(storjNode.getLastChecked()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(storjNode.getLastChecked().getValue()));
         }
 
-        if(storjNode.getLastContractSent() != -1) {
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, storjNode.getLastContractSent());
+        if(storjNode.getLastContractSent().isSet()) {
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, storjNode.getLastContractSent().getValue());
         }
 
-        if(storjNode.getReputation() != -1) {
-            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, storjNode.getReputation());
+        if(storjNode.getReputation().isSet()) {
+            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, storjNode.getReputation().getValue());
         }
 
-        insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
+        if(storjNode.isSpaceAvailable().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, storjNode.isSpaceAvailable().getValue() ? 1:0);
+
+        insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification() ? 1:0);
         insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, storjNode.isOutdated()? 1:0);
-        insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, storjNode.isSpaceAvailable()? 1:0);
 
         db.insert(NodeReaderContract.NodeEntry.TABLE_NAME, null, insertValues);
     }
@@ -149,57 +152,57 @@ public class DatabaseManager {
     public void updateNode(StorjNode storjNode) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        String filter = NodeReaderContract.NodeEntry.NODE_ID + "='"+ storjNode.getNodeID() + "'";
+        String filter = NodeReaderContract.NodeEntry.NODE_ID + "='"+ storjNode.getNodeID().getValue() + "'";
 
         ContentValues insertValues = new ContentValues();
 
-        if(storjNode.getSimpleName() != "")
-            insertValues.put(NodeReaderContract.NodeEntry.FRIENDLY_NAME, storjNode.getSimpleName());
+        if(storjNode.getSimpleName().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.FRIENDLY_NAME, storjNode.getSimpleName().getValue());
 
-        if(storjNode.getPort() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.PORT, storjNode.getPort());
+        if(storjNode.getPort().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.PORT, storjNode.getPort().getValue());
 
-        if(storjNode.getAddress() != "")
-            insertValues.put(NodeReaderContract.NodeEntry.ADDRESS, storjNode.getAddress());
+        if(storjNode.getAddress().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.ADDRESS, storjNode.getAddress().getValue());
 
-        if(storjNode.getUserAgent() != null)
-            insertValues.put(NodeReaderContract.NodeEntry.USER_AGENT, storjNode.getUserAgent().toString());
+        if(storjNode.getUserAgent().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.USER_AGENT, storjNode.getUserAgent().getValue().toString());
 
-        if(storjNode.getLastSeen() != null) {
+        if(storjNode.getLastSeen().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_SEEN, df.format(storjNode.getLastSeen()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_SEEN, df.format(storjNode.getLastSeen().getValue()));
         }
 
-        if(storjNode.getLastTimeout() != null) {
+        if(storjNode.getLastTimeout().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_TIMEOUT, df.format(storjNode.getLastTimeout()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_TIMEOUT, df.format(storjNode.getLastTimeout().getValue()));
         }
 
-        if(storjNode.getProtocol() != null)
-            insertValues.put(NodeReaderContract.NodeEntry.PROTOCOL, storjNode.getProtocol().toString());
+        if(storjNode.getProtocol().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.PROTOCOL, storjNode.getProtocol().getValue().toString());
 
-        if(storjNode.getResponseTime() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.RESPONSE_TIME, storjNode.getResponseTime());
+        if(storjNode.getResponseTime().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.RESPONSE_TIME, storjNode.getResponseTime().getValue());
 
-        if(storjNode.getTimeoutRate() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.TIMEOUT_RATE, storjNode.getTimeoutRate());
+        if(storjNode.getTimeoutRate().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.TIMEOUT_RATE, storjNode.getTimeoutRate().getValue());
 
-        if(storjNode.getLastChecked() != null) {
+        if(storjNode.getLastChecked().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(storjNode.getLastChecked()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(storjNode.getLastChecked().getValue()));
         }
 
-        if(storjNode.getLastContractSent() != -1) {
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, storjNode.getLastContractSent());
-        }
+        if(storjNode.getLastContractSent().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, storjNode.getLastContractSent().getValue());
 
-        if(storjNode.getReputation() != -1) {
-            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, storjNode.getReputation());
-        }
+        if(storjNode.getReputation().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, storjNode.getReputation().getValue());
+
+        if(storjNode.isSpaceAvailable().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, storjNode.isSpaceAvailable().getValue() ? 1:0);
 
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
         insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, storjNode.isOutdated()? 1:0);
-        insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, storjNode.isSpaceAvailable()? 1:0);
 
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
     }
@@ -208,59 +211,60 @@ public class DatabaseManager {
     public void updateNode(StorjNode storjNode, StorjNode updatedNode) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        String filter = NodeReaderContract.NodeEntry.NODE_ID + "='"+ storjNode.getNodeID() + "'";
+        String filter = NodeReaderContract.NodeEntry.NODE_ID + "='"+ storjNode.getNodeID().getValue() + "'";
 
         ContentValues insertValues = new ContentValues();
 
-        insertValues.put(NodeReaderContract.NodeEntry.NODE_ID, updatedNode.getNodeID());
+        insertValues.put(NodeReaderContract.NodeEntry.NODE_ID, updatedNode.getNodeID().getValue());
 
-        if(updatedNode.getSimpleName() != "")
-            insertValues.put(NodeReaderContract.NodeEntry.FRIENDLY_NAME, updatedNode.getSimpleName());
+        if(updatedNode.getSimpleName().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.FRIENDLY_NAME, updatedNode.getSimpleName().getValue());
 
-        if(updatedNode.getPort() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.PORT, updatedNode.getPort());
+        if(updatedNode.getPort().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.PORT, updatedNode.getPort().getValue());
 
-        if(updatedNode.getAddress() != "")
-            insertValues.put(NodeReaderContract.NodeEntry.ADDRESS, updatedNode.getAddress());
+        if(updatedNode.getAddress().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.ADDRESS, updatedNode.getAddress().getValue());
 
-        if(updatedNode.getUserAgent() != null)
-            insertValues.put(NodeReaderContract.NodeEntry.USER_AGENT, updatedNode.getUserAgent().toString());
+        if(updatedNode.getUserAgent().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.USER_AGENT, updatedNode.getUserAgent().getValue().toString());
 
-        if(updatedNode.getLastSeen() != null) {
+        if(updatedNode.getLastSeen().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_SEEN, df.format(updatedNode.getLastSeen()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_SEEN, df.format(updatedNode.getLastSeen().getValue()));
         }
 
-        if(storjNode.getLastTimeout() != null) {
+        if(storjNode.getLastTimeout().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_TIMEOUT, df.format(storjNode.getLastTimeout()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_TIMEOUT, df.format(storjNode.getLastTimeout().getValue()));
         }
 
-        if(updatedNode.getProtocol() != null)
-            insertValues.put(NodeReaderContract.NodeEntry.PROTOCOL, updatedNode.getProtocol().toString());
+        if(updatedNode.getProtocol().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.PROTOCOL, updatedNode.getProtocol().getValue().toString());
 
-        if(updatedNode.getResponseTime() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.RESPONSE_TIME, updatedNode.getResponseTime());
+        if(updatedNode.getResponseTime().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.RESPONSE_TIME, updatedNode.getResponseTime().getValue());
 
-        if(updatedNode.getTimeoutRate() != 0)
-            insertValues.put(NodeReaderContract.NodeEntry.TIMEOUT_RATE, updatedNode.getTimeoutRate());
+        if(updatedNode.getTimeoutRate().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.TIMEOUT_RATE, updatedNode.getTimeoutRate().getValue());
 
-        if(updatedNode.getLastChecked() != null) {
+        if(updatedNode.getLastChecked().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(updatedNode.getLastChecked()));
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(updatedNode.getLastChecked().getValue()));
         }
 
-        if(storjNode.getLastContractSent() != -1) {
-            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, updatedNode.getLastContractSent());
-        }
+        if(storjNode.getLastContractSent().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, updatedNode.getLastContractSent().getValue());
 
-        if(storjNode.getReputation() != -1) {
-            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, updatedNode.getReputation());
-        }
+        if(storjNode.getReputation().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, updatedNode.getReputation().getValue());
 
-        insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, updatedNode.getShouldSendNotification()? 1:0);
-        insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, updatedNode.isOutdated()? 1:0);
-        insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, updatedNode.isSpaceAvailable()? 1:0);
+        if(storjNode.isSpaceAvailable().isSet())
+            insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, updatedNode.isSpaceAvailable().getValue() ? 1:0);
+
+        insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, updatedNode.getShouldSendNotification() ? 1:0);
+        insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, updatedNode.isOutdated() ? 1:0);
+
 
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
     }
@@ -269,7 +273,7 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String whereClause = NodeReaderContract.NodeEntry.NODE_ID + "=?";
-        String[] whereArgs = new String[] { String.valueOf(node.getNodeID()) };
+        String[] whereArgs = new String[] { String.valueOf(node.getNodeID().getValue()) };
         db.delete(NodeReaderContract.NodeEntry.TABLE_NAME, whereClause, whereArgs);
     }
 
@@ -277,7 +281,7 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String whereClause = NodeReaderContract.NodeResponseTimeEntry.NODE_ID + "=?";
-        String[] whereArgs = new String[] { String.valueOf(node.getNodeID()) };
+        String[] whereArgs = new String[] { String.valueOf(node.getNodeID().getValue()) };
         db.delete(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, whereClause, whereArgs);
     }
 
@@ -285,7 +289,7 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String whereClause = NodeReaderContract.NodeReputationEntry.NODE_ID + "=?";
-        String[] whereArgs = new String[] { String.valueOf(node.getNodeID()) };
+        String[] whereArgs = new String[] { String.valueOf(node.getNodeID().getValue()) };
         db.delete(NodeReaderContract.NodeReputationEntry.TABLE_NAME, whereClause, whereArgs);
     }
 
@@ -293,9 +297,9 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues insertValues = new ContentValues();
-        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.NODE_ID, storjNode.getNodeID());
-        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME, storjNode.getResponseTime());
-        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP, storjNode.getLastChecked().getTime());
+        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.NODE_ID, storjNode.getNodeID().getValue());
+        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.RESPONSE_TIME, storjNode.getResponseTime().getValue());
+        insertValues.put(NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP, storjNode.getLastChecked().getValue().getTime());
         db.insert(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, null, insertValues);
     }
 
@@ -313,9 +317,9 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues insertValues = new ContentValues();
-        insertValues.put(NodeReaderContract.NodeReputationEntry.NODE_ID, storjNode.getNodeID());
-        insertValues.put(NodeReaderContract.NodeReputationEntry.REPUTATION, storjNode.getReputation());
-        insertValues.put(NodeReaderContract.NodeReputationEntry.TIMESTAMP, storjNode.getLastChecked().getTime());
+        insertValues.put(NodeReaderContract.NodeReputationEntry.NODE_ID, storjNode.getNodeID().getValue());
+        insertValues.put(NodeReaderContract.NodeReputationEntry.REPUTATION, storjNode.getReputation().getValue());
+        insertValues.put(NodeReaderContract.NodeReputationEntry.TIMESTAMP, storjNode.getLastChecked().getValue().getTime());
         db.insert(NodeReaderContract.NodeReputationEntry.TABLE_NAME, null, insertValues);
     }
 

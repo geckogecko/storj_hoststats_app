@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import com.stealthcopter.networktools.PortScan;
+import com.steinbacher.storj_hoststats_app.StorjNodeParameters.ResponseTime;
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 import com.steinbacher.storj_hoststats_app.util.Version;
 
@@ -91,7 +92,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 for (StorjNode storjNode : lists[0]) {
                     try {
-                        JSONObject storjApiReponse = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID());
+                        JSONObject storjApiReponse = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID().getValue());
                         Log.d(TAG, "onReceive: " + storjApiReponse.toString());
 
                         DatabaseManager db = DatabaseManager.getInstance(mContext);
@@ -102,7 +103,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         //check if node is outdated
                         JSONObject releaseInfoJson = getJSONObjectFromURL("https://api.github.com/repos/Storj/core/releases/latest");
                         Version newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v",""));
-                        node.setIsOutdated(!node.getUserAgent().isEqualTo(newestGithubVersion));
+                        node.setIsOutdated(!node.getUserAgent().getValue().isEqualTo(newestGithubVersion));
 
                         //check if we should send a notification about a new version
                         if(getSavedUserAgentVersion() == null) {
@@ -113,12 +114,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
 
                         //get the "old" information about this node
-                        Cursor cursor = db.getNode(node.getNodeID());
+                        Cursor cursor = db.getNode(node.getNodeID().getValue());
                         StorjNode previusNode = new StorjNode(cursor);
-                        node.setSimpleName(previusNode.getSimpleName());
+                        node.setSimpleName(previusNode.getSimpleName().getValue());
 
                         if (isNodeOffline(node)) {
-                            node.setResponseTime(-1);
+                            node.setResponseTime(node.getResponseTime().getDefault());
                             node.setShouldSendNotification(false);
 
                             if (previusNode.getShouldSendNotification())
@@ -128,7 +129,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             db.insertNodeResponseTimeEntry(node);
                             db.insertNodeReputationEntry(node);
 
-                            if (previusNode.getResponseTime() == -1) {
+                            if (previusNode.getResponseTime().getValue() == previusNode.getResponseTime().getDefault()) {
                                 //was the node offline before and went online now ?
                                 node.setShouldSendNotification(true);
                             }
@@ -136,9 +137,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         db.updateNode(node);
 
-                        publishProgress(node.getNodeID());
+                        publishProgress(node.getNodeID().getValue());
                     } catch (IOException e) {
-                        Log.i(TAG, "doInBackground: " + storjNode.getNodeID() + " not found");
+                        Log.i(TAG, "doInBackground: " + storjNode.getNodeID().getValue() + " not found");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -195,16 +196,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
 
                 Intent detailNotificationIntent = new Intent(mContext, StorjNodeDetailActivity.class);
-                detailNotificationIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, storjNode.getNodeID());
+                detailNotificationIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, storjNode.getNodeID().getValue());
                 stackBuilder.addNextIntentWithParentStack(detailNotificationIntent);
 
-                PendingIntent operation = stackBuilder.getPendingIntent(storjNode.getNodeID().hashCode(), PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent operation = stackBuilder.getPendingIntent(storjNode.getNodeID().getValue().hashCode(), PendingIntent.FLAG_CANCEL_CURRENT);
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
                         .setSmallIcon(R.drawable.storj_symbol)
-                        .setContentTitle(storjNode.getSimpleName())
+                        .setContentTitle(storjNode.getSimpleName().getValue())
                         .setContentIntent(operation)
-                        .setContentText(mContext.getString(R.string.node_is_offline, storjNode.getSimpleName()));
+                        .setContentText(mContext.getString(R.string.node_is_offline, storjNode.getSimpleName().getValue()));
 
                 NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotificationManager.notify(storjNode.getNodeID().hashCode(), mBuilder.build());
@@ -235,7 +236,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             int gmtOffset = TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
 
 
-            if ((currentTime.getTime() - (storjNode.getLastSeen().getTime() + gmtOffset)) >= getNodeOfflineAfter()) {
+            if ((currentTime.getTime() - (storjNode.getLastSeen().getValue().getTime() + gmtOffset)) >= getNodeOfflineAfter()) {
                 //regarding to bridge the node is offline
                 // lets check the port manually to be sure the node is offline
                 if (isPortOpen(storjNode)) {
@@ -250,8 +251,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         private boolean isPortOpen(StorjNode storjNode) {
             try {
-                ArrayList<Integer> openPorts = PortScan.onAddress(storjNode.getAddress()).setPort(storjNode.getPort()).doScan();
-                if(openPorts.get(0) == storjNode.getPort())
+                ArrayList<Integer> openPorts = PortScan.onAddress(storjNode.getAddress().getValue()).setPort(storjNode.getPort().getValue()).doScan();
+                if(openPorts.get(0) == storjNode.getPort().getValue())
                     return true;
             } catch (UnknownHostException e) {
                 e.printStackTrace();

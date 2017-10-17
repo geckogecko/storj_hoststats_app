@@ -60,46 +60,46 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
         ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
 
-        mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID()));
+        mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue()));
         mCubicValueLineChart.startAnimation();
 
-        text_SimpleName.setText(getString(R.string.details_SimpleName, mSelectedNode.getSimpleName()));
+        text_SimpleName.setText(getString(R.string.details_SimpleName, mSelectedNode.getSimpleName().getValue()));
 
-        if(mSelectedNode.getAddress() != null) {
+        if(mSelectedNode.getAddress().isSet()) {
             SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-            text_NodeID.setText(getString(R.string.details_NodeID, mSelectedNode.getNodeID()));
-            String address = mSelectedNode.getAddress() + ":" + Integer.toString(mSelectedNode.getPort());
+            text_NodeID.setText(getString(R.string.details_NodeID, mSelectedNode.getNodeID().getValue()));
+            String address = mSelectedNode.getAddress().getValue() + ":" + Integer.toString(mSelectedNode.getPort().getValue());
             text_Address.setText(getString(R.string.details_Address, address));
 
             if (mSelectedNode.isOutdated()) {
-                text_UserAgent.setText(getString(R.string.userAgent_outdated, mSelectedNode.getUserAgent().toString()));
+                text_UserAgent.setText(getString(R.string.userAgent_outdated, mSelectedNode.getUserAgent().getValue().toString()));
                 text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
             } else {
-                text_UserAgent.setText(getString(R.string.userAgent, mSelectedNode.getUserAgent().toString()));
+                text_UserAgent.setText(getString(R.string.userAgent, mSelectedNode.getUserAgent().getValue().toString()));
                 text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
             }
 
-            text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(mSelectedNode.getLastSeen())));
-            text_Protocol.setText(getString(R.string.details_Protocol, mSelectedNode.getProtocol()));
+            text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(mSelectedNode.getLastSeen().getValue())));
+            text_Protocol.setText(getString(R.string.details_Protocol, mSelectedNode.getProtocol().getValue()));
 
-            if(mSelectedNode.getLastTimeout() == null)
+            if(mSelectedNode.getLastTimeout().isSet())
                 text_LastTimeout.setText(getString(R.string.details_LastTimeout, getString(R.string.details_No_Timeout)));
             else
-                text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout())));
+                text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout().getValue())));
 
-            text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(mSelectedNode.getTimeoutRate())));
+            text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(mSelectedNode.getTimeoutRate().getValue())));
 
-            if(mSelectedNode.getLastContractSent() == -1)
-                text_LastContractSent.setText(getString(R.string.details_LastContractSent_no_value));
+            if(mSelectedNode.getLastContractSent().isSet())
+                text_LastContractSent.setText(getString(R.string.details_LastContractSent, "0"));
             else
-                text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent())));
-            text_SpaceAvailable.setText(getString(R.string.details_SpaceAvailable, Boolean.toString(mSelectedNode.isSpaceAvailable())));
+                text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent().getValue())));
+            text_SpaceAvailable.setText(getString(R.string.details_SpaceAvailable, Boolean.toString(mSelectedNode.isSpaceAvailable().getValue())));
 
             text_Error.setVisibility(View.GONE);
 
         } else {
-            text_Error.setText(getString(R.string.details_Error, mSelectedNode.getNodeID()));
+            text_Error.setText(getString(R.string.details_Error, mSelectedNode.getNodeID().getValue()));
 
             text_NodeID.setVisibility(View.GONE);
             text_Address.setVisibility(View.GONE);
@@ -112,7 +112,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
         }
 
         //set status
-        if(mSelectedNode.getResponseTime() == -1) {
+        if(mSelectedNode.getResponseTime().getValue() == mSelectedNode.getResponseTime().getDefault()) {
             text_Status.setText(getString(R.string.details_offline));
             text_Status.setTextColor(getResources().getColor(R.color.red));
         } else {
@@ -130,7 +130,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
                 mCubicValueLineChart.clearChart();
 
-                mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID()));
+                mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue()));
                 mCubicValueLineChart.startAnimation();
 
                 btn_ResponseTime.setTextColor(getResources().getColor(R.color.storj_color_blue));
@@ -147,7 +147,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
                   mCubicValueLineChart.clearChart();
 
-                  mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeReputationEntry.TABLE_NAME, mSelectedNode.getNodeID()));
+                  mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeReputationEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue()));
                   mCubicValueLineChart.startAnimation();
 
                   btn_Reputation.setTextColor(getResources().getColor(R.color.storj_color_green));

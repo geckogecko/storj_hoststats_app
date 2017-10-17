@@ -52,7 +52,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
         ResponseTimeView responseTimeView = (ResponseTimeView) view.findViewById(R.id.responseTimeView);
 
         //node simplename
-        txtNodeSimpleName.setText(selectedNode.getSimpleName());
+        txtNodeSimpleName.setText(selectedNode.getSimpleName().getValue());
 
         //set onclick listener
         view.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +61,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
                 StorjNode selectedNode = mItems.get(position);
 
                 Intent storjNodeDetailIntent = new Intent(mContext, StorjNodeDetailActivity.class);
-                storjNodeDetailIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, selectedNode.getNodeID());
+                storjNodeDetailIntent.putExtra(StorjNodeDetailActivity.EXTRA_NODEID, selectedNode.getNodeID().getValue());
                 storjNodeDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(storjNodeDetailIntent);
             }
@@ -77,16 +77,17 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
             }
         });
 
-        if(selectedNode.getLastChecked() == null || selectedNode.getResponseTime() == -1) {
+        if(selectedNode.getLastChecked().getValue() == selectedNode.getLastChecked().getDefault()
+                || selectedNode.getResponseTime().getValue() == selectedNode.getResponseTime().getDefault()) {
             responseTimeView.setResponseTime(0);
 
-            if(selectedNode.getAddress() != null)
-                txtAddress.setText(mContext.getString(R.string.address, selectedNode.getAddress() + ":" + selectedNode.getPort()));
+            if(selectedNode.getAddress().isSet())
+                txtAddress.setText(mContext.getString(R.string.address, selectedNode.getAddress().getValue() + ":" + selectedNode.getPort().getValue()));
             else
                 txtAddress.setText("");
 
-            if(selectedNode.getUserAgent() != null)
-                txtUserAgent.setText(mContext.getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+            if(selectedNode.getUserAgent().isSet())
+                txtUserAgent.setText(mContext.getString(R.string.userAgent, selectedNode.getUserAgent().getValue().toString()));
             else
                 txtUserAgent.setText("");
 
@@ -94,18 +95,18 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
         }
 
         // set response time
-        responseTimeView.setResponseTime(selectedNode.getResponseTime());
+        responseTimeView.setResponseTime(selectedNode.getResponseTime().getValue());
 
         //set Address + port
-        txtAddress.setText(mContext.getString(R.string.address, selectedNode.getAddress() + ":" + selectedNode.getPort()));
+        txtAddress.setText(mContext.getString(R.string.address, selectedNode.getAddress().getValue() + ":" + selectedNode.getPort().getValue()));
 
         //setUserAgent
-        if(selectedNode.getUserAgent() != null)
+        if(selectedNode.getUserAgent().isSet())
             if (selectedNode.isOutdated()) {
-                txtUserAgent.setText(mContext.getString(R.string.userAgent_outdated, selectedNode.getUserAgent().toString()));
+                txtUserAgent.setText(mContext.getString(R.string.userAgent_outdated, selectedNode.getUserAgent().getValue().toString()));
                 txtUserAgent.setTextColor(mContext.getResources().getColor(R.color.textColor));
             } else {
-                txtUserAgent.setText(mContext.getString(R.string.userAgent, selectedNode.getUserAgent().toString()));
+                txtUserAgent.setText(mContext.getString(R.string.userAgent, selectedNode.getUserAgent().getValue().toString()));
                 txtUserAgent.setTextColor(mContext.getResources().getColor(R.color.textColor));
             }
 
@@ -122,8 +123,8 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
         AppCompatEditText textView_nodeSimpleName = (AppCompatEditText) layout.findViewById(R.id.textView_edit_simpleName);
         AppCompatEditText textView_nodeId = (AppCompatEditText) layout.findViewById(R.id.textView_edit_nodeID);
 
-        textView_nodeId.setText(storjNode.getNodeID());
-        textView_nodeSimpleName.setText(storjNode.getSimpleName());
+        textView_nodeId.setText(storjNode.getNodeID().getValue());
+        textView_nodeSimpleName.setText(storjNode.getSimpleName().getValue());
 
         builder.setView(layout);
         final AlertDialog alertDialog = builder.create();
@@ -165,7 +166,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
 
                 DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
                 Cursor cursor = databaseManager.getNode(textView_nodeId.getText().toString());
-                if(cursor.getCount() >= 1 && !(textView_nodeId.getText().toString().equals(selectedNode.getNodeID()))) {
+                if(cursor.getCount() >= 1 && !(textView_nodeId.getText().toString().equals(selectedNode.getNodeID().getValue()))) {
                     Toast.makeText(mContext, mContext.getString(R.string.add_error_node_exists), Toast.LENGTH_SHORT).show();
                     error = true;
                 }
