@@ -252,7 +252,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         private boolean isPortOpen(StorjNode storjNode) {
             try {
 
-                ArrayList<Integer> openPorts = PortScan.onAddress(storjNode.getAddress().getValue()).setPort(storjNode.getPort().getValue()).doScan();
+                ArrayList<Integer> openPorts = PortScan
+                        .onAddress(storjNode.getAddress().getValue())
+                        .setTimeOutMillis(1000)
+                        .setPort(storjNode.getPort().getValue())
+                        .doScan();
                 if(openPorts.size() > 1 && openPorts.get(0) == storjNode.getPort().getValue())
                     return true;
                 else 
@@ -281,7 +285,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     urlc.disconnect();
                     return (responseCode == 200);
                 } catch (Exception e) {
-                    Log.e(TAG, "Error checking internet connection", e);
+                    Log.d(TAG, "Error checking internet connection", e);
                     return false;
                 }
             } else {
