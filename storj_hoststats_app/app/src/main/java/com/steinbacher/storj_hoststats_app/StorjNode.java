@@ -1,6 +1,7 @@
 package com.steinbacher.storj_hoststats_app;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,7 +111,7 @@ public class StorjNode {
             mLastTimeout = new LastTimeout();
 
         if(storjApiResponse.has(Parameters.STORJ_RESPONSE_PARAMETER_TIMEOUT_RATE))
-            mTimeoutRate = new TimeoutRate(storjApiResponse.getInt(Parameters.STORJ_RESPONSE_PARAMETER_TIMEOUT_RATE));
+            mTimeoutRate = new TimeoutRate((float) storjApiResponse.getDouble(Parameters.STORJ_RESPONSE_PARAMETER_TIMEOUT_RATE));
         else
             mTimeoutRate = new TimeoutRate();
 

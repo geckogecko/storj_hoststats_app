@@ -84,16 +84,16 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             text_Protocol.setText(getString(R.string.details_Protocol, mSelectedNode.getProtocol().getValue()));
 
             if(mSelectedNode.getLastTimeout().isSet())
-                text_LastTimeout.setText(getString(R.string.details_LastTimeout, getString(R.string.details_No_Timeout)));
-            else
                 text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout().getValue())));
+            else
+                text_LastTimeout.setText(getString(R.string.details_LastTimeout, getString(R.string.details_No_Timeout)));
 
-            text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, Float.toString(mSelectedNode.getTimeoutRate().getValue())));
+            text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, String.format("%.4f",mSelectedNode.getTimeoutRate().getValue())));
 
             if(mSelectedNode.getLastContractSent().isSet())
-                text_LastContractSent.setText(getString(R.string.details_LastContractSent, "0"));
-            else
                 text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent().getValue())));
+            else
+                text_LastContractSent.setText(getString(R.string.details_LastContractSent, "0"));
             text_SpaceAvailable.setText(getString(R.string.details_SpaceAvailable, Boolean.toString(mSelectedNode.isSpaceAvailable().getValue())));
 
             text_Error.setVisibility(View.GONE);
