@@ -30,6 +30,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.github.blackfizz:eazegraph:1.2.2@aar'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.github.stealthcopter:AndroidNetworkTools:0.2.2'
     testCompile 'junit:junit:4.12'
 }

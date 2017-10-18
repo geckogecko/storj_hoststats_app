@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -30,9 +31,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import com.stealthcopter.networktools.PortScan;
-import com.steinbacher.storj_hoststats_app.StorjNodeParameters.ResponseTime;
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
+import com.steinbacher.storj_hoststats_app.util.PortScanTCP;
 import com.steinbacher.storj_hoststats_app.util.Version;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -251,21 +251,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         private boolean isPortOpen(StorjNode storjNode) {
             try {
-
-                ArrayList<Integer> openPorts = PortScan
-                        .onAddress(storjNode.getAddress().getValue())
-                        .setTimeOutMillis(1000)
-                        .setPort(storjNode.getPort().getValue())
-                        .doScan();
-                if(openPorts.size() > 1 && openPorts.get(0) == storjNode.getPort().getValue())
-                    return true;
-                else 
-                    return false;
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
+                return PortScanTCP.scanAddress(InetAddress.getByName(storjNode.getAddress().getValue()),
+                        storjNode.getPort().getValue(),
+                        1000);
+            } catch(UnknownHostException e) {
+                return false;
             }
-
-            return false;
         }
 
         private long getNodeOfflineAfter() {
