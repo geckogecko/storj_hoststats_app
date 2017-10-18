@@ -257,7 +257,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                         .setTimeOutMillis(1000)
                         .setPort(storjNode.getPort().getValue())
                         .doScan();
-                if(openPorts.size() > 1 && openPorts.get(0) == storjNode.getPort().getValue())
+
+                if(openPorts.size() >= 1 && (openPorts.get(0) == storjNode.getPort().getValue()))
                     return true;
                 else 
                     return false;
