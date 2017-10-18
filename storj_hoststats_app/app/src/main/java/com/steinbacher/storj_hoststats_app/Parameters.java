@@ -11,7 +11,7 @@ public class Parameters {
     public static final String SHARED_PREF = "sharedPrefs";
 
     public static final String SHARED_PREF_OFFLINE_AFTER = "OfflineAfter";
-    public static final long SHARED_PREF_OFFLINE_AFTER_DEFAULT = 10800000;
+    public static final long SHARED_PREF_OFFLINE_AFTER_DEFAULT = 1800000;
     public static final String SHARED_PREF_NEWEST_USERAGENT_VERSION = "newestUserAgentVersion";
 
 
