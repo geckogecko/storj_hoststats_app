@@ -86,10 +86,15 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
             else
                 txtAddress.setText("");
 
+            //setUserAgent
             if(selectedNode.getUserAgent().isSet())
-                txtUserAgent.setText(mContext.getString(R.string.userAgent, selectedNode.getUserAgent().getValue().toString()));
-            else
-                txtUserAgent.setText("");
+                if (selectedNode.isOutdated()) {
+                    txtUserAgent.setText(mContext.getString(R.string.userAgent_outdated, selectedNode.getUserAgent().getValue().toString()));
+                    txtUserAgent.setTextColor(mContext.getResources().getColor(R.color.textColor));
+                } else {
+                    txtUserAgent.setText(mContext.getString(R.string.userAgent, selectedNode.getUserAgent().getValue().toString()));
+                    txtUserAgent.setTextColor(mContext.getResources().getColor(R.color.textColor));
+                }
 
             return view;
         }
