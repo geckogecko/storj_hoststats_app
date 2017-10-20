@@ -1,5 +1,5 @@
 ##### Test the app
-https://play.google.com/apps/testing/com.steinbacher.storj_hoststats_app
+https://play.google.com/store/apps/details?id=com.steinbacher.storj_hoststats_app&hl=de
 
 <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/main_screen.png" alt="MainActivity" height="500"/> <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/details_response_time.png" alt="DetailActivity_response" height="500"/> <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/details_reputation.png" alt="DetailActivity_reputation" height="500"/>
 
