@@ -16,6 +16,7 @@ import org.eazegraph.lib.models.ValueLineSeries;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 import com.steinbacher.storj_hoststats_app.data.NodeReaderContract;
@@ -67,6 +68,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
         if(mSelectedNode.getAddress().isSet()) {
             SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            int gmtOffset = TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
 
             text_NodeID.setText(getString(R.string.details_NodeID, mSelectedNode.getNodeID().getValue()));
             String address = mSelectedNode.getAddress().getValue() + ":" + Integer.toString(mSelectedNode.getPort().getValue());
@@ -80,11 +82,11 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
             }
 
-            text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(mSelectedNode.getLastSeen().getValue())));
+            text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(mSelectedNode.getLastSeen().getValue().getTime() + gmtOffset)));
             text_Protocol.setText(getString(R.string.details_Protocol, mSelectedNode.getProtocol().getValue()));
 
             if(mSelectedNode.getLastTimeout().isSet())
-                text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout().getValue())));
+                text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout().getValue().getTime() + gmtOffset)));
             else
                 text_LastTimeout.setText(getString(R.string.details_LastTimeout, getString(R.string.details_No_Timeout)));
 
