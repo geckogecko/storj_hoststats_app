@@ -18,11 +18,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
-import com.steinbacher.storj_hoststats_app.data.NodeReaderContract;
 import com.steinbacher.storj_hoststats_app.util.PortScanTCP;
 import com.steinbacher.storj_hoststats_app.util.Version;
 
@@ -102,13 +101,18 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         //check if node is outdated
                         JSONObject releaseInfoJson = getJSONObjectFromURL("https://api.github.com/repos/Storj/core/releases/latest");
-                        Version newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v",""));
+                        Version newestGithubVersion;
+                        if(releaseInfoJson == null) {
+                            newestGithubVersion = getSavedActualUserAgentVersion();
+                        } else {
+                            newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v", ""));
+                        }
                         node.setIsOutdated(!node.getUserAgent().getValue().isEqualTo(newestGithubVersion));
 
                         //check if we should send a notification about a new version
-                        if(getSavedUserAgentVersion() == null) {
+                        if(getSavedActualUserAgentVersion() == null) {
                             saveNewUserAgentVersion(newestGithubVersion);
-                        } else if (getSavedUserAgentVersion().isLowerThan(newestGithubVersion)) {
+                        } else if (getSavedActualUserAgentVersion().isLowerThan(newestGithubVersion)) {
                             saveNewUserAgentVersion(newestGithubVersion);
                             sendNewUserAgentVersionNotification();
                         }
@@ -143,6 +147,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             publishProgress(node.getNodeID().getValue());
                         }
                     } catch (IOException e) {
+                        e.printStackTrace();
                         Log.i(TAG, "doInBackground: " + storjNode.getNodeID().getValue() + " not found");
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -181,17 +186,23 @@ public class AlarmReceiver extends BroadcastReceiver {
             urlConnection.setDoOutput(true);
             urlConnection.connect();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder sb = new StringBuilder();
+            //403 happens if we are over the rate limit of the github api for example
+            if(urlConnection.getResponseCode() != 403) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                StringBuilder sb = new StringBuilder();
 
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                br.close();
+
+                String jsonString = sb.toString();
+                return new JSONObject(jsonString);
+            } else {
+                return null;
             }
-            br.close();
 
-            String jsonString = sb.toString();
-            return new JSONObject(jsonString);
         }
 
         private void sendNodeOfflineNotification(StorjNode storjNode) {
@@ -304,7 +315,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             prefs.commit();
         }
 
-        private Version getSavedUserAgentVersion() {
+        private Version getSavedActualUserAgentVersion() {
             SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
             String savedVersion = prefs.getString(Parameters.SHARED_PREF_NEWEST_USERAGENT_VERSION, "");
 
