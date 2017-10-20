@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (textViewSimpleName.getText().toString().matches("")) {
                     Toast.makeText(mContext, getString(R.string.add_error_missing_SimpleName), Toast.LENGTH_SHORT).show();
                     error = true;
-                } else if (textViewSimpleName.getText().length() != 40) {
+                } else if (textViewNodeId.getText().length() != 40) {
                     Toast.makeText(mContext, getString(R.string.add_error_wrong_character_count), Toast.LENGTH_SHORT).show();
                     error = true;
                 }

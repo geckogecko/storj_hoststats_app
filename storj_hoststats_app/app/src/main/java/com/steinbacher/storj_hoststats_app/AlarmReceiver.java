@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
+import com.steinbacher.storj_hoststats_app.data.NodeReaderContract;
 import com.steinbacher.storj_hoststats_app.util.PortScanTCP;
 import com.steinbacher.storj_hoststats_app.util.Version;
 
@@ -96,7 +97,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                         Log.d(TAG, "onReceive: " + storjApiReponse.toString());
 
                         DatabaseManager db = DatabaseManager.getInstance(mContext);
-
                         node = new StorjNode(storjApiReponse);
                         node.setLastChecked(Calendar.getInstance().getTime());
 
@@ -115,29 +115,33 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         //get the "old" information about this node
                         Cursor cursor = db.getNode(node.getNodeID().getValue());
-                        StorjNode previusNode = new StorjNode(cursor);
-                        node.setSimpleName(previusNode.getSimpleName().getValue());
+                        //its pussible that we pull a node the user deleted at the "same" moment
+                        if(cursor.getCount() > 0) {
+                            StorjNode previusNode = new StorjNode(cursor);
+                            node.setSimpleName(previusNode.getSimpleName().getValue());
 
-                        if (isNodeOffline(node)) {
-                            node.setResponseTime(node.getResponseTime().getDefault());
-                            node.setShouldSendNotification(false);
+                            if (isNodeOffline(node)) {
+                                node.setResponseTime(node.getResponseTime().getDefault());
+                                node.setShouldSendNotification(false);
 
-                            if (previusNode.getShouldSendNotification())
-                                sendNodeOfflineNotification(node);
-                        } else {
-                            //insert into history dbs
-                            db.insertNodeResponseTimeEntry(node);
-                            db.insertNodeReputationEntry(node);
+                                if (previusNode.getShouldSendNotification())
+                                    sendNodeOfflineNotification(node);
+                            } else {
+                                //insert into history dbs
+                                db.insertNodeResponseTimeEntry(node);
+                                db.insertNodeReputationEntry(node);
 
-                            if (previusNode.getResponseTime().getValue() == previusNode.getResponseTime().getDefault()) {
-                                //was the node offline before and went online now ?
-                                node.setShouldSendNotification(true);
+                                if (previusNode.getResponseTime().getValue() == previusNode.getResponseTime().getDefault()) {
+                                    //was the node offline before and went online now ?
+                                    node.setShouldSendNotification(true);
+                                }
                             }
+
+
+                            db.updateNode(node);
+
+                            publishProgress(node.getNodeID().getValue());
                         }
-
-                        db.updateNode(node);
-
-                        publishProgress(node.getNodeID().getValue());
                     } catch (IOException e) {
                         Log.i(TAG, "doInBackground: " + storjNode.getNodeID().getValue() + " not found");
                     } catch (JSONException e) {
