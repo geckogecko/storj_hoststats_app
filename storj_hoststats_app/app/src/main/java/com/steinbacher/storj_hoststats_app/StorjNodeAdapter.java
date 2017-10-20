@@ -167,6 +167,9 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
                 } else if (textView_simpleName.getText().toString().matches("")) {
                     Toast.makeText(mContext, mContext.getString(R.string.add_error_missing_SimpleName), Toast.LENGTH_SHORT).show();
                     error = true;
+                } else if (textView_simpleName.getText().length() != 40) {
+                    Toast.makeText(mContext, mContext.getString(R.string.add_error_wrong_character_count), Toast.LENGTH_SHORT).show();
+                    error = true;
                 }
 
                 DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);

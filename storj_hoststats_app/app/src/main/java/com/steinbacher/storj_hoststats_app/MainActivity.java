@@ -173,11 +173,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 boolean error = false;
 
-                if(textViewNodeId.getText().toString().matches("")) {
+                if (textViewNodeId.getText().toString().matches("")) {
                     Toast.makeText(mContext, getString(R.string.add_error_missing_nodeID), Toast.LENGTH_SHORT).show();
                     error = true;
                 } else if (textViewSimpleName.getText().toString().matches("")) {
                     Toast.makeText(mContext, getString(R.string.add_error_missing_SimpleName), Toast.LENGTH_SHORT).show();
+                    error = true;
+                } else if (textViewSimpleName.getText().length() != 40) {
+                    Toast.makeText(mContext, getString(R.string.add_error_wrong_character_count), Toast.LENGTH_SHORT).show();
                     error = true;
                 }
 
