@@ -18,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -101,18 +100,28 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         //check if node is outdated
                         JSONObject releaseInfoJson = getJSONObjectFromURL("https://api.github.com/repos/Storj/core/releases/latest");
-                        Version newestGithubVersion;
+                        Version newestGithubVersion = null;
                         if(releaseInfoJson == null) {
-                            newestGithubVersion = getSavedActualUserAgentVersion();
+                            Version savedStorjCoreVersion = getSavedActualStorjCoreVersion();
+                            if (savedStorjCoreVersion != null) {
+                                newestGithubVersion = getSavedActualStorjCoreVersion();
+                            }
                         } else {
                             newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v", ""));
                         }
-                        node.setIsOutdated(!node.getUserAgent().getValue().isEqualTo(newestGithubVersion));
+
+                        if(newestGithubVersion != null) {
+                            node.setIsOutdated(!node.getUserAgent().getValue().isEqualTo(newestGithubVersion));
+                        } else {
+                            //if we cant get the newest core version and we ahve never pulled it before
+                            // set it it outdated to false and try to get the newest version next time
+                            node.setIsOutdated(false);
+                        }
 
                         //check if we should send a notification about a new version
-                        if(getSavedActualUserAgentVersion() == null) {
+                        if(getSavedActualStorjCoreVersion() == null) {
                             saveNewUserAgentVersion(newestGithubVersion);
-                        } else if (getSavedActualUserAgentVersion().isLowerThan(newestGithubVersion)) {
+                        } else if (getSavedActualStorjCoreVersion().isLowerThan(newestGithubVersion)) {
                             saveNewUserAgentVersion(newestGithubVersion);
                             sendNewUserAgentVersionNotification();
                         }
@@ -315,7 +324,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             prefs.commit();
         }
 
-        private Version getSavedActualUserAgentVersion() {
+        private Version getSavedActualStorjCoreVersion() {
             SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
             String savedVersion = prefs.getString(Parameters.SHARED_PREF_NEWEST_USERAGENT_VERSION, "");
 
