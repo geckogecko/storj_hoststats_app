@@ -110,7 +110,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v", ""));
                         }
 
-                        if(newestGithubVersion != null) {
+                        if(newestGithubVersion != null && node.getUserAgent().isSet()) {
                             node.setIsOutdated(!node.getUserAgent().getValue().isEqualTo(newestGithubVersion));
                         } else {
                             //if we cant get the newest core version and we ahve never pulled it before
