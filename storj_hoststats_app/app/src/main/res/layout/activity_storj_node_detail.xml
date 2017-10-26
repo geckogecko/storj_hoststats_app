@@ -108,52 +108,61 @@
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_NodeID"
-                    android:layout_width="match_parent"
                     android:layout_marginTop="5sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_Address"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_LastSeen"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_UserAgent"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_Protocol"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_LastTimeout"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_TimeoutRate"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_LastContractSent"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_SpaceAvailable"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/storjNode_details_Error"
+                    android:layout_marginTop="5sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
