@@ -50,6 +50,8 @@
     <string name="details_No_Timeout">No Timeout so far</string>
     <string name="details_SpaceAvailable">Space available: %1$s</string>
 
+    <string name="unknown">unknown</string>
+
     <string name="btn_responseTime">Response time</string>
     <string name="btn_reputation">Reputation</string>
 </resources>

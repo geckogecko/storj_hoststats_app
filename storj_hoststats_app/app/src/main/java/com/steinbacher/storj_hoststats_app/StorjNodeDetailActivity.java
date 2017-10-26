@@ -78,8 +78,13 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 text_UserAgent.setText(getString(R.string.userAgent_outdated, mSelectedNode.getUserAgent().getValue().toString()));
                 text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
             } else {
-                text_UserAgent.setText(getString(R.string.userAgent, mSelectedNode.getUserAgent().getValue().toString()));
-                text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
+                if(mSelectedNode.getUserAgent().isSet()) {
+                    text_UserAgent.setText(getString(R.string.userAgent, mSelectedNode.getUserAgent().getValue().toString()));
+                    text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
+                } else {
+                    text_UserAgent.setText(getString(R.string.userAgent, getString(R.string.unknown)));
+                }
+
             }
 
             text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(mSelectedNode.getLastSeen().getValue().getTime() + gmtOffset)));
