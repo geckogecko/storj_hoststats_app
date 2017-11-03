@@ -40,8 +40,20 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
         mContext = getApplicationContext();
 
+        //end this activity if we dont have a nodeID
+        //TODO check why this can happen
+        if(!getIntent().hasExtra(EXTRA_NODEID))
+            finish();
+
         DatabaseManager db = DatabaseManager.getInstance(mContext);
-        mSelectedNode = new StorjNode(db.getNode(getIntent().getStringExtra(EXTRA_NODEID)));
+        Cursor selectedNode = db.getNode(getIntent().getStringExtra(EXTRA_NODEID));
+
+        //end this activity if we cant find this node in our db
+        //TODO check why this can happen
+        if(selectedNode.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID) == -1)
+            finish();
+
+        mSelectedNode = new StorjNode(selectedNode);
 
         AppCompatTextView text_SimpleName = (AppCompatTextView) findViewById(R.id.storjNode_details_SimpleName);
         AppCompatTextView text_NodeID = (AppCompatTextView) findViewById(R.id.storjNode_details_NodeID);
@@ -61,8 +73,11 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
         ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
 
-        mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue()));
-        mCubicValueLineChart.startAnimation();
+        ValueLineSeries series = getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
+        if(series.getSeries().size() > 2) {
+            mCubicValueLineChart.addSeries(series);
+            mCubicValueLineChart.startAnimation();
+        }
 
         text_SimpleName.setText(getString(R.string.details_SimpleName, mSelectedNode.getSimpleName().getValue()));
 
@@ -137,8 +152,11 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
                 mCubicValueLineChart.clearChart();
 
-                mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue()));
-                mCubicValueLineChart.startAnimation();
+                ValueLineSeries valueLineSeries = getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
+                if (valueLineSeries.getSeries().size() > 2) {
+                    mCubicValueLineChart.addSeries(valueLineSeries);
+                    mCubicValueLineChart.startAnimation();
+                }
 
                 btn_ResponseTime.setTextColor(getResources().getColor(R.color.storj_color_blue));
                 btn_Reputation.setTextColor(getResources().getColor(R.color.grey));
@@ -154,8 +172,11 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
                   mCubicValueLineChart.clearChart();
 
-                  mCubicValueLineChart.addSeries(getSeriesFromDB(NodeReaderContract.NodeReputationEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue()));
-                  mCubicValueLineChart.startAnimation();
+                  ValueLineSeries valueLineSeries = getSeriesFromDB(NodeReaderContract.NodeReputationEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
+                  if(valueLineSeries.getSeries().size() > 2) {
+                      mCubicValueLineChart.addSeries(valueLineSeries);
+                      mCubicValueLineChart.startAnimation();
+                  }
 
                   btn_Reputation.setTextColor(getResources().getColor(R.color.storj_color_green));
                   btn_ResponseTime.setTextColor(getResources().getColor(R.color.dark_grey));
