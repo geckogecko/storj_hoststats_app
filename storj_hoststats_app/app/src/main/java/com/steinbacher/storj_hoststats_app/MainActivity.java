@@ -56,7 +56,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Query all nodes and insert them into the listview
-        redrawList();
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        ArrayList<StorjNode> storjNodes = new ArrayList<>();
+        Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
+
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            storjNodes.add(new StorjNode(cursor));
+        }
+
+        StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, storjNodes);
+        mListView.setAdapter(adapter);
 
         //start pulling all nodes every x hours if
         //only if this is the first time the app got started
@@ -147,16 +156,15 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void redrawList() {
+        StorjNodeAdapter adapter = (StorjNodeAdapter) mListView.getAdapter();
+
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
-        ArrayList<StorjNode> storjNodes = new ArrayList<>();
         Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
 
+        adapter.clear();
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            storjNodes.add(new StorjNode(cursor));
+            adapter.add(new StorjNode(cursor));
         }
-
-        StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, storjNodes);
-        mListView.setAdapter(adapter);
     }
 
     private void showAddNewNodeDialog() {
