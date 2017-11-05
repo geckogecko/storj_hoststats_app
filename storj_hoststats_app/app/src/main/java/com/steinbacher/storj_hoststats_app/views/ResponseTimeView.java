@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.steinbacher.storj_hoststats_app.R;
 
@@ -34,6 +35,7 @@ public class ResponseTimeView extends android.support.v7.widget.AppCompatRadioBu
 
     public void setResponseTime(int responseTime) {
         mResponseTime = responseTime;
+        Log.i(TAG, "setResponseTime: " + responseTime);
 
         if(responseTime != 0) {
             //set text

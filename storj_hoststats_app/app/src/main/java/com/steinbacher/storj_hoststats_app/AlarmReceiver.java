@@ -119,16 +119,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
 
                         //check if we should send a notification about a new version
-                        if(getSavedActualStorjCoreVersion() == null) {
+                        if(getSavedActualStorjCoreVersion() == null && newestGithubVersion != null) {
                             saveNewUserAgentVersion(newestGithubVersion);
-                        } else if (getSavedActualStorjCoreVersion().isLowerThan(newestGithubVersion)) {
+                        } else if (newestGithubVersion != null && getSavedActualStorjCoreVersion().isLowerThan(newestGithubVersion)) {
                             saveNewUserAgentVersion(newestGithubVersion);
                             sendNewUserAgentVersionNotification();
                         }
 
                         //get the "old" information about this node
                         Cursor cursor = db.getNode(node.getNodeID().getValue());
-                        //its pussible that we pull a node the user deleted at the "same" moment
+                        //its possible that we pull a node the user deleted at the "same" moment
                         if(cursor.getCount() > 0) {
                             StorjNode previusNode = new StorjNode(cursor);
                             node.setSimpleName(previusNode.getSimpleName().getValue());
