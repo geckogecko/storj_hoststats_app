@@ -2,6 +2,7 @@ package com.steinbacher.storj_hoststats_app;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -53,7 +54,12 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
         if(selectedNode.getColumnIndex(NodeReaderContract.NodeEntry.NODE_ID) == -1)
             finish();
 
-        mSelectedNode = new StorjNode(selectedNode);
+        try {
+            mSelectedNode = new StorjNode(selectedNode);
+        } catch(CursorIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            finish();
+        }
 
         AppCompatTextView text_SimpleName = (AppCompatTextView) findViewById(R.id.storjNode_details_SimpleName);
         AppCompatTextView text_NodeID = (AppCompatTextView) findViewById(R.id.storjNode_details_NodeID);
