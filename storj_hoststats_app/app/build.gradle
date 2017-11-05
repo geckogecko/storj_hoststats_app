@@ -7,8 +7,8 @@ android {
         applicationId "com.steinbacher.storj_hoststats_app"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 9
-        versionName "1.1.9"
+        versionCode 10
+        versionName "1.1.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
