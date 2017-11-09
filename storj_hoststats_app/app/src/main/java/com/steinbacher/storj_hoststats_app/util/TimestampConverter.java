@@ -29,36 +29,18 @@ public class TimestampConverter {
         String onlineSinceString = "";
 
         if(elapsedDays > 0) {
-            onlineSinceString += elapsedDays;
-
-            if(elapsedDays == 1) {
-                onlineSinceString += " day ";
-            } else {
-                onlineSinceString += " days ";
-            }
+            onlineSinceString += elapsedDays + "d ";
         }
 
 
         if(elapsedHours > 0) {
-            onlineSinceString += elapsedHours;
-
-            if(elapsedHours == 1) {
-                onlineSinceString += " hour ";
-            } else {
-                onlineSinceString += " hours ";
-            }
+            onlineSinceString += elapsedHours + "h ";
         }
 
         if(elapsedMinutes > 0) {
-            onlineSinceString += elapsedMinutes;
-
-            if(elapsedMinutes == 1) {
-                onlineSinceString += " minute ";
-            } else {
-                onlineSinceString += " minutes ";
-            }
+            onlineSinceString += elapsedMinutes + "m";
         } else {
-            onlineSinceString = "1 minute";
+            onlineSinceString = "1m";
         }
 
         return onlineSinceString;

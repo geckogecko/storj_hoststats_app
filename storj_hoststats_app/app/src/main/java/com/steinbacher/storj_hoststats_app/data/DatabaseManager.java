@@ -56,7 +56,8 @@ public class DatabaseManager {
                 NodeReaderContract.NodeEntry.REPUTATION,
                 NodeReaderContract.NodeEntry.IS_OUTDATED,
                 NodeReaderContract.NodeEntry.SPACE_AVAILABLE,
-                NodeReaderContract.NodeEntry.ONLINE_SINCE
+                NodeReaderContract.NodeEntry.ONLINE_SINCE,
+                NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT_UPDATED
 
         };
 
@@ -153,6 +154,11 @@ public class DatabaseManager {
             insertValues.put(NodeReaderContract.NodeEntry.ONLINE_SINCE, df.format(storjNode.getOnlineSince()));
         }
 
+        if(storjNode.getLastContractSentUpdated() != null) {
+            Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT_UPDATED, df.format(storjNode.getLastContractSentUpdated()));
+        }
+
         db.insert(NodeReaderContract.NodeEntry.TABLE_NAME, null, insertValues);
     }
 
@@ -214,6 +220,11 @@ public class DatabaseManager {
         if(storjNode.getOnlineSince() != null) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             insertValues.put(NodeReaderContract.NodeEntry.ONLINE_SINCE, df.format(storjNode.getOnlineSince()));
+        }
+
+        if(storjNode.getLastContractSentUpdated() != null) {
+            Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT_UPDATED, df.format(storjNode.getLastContractSentUpdated()));
         }
 
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
@@ -280,6 +291,11 @@ public class DatabaseManager {
         if(updatedNode.getOnlineSince() != null) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             insertValues.put(NodeReaderContract.NodeEntry.ONLINE_SINCE, df.format(updatedNode.getOnlineSince()));
+        }
+
+        if(updatedNode.getLastContractSentUpdated() != null) {
+            Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT_UPDATED, df.format(updatedNode.getLastContractSentUpdated()));
         }
 
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);

@@ -80,6 +80,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
         AppCompatTextView text_LastContractSent = (AppCompatTextView) findViewById(R.id.storjNode_details_LastContractSent);
         AppCompatTextView text_SpaceAvailable = (AppCompatTextView) findViewById(R.id.storjNode_details_SpaceAvailable);
         AppCompatTextView text_onlineSince = (AppCompatTextView) findViewById(R.id.storjNode_details_OnlineSince);
+        AppCompatTextView text_LastContractSentUpdated = (AppCompatTextView) findViewById(R.id.storjNode_details_LastContractSentUpdated);
 
         AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
         AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
@@ -138,6 +139,13 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 text_onlineSince.setText(getString(R.string.details_OnlineSince, getString(R.string.details_OnlineSince_offline)));
             }
 
+            if(mSelectedNode.getLastContractSentUpdated() != null) {
+                String lastUpdatedString = TimestampConverter.getFormatedTimediff(mSelectedNode.getLastContractSentUpdated(), Calendar.getInstance().getTime());
+                text_LastContractSentUpdated.setText(getString(R.string.details_LastContractSentUpdated, lastUpdatedString));
+            } else {
+                text_LastContractSentUpdated.setVisibility(View.GONE);
+            }
+
             text_Error.setVisibility(View.GONE);
 
         } else {
@@ -151,6 +159,8 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             text_LastTimeout.setVisibility(View.GONE);
             text_TimeoutRate.setVisibility(View.GONE);
             text_LastContractSent.setVisibility(View.GONE);
+            text_onlineSince.setVisibility(View.GONE);
+            text_LastContractSentUpdated.setVisibility(View.GONE);
         }
 
         //set status

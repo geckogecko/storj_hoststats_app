@@ -137,6 +137,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                             if(previusNode.getResponseTime().getValue() != previusNode.getResponseTime().getDefault())
                                 node.setOnlineSince(previusNode.getOnlineSince());
 
+                            //check if the lastContractSent updated
+                            //only update if its not the first time it got increased
+                            if(node.getLastContractSent().getValue() != previusNode.getLastContractSent().getValue()) {
+                                node.setLastContractSentUpdated(Calendar.getInstance().getTime());
+                            } else {
+                                node.setLastContractSentUpdated(previusNode.getLastContractSentUpdated());
+                            }
+
                             if (isNodeOffline(node)) {
                                 node.setResponseTime(node.getResponseTime().getDefault());
                                 node.setShouldSendNotification(false);

@@ -53,6 +53,7 @@ public class StorjNode {
     private boolean mShouldSendNotification;
     private boolean mIsOutdated;
     private Date mOnlineSince;
+    private Date mLastContractSentUpdated;
 
     public StorjNode(String nodeID) {
         mNodeID = new NodeID(nodeID);
@@ -73,6 +74,8 @@ public class StorjNode {
         mShouldSendNotification = true;
         mIsOutdated = false;
         mOnlineSince = null;
+        mLastContractSentUpdated = null;
+
     }
 
     public StorjNode(JSONObject storjApiResponse) throws JSONException {
@@ -139,6 +142,7 @@ public class StorjNode {
         mShouldSendNotification = true;
         mIsOutdated = false;
         mOnlineSince = Calendar.getInstance().getTime();
+        mLastContractSentUpdated = Calendar.getInstance().getTime();
 
     }
 
@@ -238,6 +242,12 @@ public class StorjNode {
             mOnlineSince = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ONLINE_SINCE)));
         else
             mOnlineSince = Calendar.getInstance().getTime();
+
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT_UPDATED) != -1
+                && cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT_UPDATED)) != null)
+            mLastContractSentUpdated = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT_UPDATED)));
+        else
+            mLastContractSentUpdated = Calendar.getInstance().getTime();
     }
 
     public Date parseDateString(String dateString) {
@@ -391,5 +401,13 @@ public class StorjNode {
 
     public void setOnlineSince(Date onlineSince) {
         mOnlineSince = onlineSince;
+    }
+
+    public Date getLastContractSentUpdated() {
+        return mLastContractSentUpdated;
+    }
+
+    public void setLastContractSentUpdated(Date lastContractSentUpdated) {
+        mLastContractSentUpdated = lastContractSentUpdated;
     }
 }

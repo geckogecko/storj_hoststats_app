@@ -28,6 +28,7 @@ public class NodeReaderContract {
         public static final String IS_OUTDATED = "isOutdated";
         public static final String SPACE_AVAILABLE = "spaceAvailable";
         public static final String ONLINE_SINCE = "onlineSince";
+        public static final String LAST_CONTRACT_SENT_UPDATED = "lastContractSentUpdated";
     }
 
     public static class NodeResponseTimeEntry implements BaseColumns {
