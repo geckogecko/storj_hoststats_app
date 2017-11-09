@@ -6,7 +6,6 @@ package com.steinbacher.storj_hoststats_app;
 
 public class Parameters {
     public static final String UPDATE_UI_ACTION = "steinbacher.georg.storj_hoststats_app.UPDATEUI";
-    public static final String UPDATE_UI_NODEID = "nodeID";
 
     public static final String SHARED_PREF = "sharedPrefs";
 
