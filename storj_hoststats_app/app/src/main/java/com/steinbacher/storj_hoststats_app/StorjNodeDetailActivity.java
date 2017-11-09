@@ -62,6 +62,10 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             finish();
         }
 
+        if(mSelectedNode.getNodeID().getValue() == null) {
+            finish();
+        }
+
         AppCompatTextView text_SimpleName = (AppCompatTextView) findViewById(R.id.storjNode_details_SimpleName);
         AppCompatTextView text_NodeID = (AppCompatTextView) findViewById(R.id.storjNode_details_NodeID);
         AppCompatTextView text_Address = (AppCompatTextView) findViewById(R.id.storjNode_details_Address);
@@ -82,7 +86,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
         ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
 
         ValueLineSeries series = getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
-        if(series.getSeries().size() > 2) {
+        if(series != null && series.getSeries().size() > 2) {
             mCubicValueLineChart.addSeries(series);
             mCubicValueLineChart.startAnimation();
         }
@@ -218,7 +222,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 mCubicValueLineChart.clearChart();
 
                 ValueLineSeries valueLineSeries = getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
-                if (valueLineSeries.getSeries().size() > 2) {
+                if (valueLineSeries != null && valueLineSeries.getSeries().size() > 2) {
                     mCubicValueLineChart.addSeries(valueLineSeries);
                     mCubicValueLineChart.startAnimation();
                 }
@@ -238,7 +242,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                   mCubicValueLineChart.clearChart();
 
                   ValueLineSeries valueLineSeries = getSeriesFromDB(NodeReaderContract.NodeReputationEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
-                  if(valueLineSeries.getSeries().size() > 2) {
+                  if(valueLineSeries != null && valueLineSeries.getSeries().size() > 2) {
                       mCubicValueLineChart.addSeries(valueLineSeries);
                       mCubicValueLineChart.startAnimation();
                   }
