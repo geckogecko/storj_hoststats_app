@@ -13,7 +13,7 @@ public class DbHelper extends SQLiteOpenHelper{
     private static final String TAG = "DbHelper";
 
     private static final String DATABASE_NAME = "nodes.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public static final String SQL_CREATE_ENTRIES_NODE_ENTRY =
             "CREATE TABLE IF NOT EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME + " (" +
@@ -33,7 +33,8 @@ public class DbHelper extends SQLiteOpenHelper{
                     NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT + " INTEGER," +
                     NodeReaderContract.NodeEntry.REPUTATION + " INTEGER," +
                     NodeReaderContract.NodeEntry.IS_OUTDATED + " INTEGER," +
-                    NodeReaderContract.NodeEntry.SPACE_AVAILABLE + " INTEGER)";
+                    NodeReaderContract.NodeEntry.SPACE_AVAILABLE + " INTEGER," +
+                    NodeReaderContract.NodeEntry.ONLINE_SINCE + " TEXT)";
 
     public static final String SQL_DELETE_ENTRIES_NODE_ENTRY =
             "DROP TABLE IF EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME;
@@ -88,6 +89,11 @@ public class DbHelper extends SQLiteOpenHelper{
                         NodeReaderContract.NodeEntry.SPACE_AVAILABLE +" INTEGER;");
 
                 db.execSQL(SQL_CREATE_ENTRIES_NODE_REPUTATION_ENTRY);
+
+            case 2:
+                db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
+                        NodeReaderContract.NodeEntry.ONLINE_SINCE +" TEXT;");
+
         }
     }
 }

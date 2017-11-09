@@ -27,6 +27,7 @@ public class NodeReaderContract {
         public static final String REPUTATION = "reputation";
         public static final String IS_OUTDATED = "isOutdated";
         public static final String SPACE_AVAILABLE = "spaceAvailable";
+        public static final String ONLINE_SINCE = "onlineSince";
     }
 
     public static class NodeResponseTimeEntry implements BaseColumns {

@@ -133,6 +133,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                             StorjNode previusNode = new StorjNode(cursor);
                             node.setSimpleName(previusNode.getSimpleName().getValue());
 
+                            //check if this node came online or was online before
+                            if(previusNode.getResponseTime().getValue() != -1)
+                                node.setOnlineSince(previusNode.getOnlineSince());
+
                             if (isNodeOffline(node)) {
                                 node.setResponseTime(node.getResponseTime().getDefault());
                                 node.setShouldSendNotification(false);

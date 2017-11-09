@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.steinbacher.storj_hoststats_app.StorjNodeParameters.Address;
@@ -51,6 +52,7 @@ public class StorjNode {
 
     private boolean mShouldSendNotification;
     private boolean mIsOutdated;
+    private Date mOnlineSince;
 
     public StorjNode(String nodeID) {
         mNodeID = new NodeID(nodeID);
@@ -70,6 +72,7 @@ public class StorjNode {
 
         mShouldSendNotification = true;
         mIsOutdated = false;
+        mOnlineSince = null;
     }
 
     public StorjNode(JSONObject storjApiResponse) throws JSONException {
@@ -135,6 +138,7 @@ public class StorjNode {
 
         mShouldSendNotification = true;
         mIsOutdated = false;
+        mOnlineSince = Calendar.getInstance().getTime();
 
     }
 
@@ -228,6 +232,12 @@ public class StorjNode {
         if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION) != -1
                 && cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION)) != null)
             mShouldSendNotification = cursor.getInt(cursor.getColumnIndex(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION)) == 1;
+
+        if(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ONLINE_SINCE) != -1
+                && cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ONLINE_SINCE)) != null)
+            mOnlineSince = parseDateString(cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeEntry.ONLINE_SINCE)));
+        else
+            mOnlineSince = Calendar.getInstance().getTime();
     }
 
     public Date parseDateString(String dateString) {
@@ -373,5 +383,13 @@ public class StorjNode {
 
     public SpaceAvailable isSpaceAvailable() {
         return mSpaceAvailable;
+    }
+
+    public Date getOnlineSince() {
+        return mOnlineSince;
+    }
+
+    public void setOnlineSince(Date onlineSince) {
+        mOnlineSince = onlineSince;
     }
 }

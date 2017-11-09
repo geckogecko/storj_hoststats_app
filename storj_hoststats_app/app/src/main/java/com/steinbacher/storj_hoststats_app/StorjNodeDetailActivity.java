@@ -16,6 +16,7 @@ import org.eazegraph.lib.models.ValueLinePoint;
 import org.eazegraph.lib.models.ValueLineSeries;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -73,6 +74,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
         AppCompatTextView text_Error = (AppCompatTextView) findViewById(R.id.storjNode_details_Error);
         AppCompatTextView text_LastContractSent = (AppCompatTextView) findViewById(R.id.storjNode_details_LastContractSent);
         AppCompatTextView text_SpaceAvailable = (AppCompatTextView) findViewById(R.id.storjNode_details_SpaceAvailable);
+        AppCompatTextView text_onlineSince = (AppCompatTextView) findViewById(R.id.storjNode_details_OnlineSince);
 
         AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
         AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
@@ -123,6 +125,63 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             else
                 text_LastContractSent.setText(getString(R.string.details_LastContractSent, "0"));
             text_SpaceAvailable.setText(getString(R.string.details_SpaceAvailable, Boolean.toString(mSelectedNode.isSpaceAvailable().getValue())));
+
+            if(mSelectedNode.getOnlineSince() != null && mSelectedNode.getResponseTime().getValue() != -1) {
+                long timeDiff = (Calendar.getInstance().getTime().getTime() - mSelectedNode.getOnlineSince().getTime());
+
+                long secondsInMilli = 1000;
+                long minutesInMilli =  secondsInMilli * 60;
+                long hoursInMilli = minutesInMilli * 60;
+                long daysInMilli = hoursInMilli * 24;
+
+                long elapsedDays = timeDiff / daysInMilli;
+                timeDiff = timeDiff % daysInMilli;
+
+                long elapsedHours = timeDiff / hoursInMilli;
+                timeDiff = timeDiff % hoursInMilli;
+
+                long elapsedMinutes = timeDiff / minutesInMilli;
+
+                String onlineSinceString = "";
+
+                if(elapsedDays > 0) {
+                    onlineSinceString += elapsedDays;
+
+                    if(elapsedDays == 1) {
+                        onlineSinceString += " day ";
+                    } else {
+                        onlineSinceString += " days ";
+                    }
+                }
+
+
+                if(elapsedHours > 0) {
+                    onlineSinceString += elapsedHours;
+
+                    if(elapsedHours == 1) {
+                        onlineSinceString += " hour ";
+                    } else {
+                        onlineSinceString += " hours ";
+                    }
+                }
+
+                if(elapsedMinutes > 0) {
+                    onlineSinceString += elapsedMinutes;
+
+                    if(elapsedMinutes == 1) {
+                        onlineSinceString += " minute ";
+                    } else {
+                        onlineSinceString += " minutes ";
+                    }
+                } else {
+                    onlineSinceString = "1 minute";
+                }
+
+
+                text_onlineSince.setText(getString(R.string.details_OnlineSince, onlineSinceString));
+            } else {
+                text_onlineSince.setText(getString(R.string.details_OnlineSince, getString(R.string.details_OnlineSince_offline)));
+            }
 
             text_Error.setVisibility(View.GONE);
 

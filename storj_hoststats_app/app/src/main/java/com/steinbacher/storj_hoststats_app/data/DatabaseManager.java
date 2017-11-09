@@ -140,11 +140,17 @@ public class DatabaseManager {
             insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, storjNode.getReputation().getValue());
         }
 
-        if(storjNode.isSpaceAvailable().isSet())
-            insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, storjNode.isSpaceAvailable().getValue() ? 1:0);
+        if(storjNode.isSpaceAvailable().isSet()) {
+            insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, storjNode.isSpaceAvailable().getValue() ? 1 : 0);
+        }
 
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification() ? 1:0);
         insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, storjNode.isOutdated()? 1:0);
+
+        if(storjNode.getOnlineSince() != null) {
+            Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            insertValues.put(NodeReaderContract.NodeEntry.ONLINE_SINCE, df.format(storjNode.getOnlineSince()));
+        }
 
         db.insert(NodeReaderContract.NodeEntry.TABLE_NAME, null, insertValues);
     }
@@ -204,6 +210,11 @@ public class DatabaseManager {
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, storjNode.getShouldSendNotification()? 1:0);
         insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, storjNode.isOutdated()? 1:0);
 
+        if(storjNode.getOnlineSince() != null) {
+            Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            insertValues.put(NodeReaderContract.NodeEntry.ONLINE_SINCE, df.format(storjNode.getOnlineSince()));
+        }
+
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
     }
 
@@ -234,7 +245,7 @@ public class DatabaseManager {
             insertValues.put(NodeReaderContract.NodeEntry.LAST_SEEN, df.format(updatedNode.getLastSeen().getValue()));
         }
 
-        if(storjNode.getLastTimeout().isSet()) {
+        if(updatedNode.getLastTimeout().isSet()) {
             Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             insertValues.put(NodeReaderContract.NodeEntry.LAST_TIMEOUT, df.format(storjNode.getLastTimeout().getValue()));
         }
@@ -253,18 +264,22 @@ public class DatabaseManager {
             insertValues.put(NodeReaderContract.NodeEntry.LAST_CHECKED, df.format(updatedNode.getLastChecked().getValue()));
         }
 
-        if(storjNode.getLastContractSent().isSet())
+        if(updatedNode.getLastContractSent().isSet())
             insertValues.put(NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT, updatedNode.getLastContractSent().getValue());
 
-        if(storjNode.getReputation().isSet())
+        if(updatedNode.getReputation().isSet())
             insertValues.put(NodeReaderContract.NodeEntry.REPUTATION, updatedNode.getReputation().getValue());
 
-        if(storjNode.isSpaceAvailable().isSet())
+        if(updatedNode.isSpaceAvailable().isSet())
             insertValues.put(NodeReaderContract.NodeEntry.SPACE_AVAILABLE, updatedNode.isSpaceAvailable().getValue() ? 1:0);
 
         insertValues.put(NodeReaderContract.NodeEntry.SHOULD_SEND_NOTIFICATION, updatedNode.getShouldSendNotification() ? 1:0);
         insertValues.put(NodeReaderContract.NodeEntry.IS_OUTDATED, updatedNode.isOutdated() ? 1:0);
 
+        if(updatedNode.getOnlineSince() != null) {
+            Format df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            insertValues.put(NodeReaderContract.NodeEntry.ONLINE_SINCE, df.format(updatedNode.getOnlineSince()));
+        }
 
         db.update(NodeReaderContract.NodeEntry.TABLE_NAME, insertValues, filter, null);
     }
