@@ -134,7 +134,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             node.setSimpleName(previusNode.getSimpleName().getValue());
 
                             //check if this node came online or was online before
-                            if(previusNode.getResponseTime().getValue() != -1)
+                            if(previusNode.getResponseTime().getValue() != previusNode.getResponseTime().getDefault())
                                 node.setOnlineSince(previusNode.getOnlineSince());
 
                             if (isNodeOffline(node)) {
@@ -153,7 +153,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     node.setShouldSendNotification(true);
                                 }
                             }
-
 
                             db.updateNode(node);
 

@@ -36,7 +36,7 @@ public class ResponseTimeView extends android.support.v7.widget.AppCompatRadioBu
     public void setResponseTime(int responseTime) {
         mResponseTime = responseTime;
 
-        if(responseTime != 0) {
+        if(responseTime > 0) {
             //set text
             Float responseTimeSeconds = (float) responseTime / 1000;
             setText(String.format("%.1f", responseTimeSeconds));

@@ -15,9 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
+import com.steinbacher.storj_hoststats_app.util.TimestampConverter;
 import com.steinbacher.storj_hoststats_app.views.ResponseTimeView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by stge on 13.10.17.
@@ -50,6 +52,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
         TextView txtAddress = (TextView) view.findViewById(R.id.textView_address);
         final TextView txtUserAgent = (TextView) view.findViewById(R.id.textView_userAgent);
         ResponseTimeView responseTimeView = (ResponseTimeView) view.findViewById(R.id.responseTimeView);
+        TextView txtOnlineSince = (TextView) view.findViewById(R.id.textView_onlineSince);
 
         //node simplename
         txtNodeSimpleName.setText(selectedNode.getSimpleName().getValue());
@@ -79,7 +82,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
 
         if(selectedNode.getLastChecked().getValue() == selectedNode.getLastChecked().getDefault()
                 || selectedNode.getResponseTime().getValue() == selectedNode.getResponseTime().getDefault()) {
-            responseTimeView.setResponseTime(0);
+            responseTimeView.setResponseTime(-1);
 
             if(selectedNode.getAddress().isSet())
                 txtAddress.setText(mContext.getString(R.string.address, selectedNode.getAddress().getValue() + ":" + selectedNode.getPort().getValue()));
@@ -97,6 +100,13 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
                 }
             } else {
                 txtUserAgent.setText("");
+            }
+
+            //set online since
+            if(selectedNode.getUserAgent().isSet() && selectedNode.getAddress().isSet()) {
+                txtOnlineSince.setText(mContext.getString(R.string.details_OnlineSince, mContext.getString(R.string.details_OnlineSince_offline)));
+            } else {
+                txtOnlineSince.setText("");
             }
 
             return view;
@@ -117,6 +127,10 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
                 txtUserAgent.setText(mContext.getString(R.string.userAgent, selectedNode.getUserAgent().getValue().toString()));
                 txtUserAgent.setTextColor(mContext.getResources().getColor(R.color.textColor));
             }
+
+        //set online since
+        String onlineSinceString = TimestampConverter.getFormatedTimediff(selectedNode.getOnlineSince(), Calendar.getInstance().getTime());
+        txtOnlineSince.setText(mContext.getString(R.string.details_OnlineSince, onlineSinceString));
 
 
         return view;

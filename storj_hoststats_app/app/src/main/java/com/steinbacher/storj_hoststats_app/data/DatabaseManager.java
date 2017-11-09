@@ -55,7 +55,8 @@ public class DatabaseManager {
                 NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT,
                 NodeReaderContract.NodeEntry.REPUTATION,
                 NodeReaderContract.NodeEntry.IS_OUTDATED,
-                NodeReaderContract.NodeEntry.SPACE_AVAILABLE
+                NodeReaderContract.NodeEntry.SPACE_AVAILABLE,
+                NodeReaderContract.NodeEntry.ONLINE_SINCE
 
         };
 
