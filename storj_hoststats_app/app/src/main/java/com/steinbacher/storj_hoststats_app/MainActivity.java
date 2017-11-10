@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -71,6 +72,17 @@ public class MainActivity extends AppCompatActivity {
         //only if this is the first time the app got started
         AlarmReceiver alarm = new AlarmReceiver();
         alarm.scheduleAlarm(mContext);
+
+        //updated the ui every minute
+        final Handler handler = new Handler();
+        handler.postDelayed( new Runnable() {
+
+            @Override
+            public void run() {
+                redrawList();
+                handler.postDelayed( this, 60 * 1000 );
+            }
+        }, 60 * 1000 );
     }
 
     @Override
