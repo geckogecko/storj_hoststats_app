@@ -19,6 +19,17 @@
         android:layout_marginTop="5sp"
         android:layout_marginBottom="5sp"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginRight="7sp"
+        android:layout_marginBottom="5sp"/>
+
     <android.support.v7.widget.LinearLayoutCompat
         android:orientation="vertical"
         android:layout_width="wrap_content"

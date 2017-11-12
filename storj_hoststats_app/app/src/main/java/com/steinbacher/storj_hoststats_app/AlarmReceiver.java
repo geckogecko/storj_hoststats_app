@@ -13,6 +13,9 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.*;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,11 +89,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         @Override
         protected StorjNode doInBackground(List<StorjNode>... lists) {
             StorjNode node = null;
+            ListViewHolder holder = ListViewHolder.getInstance();
+            int nodePostion = 0;
 
             if(hasActiveInternetConnection()) {
-
                 for (StorjNode storjNode : lists[0]) {
                     try {
+
+                        //start the loading bar
+                        holder.showLoadingBar(nodePostion, true);
+
                         JSONObject storjApiReponse = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID().getValue());
                         Log.d(TAG, "onReceive: " + storjApiReponse.toString());
 
@@ -166,12 +174,19 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                             publishProgress(node.getNodeID().getValue());
                         }
+
+                        holder.showLoadingBar(nodePostion, false);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        holder.showLoadingBar(nodePostion, false);
                         Log.i(TAG, "doInBackground: " + storjNode.getNodeID().getValue() + " not found");
+
                     } catch (JSONException e) {
+                        holder.showLoadingBar(nodePostion, false);
                         e.printStackTrace();
                     }
+
+                    nodePostion++;
                 }
             }
 

@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         StorjNodeAdapter adapter = new StorjNodeAdapter(this, R.layout.activity_main_row, storjNodes);
         mListView.setAdapter(adapter);
+        ListViewHolder.getInstance().setListView(mListView);
 
         //start pulling all nodes every x hours if
         //only if this is the first time the app got started
