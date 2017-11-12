@@ -98,7 +98,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
         if(mSelectedNode.getAddress().isSet()) {
             SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            int gmtOffset = TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
+            int gmtOffset = TimeZone.getDefault().getRawOffset() ;
 
             //NodeID
             text_NodeID.setTitle(getString(R.string.details_NodeID));
