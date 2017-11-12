@@ -180,7 +180,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 text_LastTimeout.setStatus(DetailsLineView.Status.NoStatus);
             } else {
                 text_LastTimeout.setValue(getString(R.string.details_No_Timeout));
-                text_LastTimeout.setStatus(DetailsLineView.Status.NoStatus);
+                text_LastTimeout.setStatus(DetailsLineView.Status.OK);
             }
 
             //Timeout Rate
