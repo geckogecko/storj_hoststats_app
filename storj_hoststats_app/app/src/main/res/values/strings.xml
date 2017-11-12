@@ -5,6 +5,7 @@
     <string name="address">Address: %1$s</string>
     <string name="userAgent">UserAgent: %1$s</string>
     <string name="userAgent_outdated">UserAgent: %1$s (Outdated Version)</string>
+    <string name="onlineSince">Online since: %1$s</string>
     <string name="edit_node">Edit Node</string>
 
     <!-- Add/edit Node popup -->

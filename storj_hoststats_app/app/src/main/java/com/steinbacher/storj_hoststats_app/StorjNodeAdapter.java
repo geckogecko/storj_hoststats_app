@@ -80,8 +80,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
             }
         });
 
-        if(selectedNode.getLastChecked().getValue() == selectedNode.getLastChecked().getDefault()
-                || selectedNode.getResponseTime().getValue() == selectedNode.getResponseTime().getDefault()) {
+        if(selectedNode.getResponseTime().getValue() == selectedNode.getResponseTime().getDefault()) {
             responseTimeView.setResponseTime(-1);
 
             if(selectedNode.getAddress().isSet())
@@ -104,7 +103,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
 
             //set online since
             if(selectedNode.getUserAgent().isSet() && selectedNode.getAddress().isSet()) {
-                txtOnlineSince.setText(mContext.getString(R.string.details_OnlineSince, mContext.getString(R.string.details_OnlineSince_offline)));
+                txtOnlineSince.setText(mContext.getString(R.string.onlineSince, mContext.getString(R.string.details_OnlineSince_offline)));
             } else {
                 txtOnlineSince.setText("");
             }
@@ -130,7 +129,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
 
         //set online since
         String onlineSinceString = TimestampConverter.getFormatedTimediff(selectedNode.getOnlineSince(), Calendar.getInstance().getTime());
-        txtOnlineSince.setText(mContext.getString(R.string.details_OnlineSince, onlineSinceString));
+        txtOnlineSince.setText(mContext.getString(R.string.onlineSince, onlineSinceString));
 
 
         return view;
