@@ -23,6 +23,7 @@ import java.util.TimeZone;
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 import com.steinbacher.storj_hoststats_app.data.NodeReaderContract;
 import com.steinbacher.storj_hoststats_app.util.TimestampConverter;
+import com.steinbacher.storj_hoststats_app.views.DetailsLineView;
 
 public class StorjNodeDetailActivity extends AppCompatActivity{
     private static final String TAG = "StorjNodeDetailActivity";
@@ -67,20 +68,20 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             finish();
         }
 
-        AppCompatTextView text_SimpleName = (AppCompatTextView) findViewById(R.id.storjNode_details_SimpleName);
-        AppCompatTextView text_NodeID = (AppCompatTextView) findViewById(R.id.storjNode_details_NodeID);
-        AppCompatTextView text_Address = (AppCompatTextView) findViewById(R.id.storjNode_details_Address);
-        AppCompatTextView text_LastSeen = (AppCompatTextView) findViewById(R.id.storjNode_details_LastSeen);
-        AppCompatTextView text_UserAgent = (AppCompatTextView) findViewById(R.id.storjNode_details_UserAgent);
-        AppCompatTextView text_Protocol = (AppCompatTextView) findViewById(R.id.storjNode_details_Protocol);
-        AppCompatTextView text_LastTimeout = (AppCompatTextView) findViewById(R.id.storjNode_details_LastTimeout);
-        AppCompatTextView text_TimeoutRate = (AppCompatTextView) findViewById(R.id.storjNode_details_TimeoutRate);
-        AppCompatTextView text_Status = (AppCompatTextView) findViewById(R.id.storjNode_details_Status);
         AppCompatTextView text_Error = (AppCompatTextView) findViewById(R.id.storjNode_details_Error);
-        AppCompatTextView text_LastContractSent = (AppCompatTextView) findViewById(R.id.storjNode_details_LastContractSent);
-        AppCompatTextView text_SpaceAvailable = (AppCompatTextView) findViewById(R.id.storjNode_details_SpaceAvailable);
-        AppCompatTextView text_onlineSince = (AppCompatTextView) findViewById(R.id.storjNode_details_OnlineSince);
-        AppCompatTextView text_LastContractSentUpdated = (AppCompatTextView) findViewById(R.id.storjNode_details_LastContractSentUpdated);
+        AppCompatTextView text_SimpleName = (AppCompatTextView) findViewById(R.id.storjNode_details_SimpleName);
+        DetailsLineView text_NodeID = (DetailsLineView) findViewById(R.id.storjNode_details_NodeID);
+        DetailsLineView text_Address = (DetailsLineView) findViewById(R.id.storjNode_details_Address);
+        DetailsLineView text_LastSeen = (DetailsLineView) findViewById(R.id.storjNode_details_LastSeen);
+        DetailsLineView text_UserAgent = (DetailsLineView) findViewById(R.id.storjNode_details_UserAgent);
+        DetailsLineView text_Protocol = (DetailsLineView) findViewById(R.id.storjNode_details_Protocol);
+        DetailsLineView text_LastTimeout = (DetailsLineView) findViewById(R.id.storjNode_details_LastTimeout);
+        DetailsLineView text_TimeoutRate = (DetailsLineView) findViewById(R.id.storjNode_details_TimeoutRate);
+        AppCompatTextView text_Status = (AppCompatTextView) findViewById(R.id.storjNode_details_Status);
+        DetailsLineView text_LastContractSent = (DetailsLineView) findViewById(R.id.storjNode_details_LastContractSent);
+        DetailsLineView text_SpaceAvailable = (DetailsLineView) findViewById(R.id.storjNode_details_SpaceAvailable);
+        DetailsLineView text_onlineSince = (DetailsLineView) findViewById(R.id.storjNode_details_OnlineSince);
+        DetailsLineView text_LastContractSentUpdated = (DetailsLineView) findViewById(R.id.storjNode_details_LastContractSentUpdated);
 
         AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
         AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
@@ -99,49 +100,144 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
             int gmtOffset = TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
 
-            text_NodeID.setText(getString(R.string.details_NodeID, mSelectedNode.getNodeID().getValue()));
-            String address = mSelectedNode.getAddress().getValue() + ":" + Integer.toString(mSelectedNode.getPort().getValue());
-            text_Address.setText(getString(R.string.details_Address, address));
+            //NodeID
+            text_NodeID.setTitle(getString(R.string.details_NodeID));
+            text_NodeID.setValue(mSelectedNode.getNodeID().getValue());
+            text_NodeID.setStatus(DetailsLineView.Status.NoStatus);
 
-            if (mSelectedNode.isOutdated()) {
-                text_UserAgent.setText(getString(R.string.userAgent_outdated, mSelectedNode.getUserAgent().getValue().toString()));
-                text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
+            //Address + Port
+            text_Address.setTitle(getString(R.string.details_Address));
+
+            if(mSelectedNode.getAddress().isSet() && mSelectedNode.getPort().isSet()) {
+                String address = mSelectedNode.getAddress().getValue() + ":" + Integer.toString(mSelectedNode.getPort().getValue());
+                text_Address.setValue(address);
+                text_Address.setStatus(DetailsLineView.Status.NoStatus);
             } else {
-                if(mSelectedNode.getUserAgent().isSet()) {
-                    text_UserAgent.setText(getString(R.string.userAgent, mSelectedNode.getUserAgent().getValue().toString()));
-                    text_UserAgent.setTextColor(getResources().getColor(R.color.textColor));
-                } else {
-                    text_UserAgent.setText(getString(R.string.userAgent, getString(R.string.unknown)));
-                }
-
+                text_Address.setValue(getString(R.string.unknown));
+                text_Address.setStatus(DetailsLineView.Status.NOK);
             }
 
-            text_LastSeen.setText(getString(R.string.details_LastSeen, simpleDate.format(mSelectedNode.getLastSeen().getValue().getTime() + gmtOffset)));
-            text_Protocol.setText(getString(R.string.details_Protocol, mSelectedNode.getProtocol().getValue()));
+            //UserAgent
+            text_UserAgent.setTitle(getString(R.string.details_UserAgent));
 
-            if(mSelectedNode.getLastTimeout().isSet())
-                text_LastTimeout.setText(getString(R.string.details_LastTimeout, simpleDate.format(mSelectedNode.getLastTimeout().getValue().getTime() + gmtOffset)));
-            else
-                text_LastTimeout.setText(getString(R.string.details_LastTimeout, getString(R.string.details_No_Timeout)));
+            if (mSelectedNode.isOutdated()) {
+                text_UserAgent.setValue(getString(R.string.userAgent_outdated, mSelectedNode.getUserAgent().getValue().toString()));
+                text_UserAgent.setStatus(DetailsLineView.Status.NOK);
+            } else {
+                if(mSelectedNode.getUserAgent().isSet()) {
+                    text_UserAgent.setValue(mSelectedNode.getUserAgent().getValue().toString());
+                    text_UserAgent.setStatus(DetailsLineView.Status.OK);
+                } else {
+                    text_UserAgent.setValue(getString(R.string.unknown));
+                    text_UserAgent.setStatus(DetailsLineView.Status.NOK);
+                }
+            }
 
-            text_TimeoutRate.setText(getString(R.string.details_TimeoutRate, String.format("%.4f",mSelectedNode.getTimeoutRate().getValue())));
+            //LastSeen
+            text_LastSeen.setTitle(getString(R.string.details_LastSeen));
 
-            if(mSelectedNode.getLastContractSent().isSet())
-                text_LastContractSent.setText(getString(R.string.details_LastContractSent, Long.toString(mSelectedNode.getLastContractSent().getValue())));
-            else
-                text_LastContractSent.setText(getString(R.string.details_LastContractSent, "0"));
-            text_SpaceAvailable.setText(getString(R.string.details_SpaceAvailable, Boolean.toString(mSelectedNode.isSpaceAvailable().getValue())));
+            if(mSelectedNode.getLastSeen().isSet()) {
+                if(mSelectedNode.getResponseTime().getValue() != mSelectedNode.getResponseTime().getDefault()) {
+                    text_LastSeen.setValue(simpleDate.format(mSelectedNode.getLastSeen().getValue().getTime() + gmtOffset));
+                    text_LastSeen.setStatus(DetailsLineView.Status.OK);
+                } else {
+                    text_LastSeen.setValue(simpleDate.format(mSelectedNode.getLastSeen().getValue().getTime() + gmtOffset));
+                    text_LastSeen.setStatus(DetailsLineView.Status.NOK);
+                }
+            } else {
+                text_LastSeen.setValue(getString(R.string.unknown));
+                text_LastSeen.setStatus(DetailsLineView.Status.NOK);
+            }
+
+
+            //UserAgent
+            text_UserAgent.setTitle(getString(R.string.details_UserAgent));
+
+            if(mSelectedNode.getUserAgent().isSet()) {
+                text_UserAgent.setValue(mSelectedNode.getUserAgent().getValue().toString());
+                text_UserAgent.setStatus(DetailsLineView.Status.OK);
+            } else {
+                text_UserAgent.setValue(getString(R.string.unknown));
+                text_UserAgent.setStatus(DetailsLineView.Status.OK);
+            }
+
+            //Protocol
+            text_Protocol.setTitle(getString(R.string.details_Protocol));
+
+            if(mSelectedNode.getProtocol().isSet()) {
+                text_Protocol.setValue(mSelectedNode.getProtocol().getValue().toString());
+                text_Protocol.setStatus(DetailsLineView.Status.OK);
+            } else {
+                text_Protocol.setValue(getString(R.string.unknown));
+                text_Protocol.setStatus(DetailsLineView.Status.OK);
+            }
+
+            //Last Timeout
+            text_LastTimeout.setTitle(getString(R.string.details_LastTimeout));
+
+            if(mSelectedNode.getLastTimeout().isSet()) {
+                text_LastTimeout.setValue(simpleDate.format(mSelectedNode.getLastTimeout().getValue().getTime() + gmtOffset));
+                text_LastTimeout.setStatus(DetailsLineView.Status.NoStatus);
+            } else {
+                text_LastTimeout.setValue(getString(R.string.details_No_Timeout));
+                text_LastTimeout.setStatus(DetailsLineView.Status.NoStatus);
+            }
+
+            //Timeout Rate
+            //TODO set to nok if too high
+            text_TimeoutRate.setTitle(getString(R.string.details_TimeoutRate));
+
+            if(mSelectedNode.getTimeoutRate().isSet()) {
+                text_TimeoutRate.setValue(String.format("%.4f",mSelectedNode.getTimeoutRate().getValue()));
+                text_TimeoutRate.setStatus(DetailsLineView.Status.OK);
+            } else {
+                text_TimeoutRate.setValue("0");
+                text_TimeoutRate.setStatus(DetailsLineView.Status.OK);
+            }
+
+            //LastContractSent
+            //TODO set to nok if it increases too slow / never
+            text_LastContractSent.setTitle(getString(R.string.details_LastContractSent));
+
+            if(mSelectedNode.getLastContractSent().isSet()) {
+                text_LastContractSent.setValue(Long.toString(mSelectedNode.getLastContractSent().getValue()));
+                text_LastContractSent.setStatus(DetailsLineView.Status.NoStatus);
+            } else {
+                text_LastContractSent.setValue(getString(R.string.unknown));
+                text_LastContractSent.setStatus(DetailsLineView.Status.NOK);
+            }
+
+            //SpaceAvailable
+            text_SpaceAvailable.setTitle(getString(R.string.details_SpaceAvailable));
+
+            if(mSelectedNode.isSpaceAvailable().isSet()) {
+                text_SpaceAvailable.setValue(Boolean.toString(mSelectedNode.isSpaceAvailable().getValue()));
+                text_SpaceAvailable.setStatus(DetailsLineView.Status.OK);
+            } else {
+                text_SpaceAvailable.setValue(getString(R.string.unknown));
+                text_SpaceAvailable.setStatus(DetailsLineView.Status.NOK);
+            }
+
+            //Online since
+            text_onlineSince.setTitle(getString(R.string.details_OnlineSince));
 
             if(mSelectedNode.getOnlineSince() != null && mSelectedNode.getResponseTime().getValue() != -1) {
                 String onlineSinceString = TimestampConverter.getFormatedTimediff(mSelectedNode.getOnlineSince(), Calendar.getInstance().getTime());
-                text_onlineSince.setText(getString(R.string.details_OnlineSince, onlineSinceString));
+                text_onlineSince.setValue(onlineSinceString);
+                text_onlineSince.setStatus(DetailsLineView.Status.OK);
             } else {
-                text_onlineSince.setText(getString(R.string.details_OnlineSince, getString(R.string.details_OnlineSince_offline)));
+                text_onlineSince.setValue(getString(R.string.details_OnlineSince_offline));
+                text_onlineSince.setStatus(DetailsLineView.Status.NOK);
             }
+
+            //LastContractSentUpdated
+            //TODO update to nok if updates too slow
+            text_LastContractSentUpdated.setTitle(getString(R.string.details_LastContractSentUpdated) + " ago");
 
             if(mSelectedNode.getLastContractSentUpdated() != null) {
                 String lastUpdatedString = TimestampConverter.getFormatedTimediff(mSelectedNode.getLastContractSentUpdated(), Calendar.getInstance().getTime());
-                text_LastContractSentUpdated.setText(getString(R.string.details_LastContractSentUpdated, lastUpdatedString));
+                text_LastContractSentUpdated.setValue(lastUpdatedString);
+                text_LastContractSentUpdated.setStatus(DetailsLineView.Status.OK);
             } else {
                 text_LastContractSentUpdated.setVisibility(View.GONE);
             }

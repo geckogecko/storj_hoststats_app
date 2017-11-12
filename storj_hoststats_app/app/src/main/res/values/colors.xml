@@ -13,11 +13,14 @@
     <color name="red">#df3b41</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="transparent">@android:color/transparent</color>
 
 
     <color name="storj_color_blue">#2683FF</color>
     <color name="storj_color_white">#FFFFFF</color>
     <color name="storj_color_green">#88C425</color>
+
+
 
     <!-- Response Time colors -->
     <string-array name="responseTimeColors">
