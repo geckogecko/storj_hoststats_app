@@ -38,17 +38,19 @@ public class ListViewHolder extends Activity{
     public void showLoadingBar(int position, final boolean visible) {
         final View parentView = mListView.getChildAt(position);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (visible) {
-                    parentView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                    parentView.findViewById(R.id.responseTimeView).setVisibility(View.GONE);
-                } else {
-                    parentView.findViewById(R.id.progressBar).setVisibility(View.GONE);
-                    parentView.findViewById(R.id.responseTimeView).setVisibility(View.VISIBLE);
+        if(parentView != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (visible) {
+                        parentView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                        parentView.findViewById(R.id.responseTimeView).setVisibility(View.GONE);
+                    } else {
+                        parentView.findViewById(R.id.progressBar).setVisibility(View.GONE);
+                        parentView.findViewById(R.id.responseTimeView).setVisibility(View.VISIBLE);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }
