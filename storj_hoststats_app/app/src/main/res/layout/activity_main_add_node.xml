@@ -9,11 +9,11 @@
         android:id="@+id/textView_add_simpleName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
-        android:hint="@string/edit_simpleName" />
+        android:ems="10"
+        android:hint="@string/edit_simpleName"
+        android:inputType="textNoSuggestions" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/textView_add_nodeID"
