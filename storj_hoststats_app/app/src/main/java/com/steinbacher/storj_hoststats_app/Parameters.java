@@ -32,4 +32,7 @@ public class Parameters {
     public static final String STORJ_RESPONSE_PARAMETER_REPUTATION = "reputation";
     public static final String STORJ_RESPONSE_PARAMETER_SPACE_AVAILABLE = "spaceAvailable";
 
+    //Node analysis data
+    public static final double TIMEOUT_RATE_LIMIT = 0.1;
+
 }

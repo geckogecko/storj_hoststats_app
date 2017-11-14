@@ -45,6 +45,7 @@
     <string name="details_Protocol">Protocol: </string>
     <string name="details_LastTimeout">Last Timeout: </string>
     <string name="details_TimeoutRate">Timeout Rate: </string>
+    <string name="details_TimeoutRate_too_hight"> (too high)</string>
     <string name="details_LastContractSent">Last Contract Sent: </string>
     <string name="details_Reputation">Reputation: </string>
     <string name="details_Error">Unable to find node: %1$s</string>

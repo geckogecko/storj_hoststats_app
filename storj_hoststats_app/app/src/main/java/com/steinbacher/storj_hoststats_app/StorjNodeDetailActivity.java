@@ -184,12 +184,16 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             }
 
             //Timeout Rate
-            //TODO set to nok if too high
             text_TimeoutRate.setTitle(getString(R.string.details_TimeoutRate));
 
             if(mSelectedNode.getTimeoutRate().isSet()) {
-                text_TimeoutRate.setValue(String.format("%.4f",mSelectedNode.getTimeoutRate().getValue()));
-                text_TimeoutRate.setStatus(DetailsLineView.Status.OK);
+                if(mSelectedNode.getTimeoutRate().getValue() > Parameters.TIMEOUT_RATE_LIMIT) {
+                    text_TimeoutRate.setValue(String.format("%.4f", mSelectedNode.getTimeoutRate().getValue()) + getString(R.string.details_TimeoutRate_too_hight));
+                    text_TimeoutRate.setStatus(DetailsLineView.Status.NOK);
+                } else {
+                    text_TimeoutRate.setValue(String.format("%.4f", mSelectedNode.getTimeoutRate().getValue()));
+                    text_TimeoutRate.setStatus(DetailsLineView.Status.OK);
+                }
             } else {
                 text_TimeoutRate.setValue("0");
                 text_TimeoutRate.setStatus(DetailsLineView.Status.OK);
@@ -239,7 +243,13 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 text_LastContractSentUpdated.setValue(lastUpdatedString + " ago");
                 text_LastContractSentUpdated.setStatus(DetailsLineView.Status.OK);
             } else {
-                text_LastContractSentUpdated.setVisibility(View.GONE);
+                if(mSelectedNode.getLastContractSent().isSet()) {
+                    String lastUpdatedString = TimestampConverter.getFormatedTimediff(mSelectedNode.getLastContractSentUpdated(), Calendar.getInstance().getTime());
+                    text_LastContractSentUpdated.setValue(lastUpdatedString + " ago");
+                    text_LastContractSentUpdated.setStatus(DetailsLineView.Status.NOK);
+                } else {
+                    text_LastContractSentUpdated.setVisibility(View.GONE);
+                }
             }
 
             text_Error.setVisibility(View.GONE);
