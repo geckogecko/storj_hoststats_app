@@ -29,6 +29,9 @@ import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
+    //Used by the AlarmReceiver to check if this activity is running
+    public static boolean mIsRunning = false;
+
     private Context mContext;
     private ListView mListView;
     private boolean mUIUpdateListenerRegisted = false;
@@ -98,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mIsRunning = true;
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
@@ -105,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
             unregisterReceiver(mUIUpdateListener);
             mUIUpdateListenerRegisted = false;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mIsRunning = false;
     }
 
     @Override

@@ -89,14 +89,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         @Override
         protected StorjNode doInBackground(List<StorjNode>... lists) {
             StorjNode node = null;
-            ListViewHolder holder = ListViewHolder.getInstance();
 
             if(hasActiveInternetConnection()) {
                 for (StorjNode storjNode : lists[0]) {
                     try {
 
-                        //start the loading bar
-                        holder.showLoadingBar(storjNode.getNodeID().getValue(), true);
+                        if(MainActivity.mIsRunning) {
+                            //start the loading bar
+                            ListViewHolder holder = ListViewHolder.getInstance();
+                            holder.showLoadingBar(storjNode.getNodeID().getValue(), true);
+                        }
 
                         JSONObject storjApiReponse = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID().getValue());
                         Log.d(TAG, "onReceive: " + storjApiReponse.toString());
@@ -174,14 +176,26 @@ public class AlarmReceiver extends BroadcastReceiver {
                             publishProgress(node.getNodeID().getValue());
                         }
 
-                        holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
+                        if(MainActivity.mIsRunning) {
+                            //start the loading bar
+                            ListViewHolder holder = ListViewHolder.getInstance();
+                            holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
-                        holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
+                        if(MainActivity.mIsRunning) {
+                            //start the loading bar
+                            ListViewHolder holder = ListViewHolder.getInstance();
+                            holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
+                        }
                         Log.i(TAG, "doInBackground: " + storjNode.getNodeID().getValue() + " not found");
 
                     } catch (JSONException e) {
-                        holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
+                        if(MainActivity.mIsRunning) {
+                            //start the loading bar
+                            ListViewHolder holder = ListViewHolder.getInstance();
+                            holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
+                        }
                         e.printStackTrace();
                     }
                 }
