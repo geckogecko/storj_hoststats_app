@@ -234,7 +234,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             //TODO update to nok if updates too slow
             text_LastContractSentUpdated.setTitle(getString(R.string.details_LastContractSentUpdated));
 
-            if(mSelectedNode.getLastContractSentUpdated() != null) {
+            if(mSelectedNode.getLastContractSentUpdated() != null && mSelectedNode.getLastContractSent().isSet()) {
                 String lastUpdatedString = TimestampConverter.getFormatedTimediff(mSelectedNode.getLastContractSentUpdated(), Calendar.getInstance().getTime());
                 text_LastContractSentUpdated.setValue(lastUpdatedString + " ago");
                 text_LastContractSentUpdated.setStatus(DetailsLineView.Status.OK);
