@@ -134,6 +134,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchSortOrder() {
+        ListViewHolder holder = ListViewHolder.getInstance();
+        String currentLoadingNode = holder.getCurrentLoadingNode();
+
+        if(currentLoadingNode != null) {
+            holder.showLoadingBar(currentLoadingNode, false);
+        }
+
         String newSortOrder = "";
 
         //save to shared prefs
@@ -149,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
         prefsEditor.commit();
 
         redrawList();
+
+        if(currentLoadingNode != null) {
+            holder.showLoadingBar(currentLoadingNode, true);
+        }
     }
 
     private void pullSotrjNodeStats(Context context) {

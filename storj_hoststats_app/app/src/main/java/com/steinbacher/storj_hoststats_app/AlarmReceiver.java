@@ -90,14 +90,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         protected StorjNode doInBackground(List<StorjNode>... lists) {
             StorjNode node = null;
             ListViewHolder holder = ListViewHolder.getInstance();
-            int nodePostion = 0;
 
             if(hasActiveInternetConnection()) {
                 for (StorjNode storjNode : lists[0]) {
                     try {
 
                         //start the loading bar
-                        holder.showLoadingBar(nodePostion, true);
+                        holder.showLoadingBar(storjNode.getNodeID().getValue(), true);
 
                         JSONObject storjApiReponse = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID().getValue());
                         Log.d(TAG, "onReceive: " + storjApiReponse.toString());
@@ -175,18 +174,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                             publishProgress(node.getNodeID().getValue());
                         }
 
-                        holder.showLoadingBar(nodePostion, false);
+                        holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        holder.showLoadingBar(nodePostion, false);
+                        holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
                         Log.i(TAG, "doInBackground: " + storjNode.getNodeID().getValue() + " not found");
 
                     } catch (JSONException e) {
-                        holder.showLoadingBar(nodePostion, false);
+                        holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
                         e.printStackTrace();
                     }
-
-                    nodePostion++;
                 }
             }
 

@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 public class ListViewHolder extends Activity{
     private static ListView mListView;
+    private static String mCurrentLoadingNode;
 
     private ListViewHolder() {}
 
@@ -35,22 +36,41 @@ public class ListViewHolder extends Activity{
         return mListView;
     }
 
-    public void showLoadingBar(int position, final boolean visible) {
-        final View parentView = mListView.getChildAt(position);
+    public void showLoadingBar(final String nodeID, final boolean visible) {
+        final View nodeView = getNodeView(nodeID);
 
-        if(parentView != null) {
+        if(nodeView != null) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (visible) {
-                        parentView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                        parentView.findViewById(R.id.responseTimeView).setVisibility(View.GONE);
+                        mCurrentLoadingNode = nodeID;
+                        nodeView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                        nodeView.findViewById(R.id.responseTimeView).setVisibility(View.GONE);
                     } else {
-                        parentView.findViewById(R.id.progressBar).setVisibility(View.GONE);
-                        parentView.findViewById(R.id.responseTimeView).setVisibility(View.VISIBLE);
+                        mCurrentLoadingNode = null;
+                        nodeView.findViewById(R.id.progressBar).setVisibility(View.GONE);
+                        nodeView.findViewById(R.id.responseTimeView).setVisibility(View.VISIBLE);
                     }
                 }
             });
         }
+    }
+
+    public static String getCurrentLoadingNode() {
+        return mCurrentLoadingNode;
+    }
+
+    private static View getNodeView(String nodeID) {
+        StorjNodeAdapter adapter = (StorjNodeAdapter) mListView.getAdapter();
+        for(int i=0; i<adapter.getCount(); i++) {
+            String tempNodeID = adapter.getItem(i).getNodeID().getValue();
+            if(tempNodeID.equals(nodeID)) {
+                View nodeView = mListView.getChildAt(i);
+                return nodeView;
+            }
+        }
+
+        return null;
     }
 }
