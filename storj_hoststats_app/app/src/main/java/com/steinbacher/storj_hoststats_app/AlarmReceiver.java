@@ -44,6 +44,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private static final String STORJ_API_URL = "https://api.storj.io";
 
+    public static boolean mRunning = false;
+    public static boolean mRetrigger = false;
+
     private Context mContext;
 
     @Override
@@ -88,6 +91,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         @Override
         protected StorjNode doInBackground(List<StorjNode>... lists) {
+            mRunning = true;
             StorjNode node = null;
 
             if(hasActiveInternetConnection()) {
@@ -201,6 +205,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
             }
 
+            mRunning = false;
             return node;
         }
 
@@ -220,6 +225,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         @Override
         protected void onPostExecute(StorjNode receivedStorjNode) {
             super.onPostExecute(receivedStorjNode);
+
+            if(mRetrigger) {
+                pullStorjNodesStats(mContext);
+                mRetrigger = false;
+            }
         }
 
         private JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {

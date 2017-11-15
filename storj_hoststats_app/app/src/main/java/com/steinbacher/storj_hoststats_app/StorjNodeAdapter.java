@@ -161,7 +161,11 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
                 alertDialog.cancel();
                 deleteNode(selectedNode);
 
-                pullSotrjNodeStats(mContext);
+                if(!AlarmReceiver.mRunning) {
+                    pullSotrjNodeStats(mContext);
+                } else {
+                    AlarmReceiver.mRetrigger = true;
+                }
             }
         });
 
@@ -201,7 +205,11 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
                     updatedNode.setSimpleName(textView_simpleName.getText().toString());
                     updateNode(selectedNode, updatedNode);
 
-                    pullSotrjNodeStats(mContext);
+                    if(!AlarmReceiver.mRunning) {
+                        pullSotrjNodeStats(mContext);
+                    } else {
+                        AlarmReceiver.mRetrigger = true;
+                    }
                 }
 
                 alertDialog.cancel();

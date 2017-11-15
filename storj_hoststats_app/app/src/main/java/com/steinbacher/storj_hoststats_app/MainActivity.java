@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_refresh:
-                pullSotrjNodeStats(mContext);
+                pullStorjNodeStats(mContext);
                 return true;
 
             case R.id.action_help:
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void pullSotrjNodeStats(Context context) {
+    private void pullStorjNodeStats(Context context) {
         AlarmReceiver alarm = new AlarmReceiver();
         alarm.pullStorjNodesStats(context);
     }
@@ -251,7 +250,11 @@ public class MainActivity extends AppCompatActivity {
                     databaseManager.insertNode(newNode);
                     redrawList();
 
-                    pullSotrjNodeStats(mContext);
+                    if(!AlarmReceiver.mRunning) {
+                        pullStorjNodeStats(mContext);
+                    } else {
+                        AlarmReceiver.mRetrigger = true;
+                    }
                 }
             }
         });
