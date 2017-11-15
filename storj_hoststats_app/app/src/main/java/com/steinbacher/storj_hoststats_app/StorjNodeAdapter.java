@@ -117,6 +117,7 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
         //set Address + port
         txtAddress.setText(mContext.getString(R.string.address, selectedNode.getAddress().getValue() + ":" + selectedNode.getPort().getValue()));
 
+
         //setUserAgent
         if(selectedNode.getUserAgent().isSet())
             if (selectedNode.isOutdated()) {
