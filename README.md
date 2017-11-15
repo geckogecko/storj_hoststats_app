@@ -1,7 +1,7 @@
 # Storj-HostStats
 https://play.google.com/store/apps/details?id=com.steinbacher.storj_hoststats_app
 
-<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/joined.jpg" alt="Screenshots" height="500"/>
+<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/joined.jpg" alt="Screenshots" height="350"/>
 
 Monitors and analyses the following stats of your Storj-Nodes with the help of the official Storj Api:
 - Online Since
@@ -26,12 +26,12 @@ Sends an alert if:
 # FAQ
 
 ### 1 - What is the colored circle next to my node entry showing? 
-<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/FAQ/line_example1.png" alt="line_example_online" height="150"/>
+<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/FAQ/line_example1.png" alt="line_example_online" height="100"/>
 This circle shows the **response time** of the node in **seconds**.
 
 
 ### 2 - Why is the colored circle next to my node **red** with no response time?
-<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/FAQ/line_example_offline.png" alt="line_example_offline" height="150"/>
+<img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/FAQ/line_example_offline.png" alt="line_example_offline" height="100"/>
 This means your node is **offline**. 
 
 
