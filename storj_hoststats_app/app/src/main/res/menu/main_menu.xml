@@ -1,6 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_help"
+        android:title="@string/menu_help"
+        android:icon="@mipmap/ic_help_outline_white_36dp"
+        app:showAsAction="always"/>
+
     <item android:id="@+id/action_refresh"
         android:title="@string/menu_refresh"
         android:icon="@mipmap/ic_refresh_white_36dp"

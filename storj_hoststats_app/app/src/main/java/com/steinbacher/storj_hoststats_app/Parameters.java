@@ -35,4 +35,7 @@ public class Parameters {
     //Node analysis data
     public static final double TIMEOUT_RATE_LIMIT = 0.1;
 
+    //Help Screen URL
+    public static final String HELP_URL = "https://github.com/geckogecko/storj_hoststats_app";
+
 }

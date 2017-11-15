@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -142,6 +143,11 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.action_refresh:
                 pullSotrjNodeStats(mContext);
+                return true;
+
+            case R.id.action_help:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Parameters.HELP_URL));
+                startActivity(browserIntent);
 
             default:
                 return super.onOptionsItemSelected(item);
