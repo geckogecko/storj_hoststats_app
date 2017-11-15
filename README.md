@@ -1,4 +1,4 @@
-# Test the app
+# Storj-HostStats
 https://play.google.com/store/apps/details?id=com.steinbacher.storj_hoststats_app
 
 <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/joined.jpg" alt="Screenshots" height="500"/>
