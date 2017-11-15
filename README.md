@@ -25,19 +25,27 @@ Sends an alert if:
 
 # FAQ
 
-### 1 - What is the colored circle next to my node entry showing ? 
+### 1 - What is the colored circle next to my node entry showing? 
 <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/FAQ/line_example1.png" alt="line_example_online" height="150"/>
 This circle shows the **response time** of the node in **seconds**.
 
 
-### 2 - Why is the colored circle next to my node **red** with no response time ?
+### 2 - Why is the colored circle next to my node **red** with no response time?
 <img src="https://raw.githubusercontent.com/geckogecko/storj_hoststats_app/master/screenshots/FAQ/line_example_offline.png" alt="line_example_offline" height="150"/>
 This means your node is **offline**. 
 
 
-### 3 - How can the app detect if a node is offline ? 
+### 3 - How can the app detect if a node is offline? 
 
 The app checks the `LastSeen` field of for your node every 30min. If that field has not increased for more more than 30min a port scan on your nodes port is triggered. If this scan shows that your port is down its very likley that your node is offline and your node is marked as offline. 
+
+### 4 - How can I edit/delete a node?
+Simple longpress on that node and an edit screen opens.
+
+### 5 - What is the `Reputation` field?
+
+[SIP6 - Farmer Load Balancing Based on Reputation](https://github.com/Storj/sips/blob/master/sip-0006.md)
+
 
 
 # Donate
