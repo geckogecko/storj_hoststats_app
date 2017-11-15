@@ -22,7 +22,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import com.steinbacher.storj_hoststats_app.data.DatabaseManager;
 
@@ -35,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private ListView mListView;
     private boolean mUIUpdateListenerRegisted = false;
-    private AlertDialog mAddNewNode;
+    private long mRefreshLastTimeClicked = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +144,15 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_refresh:
-                pullStorjNodeStats(mContext);
+                long timeClicked = Calendar.getInstance().getTime().getTime();
+
+                if(mRefreshLastTimeClicked == 0) {
+                    pullStorjNodeStats(mContext);
+                    mRefreshLastTimeClicked = timeClicked;
+                } else if((timeClicked - mRefreshLastTimeClicked) > 2000) {
+                    pullStorjNodeStats(mContext);
+                    mRefreshLastTimeClicked = timeClicked;
+                }
                 return true;
 
             case R.id.action_help:

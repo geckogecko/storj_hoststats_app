@@ -230,6 +230,17 @@ public class AlarmReceiver extends BroadcastReceiver {
                 pullStorjNodesStats(mContext);
                 mRetrigger = false;
             }
+
+            if(MainActivity.mIsRunning) {
+                DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+                ListViewHolder holder = ListViewHolder.getInstance();
+                Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
+
+                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                    holder.showLoadingBar(new StorjNode(cursor).getNodeID().getValue(), false);
+                }
+
+            }
         }
 
         private JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
