@@ -241,7 +241,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             if(mSelectedNode.getLastContractSentUpdated() != null && mSelectedNode.getLastContractSent().isSet()) {
                 String lastUpdatedString = TimestampConverter.getFormatedTimediff(mSelectedNode.getLastContractSentUpdated(), Calendar.getInstance().getTime());
                 text_LastContractSentUpdated.setValue(lastUpdatedString + " ago");
-                text_LastContractSentUpdated.setStatus(DetailsLineView.Status.OK);
+                text_LastContractSentUpdated.setStatus(DetailsLineView.Status.NoStatus);
             } else {
                 if(mSelectedNode.getLastContractSent().isSet()) {
                     String lastUpdatedString = TimestampConverter.getFormatedTimediff(mSelectedNode.getLastContractSentUpdated(), Calendar.getInstance().getTime());
