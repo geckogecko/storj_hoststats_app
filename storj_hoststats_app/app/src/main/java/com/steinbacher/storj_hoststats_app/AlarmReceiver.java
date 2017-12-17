@@ -157,7 +157,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                                 }
 
-                                Log.i(TAG, "doInBackground: " + node.getLong("stored_bytes"));
                                 databaseManager.insertNodeStoredBytesEntry(node.getString("storj_id"),
                                         node.getLong("stored_bytes"),
                                         System.currentTimeMillis());

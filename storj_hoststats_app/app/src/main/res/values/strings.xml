@@ -34,7 +34,7 @@
     <string name="pref_enable_notifications_summary">Enable to receive notifications about your Storj-Nodes</string>
     <string name="pref_storj_dash_integration">StorjDash Integration</string>
     <string name="pref_storj_dash_integration_enabled">Enabled</string>
-    <string name="pref_storj_dash_integration_api_key_default">API-Key</string>
+    <string name="pref_storj_dash_integration_api_key_default">Please enter your API-Key</string>
 
     <!-- AlarmReceiver -->
     <string name="no_connection">No internet connection</string>
@@ -64,5 +64,5 @@
 
     <string name="btn_responseTime">Response time [ms]</string>
     <string name="btn_reputation">Reputation</string>
-    <string name="btn_stored_bytes">Shared space [GB]</string>
+    <string name="btn_stored_bytes">Shared [GB]</string>
 </resources>

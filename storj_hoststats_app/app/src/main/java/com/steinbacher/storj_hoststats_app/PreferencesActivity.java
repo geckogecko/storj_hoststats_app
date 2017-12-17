@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,6 +58,7 @@ public class PreferencesActivity extends AppCompatActivity {
             boolean isEnabled = getPreferenceManager().getSharedPreferences().getBoolean("storj_dash_integration_enabled", false);
             EditTextPreference apiKey = (EditTextPreference) findPreference("api_key_edit_text");
             apiKey.setEnabled(isEnabled);
+            apiKey.setSummary(getStorjDashAPIKey());
 
             apiKey.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -65,14 +68,27 @@ public class PreferencesActivity extends AppCompatActivity {
                     boolean isEnabled = getPreferenceManager().getSharedPreferences().getBoolean("storj_dash_integration_enabled", false);
 
                     if(isEnabled) {
-                        AlarmReceiver alarmReceiver = new AlarmReceiver();
-                        alarmReceiver.pullStorjDash(mContext);
+
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                AlarmReceiver alarmReceiver = new AlarmReceiver();
+                                alarmReceiver.pullStorjDash(mContext);
+                            }
+                        }, 2000);
                     }
 
                     return true;
                 }
             });
+        }
 
+        private String getStorjDashAPIKey() {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String apiKey = prefs.getString("api_key_edit_text", "");
+
+            return apiKey;
         }
 
         @Override
