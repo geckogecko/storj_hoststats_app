@@ -20,5 +20,5 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:enabled="false"
-        android:title="@string/pref_storj_dash_integration_api_key_default" />
+        android:title="@string/pref_storj_dash_integration_api_key" />
 </PreferenceScreen>

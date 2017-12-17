@@ -34,6 +34,7 @@
     <string name="pref_enable_notifications_summary">Enable to receive notifications about your Storj-Nodes</string>
     <string name="pref_storj_dash_integration">StorjDash Integration</string>
     <string name="pref_storj_dash_integration_enabled">Enabled</string>
+    <string name="pref_storj_dash_integration_api_key">API-key</string>
     <string name="pref_storj_dash_integration_api_key_default">Please enter your API-Key</string>
 
     <!-- AlarmReceiver -->
