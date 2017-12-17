@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -52,6 +53,26 @@ public class PreferencesActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
+            boolean isEnabled = getPreferenceManager().getSharedPreferences().getBoolean("storj_dash_integration_enabled", false);
+            EditTextPreference apiKey = (EditTextPreference) findPreference("api_key_edit_text");
+            apiKey.setEnabled(isEnabled);
+
+            apiKey.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    preference.setSummary(newValue.toString());
+
+                    boolean isEnabled = getPreferenceManager().getSharedPreferences().getBoolean("storj_dash_integration_enabled", false);
+
+                    if(isEnabled) {
+                        AlarmReceiver alarmReceiver = new AlarmReceiver();
+                        alarmReceiver.pullStorjDash(mContext);
+                    }
+
+                    return true;
+                }
+            });
+
         }
 
         @Override
@@ -68,8 +89,12 @@ public class PreferencesActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equals(getString(R.string.pref_enable_notifications))) {
+            if(key.equals("pref_enable_notifications")) {
                 switchPullNodeStatsAlarm(sharedPreferences.getBoolean(key, true));
+            } else if(key.equals("storj_dash_integration_enabled")) {
+                boolean isEnabled = sharedPreferences.getBoolean("storj_dash_integration_enabled", false);
+                EditTextPreference apiKey = (EditTextPreference) findPreference("api_key_edit_text");
+                apiKey.setEnabled(isEnabled);
             }
         }
 

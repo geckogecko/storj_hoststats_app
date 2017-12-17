@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +44,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static final String TAG = "AlarmReceiver";
 
     private static final String STORJ_API_URL = "https://api.storj.io";
+
+    //Storjdash
+    private static final String SERVER_LSIT_URL = "https://api.storjdash.com/servers/";
+    private static final String NODE_URL_PRE = "https://api.storjdash.com/servers/";
+    private static final String NODE_URL_AF = "/nodes/";
 
     public static boolean mRunning = false;
     public static boolean mRetrigger = false;
@@ -73,6 +79,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     public void pullStorjNodesStats(Context context) {
         mContext = context;
+
+        if(isStorjDashIntegrationEnabled()) {
+            pullStorjDash(mContext);
+        }
+
         DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
         ArrayList<StorjNode> storjNodes = new ArrayList<>();
         Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
@@ -84,7 +95,79 @@ public class AlarmReceiver extends BroadcastReceiver {
         new StorjApiCommunicationTask().execute(storjNodes);
     }
 
+    public void pullStorjDash(Context context) {
+        mContext = context;
 
+        new StorjDashApiTask().execute(SERVER_LSIT_URL + "?api_key=" + getStorjDashAPIKey());
+    }
+
+    public boolean isStorjDashIntegrationEnabled() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean isEnabled = prefs.getBoolean("storj_dash_integration_enabled", false);
+
+        return isEnabled;
+    }
+
+    private String getStorjDashAPIKey() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String apiKey = prefs.getString("api_key_edit_text", "");
+
+        return apiKey;
+    }
+
+    private class StorjDashApiTask extends AsyncTask<String, JSONObject, JSONObject> {
+        private static final String TAG = "StorjDashApiTask";
+
+
+        @Override
+        protected JSONObject doInBackground(String... strings) {
+            if(hasActiveInternetConnection()) {
+                JSONObject jsonResponse = null;
+                try {
+                    jsonResponse = getJSONObjectFromURL(strings[0]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(jsonResponse != null) {
+                    DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+
+                    try {
+                        JSONObject embedded = jsonResponse.getJSONObject("_embedded");
+                        JSONArray servers = embedded.getJSONArray("servers");
+                        for (int i=0; i<servers.length(); i++) {
+                            JSONObject server = servers.getJSONObject(i);
+                            String server_id = server.getString("_id");
+
+                            JSONObject nodeResponse = getJSONObjectFromURL(NODE_URL_PRE + server_id + NODE_URL_AF + "?api_key=" + getStorjDashAPIKey());
+
+                            embedded = nodeResponse.getJSONObject("_embedded");
+                            JSONArray nodes = embedded.getJSONArray("nodes");
+
+                            for(int j=0; j<nodes.length(); j++) {
+                                JSONObject node = nodes.getJSONObject(j);
+
+                                Cursor cursor = databaseManager.getNode(node.getString("storj_id"));
+                                if(cursor.getCount() == 0) {
+                                    StorjNode storjNode = new StorjNode(node.getString("storj_id"));
+                                    storjNode.setSimpleName(node.getString("name"));
+                                    databaseManager.insertNode(storjNode);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
 
     private class StorjApiCommunicationTask extends AsyncTask<List<StorjNode>, String, StorjNode> {
         private static final String TAG = "StorjApiCommunicationTa";
@@ -243,35 +326,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }
 
-        private JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
-            HttpURLConnection urlConnection = null;
-            URL url = new URL(urlString);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setReadTimeout(10000);
-            urlConnection.setConnectTimeout(15000);
-            urlConnection.setDoOutput(true);
-            urlConnection.connect();
-
-            //403 happens if we are over the rate limit of the github api for example
-            if(urlConnection.getResponseCode() != 403) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-                StringBuilder sb = new StringBuilder();
-
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                br.close();
-
-                String jsonString = sb.toString();
-                return new JSONObject(jsonString);
-            } else {
-                return null;
-            }
-
-        }
-
         private void sendNodeOfflineNotification(StorjNode storjNode) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             if(prefs.getBoolean(mContext.getString(R.string.pref_enable_notifications),true)) {
@@ -345,37 +399,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             SharedPreferences prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE);
             return prefs.getLong(Parameters.SHARED_PREF_OFFLINE_AFTER, Parameters.SHARED_PREF_OFFLINE_AFTER_DEFAULT);
         }
-
-        public boolean hasActiveInternetConnection() {
-            if (isNetworkAvailable()) {
-                try {
-                    HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
-                    urlc.setRequestProperty("User-Agent", "Test");
-                    urlc.setRequestProperty("Connection", "close");
-                    urlc.setConnectTimeout(1500);
-                    urlc.connect();
-                    int responseCode = urlc.getResponseCode();
-                    urlc.disconnect();
-                    return (responseCode == 200);
-                } catch (Exception e) {
-                    Log.d(TAG, "Error checking internet connection", e);
-                    return false;
-                }
-            } else {
-                //TODO notify the user about "No internet connection"
-                //Dont use a toast
-                Log.e(TAG, "hasActiveInternetConnection: No internet connection");
-            }
-            return false;
-        }
-
-        private boolean isNetworkAvailable() {
-            ConnectivityManager connectivityManager
-                    = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            return activeNetworkInfo != null;
-        }
-
         private void saveNewUserAgentVersion(Version version) {
             SharedPreferences.Editor prefs = mContext.getSharedPreferences(Parameters.SHARED_PREF, MODE_PRIVATE).edit();
             prefs.putString(Parameters.SHARED_PREF_NEWEST_USERAGENT_VERSION, version.toString());
@@ -393,5 +416,62 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
+    private JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
+        HttpURLConnection urlConnection = null;
+        URL url = new URL(urlString);
+        urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setReadTimeout(10000);
+        urlConnection.setConnectTimeout(15000);
+        urlConnection.setDoOutput(true);
+        urlConnection.connect();
 
+        //403 happens if we are over the rate limit of the github api for example
+        if(urlConnection.getResponseCode() != 403) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuilder sb = new StringBuilder();
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+
+            String jsonString = sb.toString();
+            return new JSONObject(jsonString);
+        } else {
+            return null;
+        }
+
+    }
+
+    private boolean hasActiveInternetConnection() {
+        if (isNetworkAvailable()) {
+            try {
+                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                urlc.setRequestProperty("User-Agent", "Test");
+                urlc.setRequestProperty("Connection", "close");
+                urlc.setConnectTimeout(1500);
+                urlc.connect();
+                int responseCode = urlc.getResponseCode();
+                urlc.disconnect();
+                return (responseCode == 200);
+            } catch (Exception e) {
+                Log.d(TAG, "Error checking internet connection", e);
+                return false;
+            }
+        } else {
+            //TODO notify the user about "No internet connection"
+            //Dont use a toast
+            Log.e(TAG, "hasActiveInternetConnection: No internet connection");
+        }
+        return false;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
 }
