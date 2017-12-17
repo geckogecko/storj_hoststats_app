@@ -365,6 +365,26 @@ public class DatabaseManager {
         return cursor;
     }
 
+    public void insertNodeStoredBytesEntry(String nodeID, long storedBytes, long timestamp) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        ContentValues insertValues = new ContentValues();
+        insertValues.put(NodeReaderContract.NodeStoredBytesEntry.NODE_ID, nodeID);
+        insertValues.put(NodeReaderContract.NodeStoredBytesEntry.STORED_BYTES, storedBytes);
+        insertValues.put(NodeReaderContract.NodeStoredBytesEntry.TIMESTAMP, timestamp);
+        db.insert(NodeReaderContract.NodeStoredBytesEntry.TABLE_NAME, null, insertValues);
+    }
+
+    public Cursor getNodeStoredBytes(String nodeID) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NodeReaderContract.NodeStoredBytesEntry.TABLE_NAME + " WHERE " +
+                NodeReaderContract.NodeStoredBytesEntry.NODE_ID+" = '"+ nodeID +"' limit 1000", null);
+
+        cursor.moveToFirst();
+        return cursor;
+    }
+
     public void dropNodeDB() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         db.execSQL(DbHelper.SQL_DELETE_ENTRIES_NODE_ENTRY);

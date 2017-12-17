@@ -62,6 +62,7 @@
     <string name="unknown">unknown</string>
     <string name="details_OnlineSince_offline">Node is offline</string>
 
-    <string name="btn_responseTime">Response time</string>
+    <string name="btn_responseTime">Response time [ms]</string>
     <string name="btn_reputation">Reputation</string>
+    <string name="btn_stored_bytes">Shared space [GB]</string>
 </resources>

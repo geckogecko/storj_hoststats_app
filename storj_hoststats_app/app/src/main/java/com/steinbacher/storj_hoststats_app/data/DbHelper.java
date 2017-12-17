@@ -13,7 +13,7 @@ public class DbHelper extends SQLiteOpenHelper{
     private static final String TAG = "DbHelper";
 
     private static final String DATABASE_NAME = "nodes.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String SQL_CREATE_ENTRIES_NODE_ENTRY =
             "CREATE TABLE IF NOT EXISTS " + NodeReaderContract.NodeEntry.TABLE_NAME + " (" +
@@ -60,6 +60,16 @@ public class DbHelper extends SQLiteOpenHelper{
     public static final String SQL_DELETE_ENTRIES_NODE_REPUTATION_ENTRY =
             "DROP TABLE IF EXISTS " + NodeReaderContract.NodeReputationEntry.TABLE_NAME;
 
+    public static final String SQL_CREATE_ENTRIES_NODE_STOREDBYTES_ENTRY =
+            "CREATE TABLE IF NOT EXISTS " + NodeReaderContract.NodeStoredBytesEntry.TABLE_NAME + " (" +
+                    NodeReaderContract.NodeStoredBytesEntry._ID + " INTEGER PRIMARY KEY," +
+                    NodeReaderContract.NodeStoredBytesEntry.NODE_ID + " TEXT," +
+                    NodeReaderContract.NodeStoredBytesEntry.STORED_BYTES + " INTEGER," +
+                    NodeReaderContract.NodeStoredBytesEntry.TIMESTAMP + " STRING);";
+
+    public static final String SQL_DELETE_ENTRIES_NODE_STOREDBYTES_ENTRY =
+            "DROP TABLE IF EXISTS " + NodeReaderContract.NodeReputationEntry.TABLE_NAME;
+
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -69,6 +79,7 @@ public class DbHelper extends SQLiteOpenHelper{
         db.execSQL(SQL_CREATE_ENTRIES_NODE_ENTRY);
         db.execSQL(SQL_CREATE_ENTRIES_NODE_RESPONSE_TIME_ENTRY);
         db.execSQL(SQL_CREATE_ENTRIES_NODE_REPUTATION_ENTRY);
+        db.execSQL(SQL_CREATE_ENTRIES_NODE_STOREDBYTES_ENTRY);
     }
 
     @Override
@@ -98,6 +109,8 @@ public class DbHelper extends SQLiteOpenHelper{
                 db.execSQL("ALTER TABLE "+ NodeReaderContract.NodeEntry.TABLE_NAME +" ADD COLUMN " +
                         NodeReaderContract.NodeEntry.LAST_CONTRACT_SENT_UPDATED +" TEXT;");
 
+            case 3:
+                db.execSQL(SQL_CREATE_ENTRIES_NODE_STOREDBYTES_ENTRY);
         }
     }
 }

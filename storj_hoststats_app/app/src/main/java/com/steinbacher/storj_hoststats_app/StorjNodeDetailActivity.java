@@ -1,8 +1,11 @@
 package com.steinbacher.storj_hoststats_app;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
+import android.opengl.Visibility;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -85,6 +88,13 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
 
         AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
         AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
+        AppCompatButton btn_StoredBytes = (AppCompatButton) findViewById(R.id.btn_stored_bytes);
+
+        if(isStorjDashIntegrationEnabled()) {
+            btn_StoredBytes.setVisibility(View.VISIBLE);
+        } else {
+            btn_StoredBytes.setVisibility(View.GONE);
+        }
 
         ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
 
@@ -285,17 +295,20 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
                 AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
                 AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
+                AppCompatButton btn_StoredBytes = (AppCompatButton) findViewById(R.id.btn_stored_bytes);
 
                 mCubicValueLineChart.clearChart();
 
                 ValueLineSeries valueLineSeries = getSeriesFromDB(NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
                 if (valueLineSeries != null && valueLineSeries.getSeries().size() > 2) {
                     mCubicValueLineChart.addSeries(valueLineSeries);
-                    mCubicValueLineChart.startAnimation();
                 }
+
+                mCubicValueLineChart.startAnimation();
 
                 btn_ResponseTime.setTextColor(getResources().getColor(R.color.storj_color_blue));
                 btn_Reputation.setTextColor(getResources().getColor(R.color.grey));
+                btn_StoredBytes.setTextColor(getResources().getColor(R.color.grey));
             }
         });
 
@@ -305,23 +318,52 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                   ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
                   AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
                   AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
+                  AppCompatButton btn_StoredBytes = (AppCompatButton) findViewById(R.id.btn_stored_bytes);
+
 
                   mCubicValueLineChart.clearChart();
 
                   ValueLineSeries valueLineSeries = getSeriesFromDB(NodeReaderContract.NodeReputationEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
                   if(valueLineSeries != null && valueLineSeries.getSeries().size() > 2) {
                       mCubicValueLineChart.addSeries(valueLineSeries);
-                      mCubicValueLineChart.startAnimation();
                   }
+
+                  mCubicValueLineChart.startAnimation();
 
                   btn_Reputation.setTextColor(getResources().getColor(R.color.storj_color_green));
                   btn_ResponseTime.setTextColor(getResources().getColor(R.color.dark_grey));
+                  btn_StoredBytes.setTextColor(getResources().getColor(R.color.grey));
+              }
+          }
+        );
+
+        btn_StoredBytes.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                  ValueLineChart mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
+                  AppCompatButton btn_ResponseTime = (AppCompatButton) findViewById(R.id.btn_responseTime);
+                  AppCompatButton btn_Reputation = (AppCompatButton) findViewById(R.id.btn_reputation);
+                  AppCompatButton btn_StoredBytes = (AppCompatButton) findViewById(R.id.btn_stored_bytes);
+
+                  mCubicValueLineChart.clearChart();
+
+                  ValueLineSeries valueLineSeries = getSeriesFromDB(NodeReaderContract.NodeStoredBytesEntry.TABLE_NAME, mSelectedNode.getNodeID().getValue());
+                  if(valueLineSeries != null && valueLineSeries.getSeries().size() > 2) {
+                      mCubicValueLineChart.addSeries(valueLineSeries);
+                  }
+
+                  mCubicValueLineChart.startAnimation();
+
+                  btn_StoredBytes.setTextColor(getResources().getColor(R.color.yellow));
+                  btn_ResponseTime.setTextColor(getResources().getColor(R.color.grey));
+                  btn_Reputation.setTextColor(getResources().getColor(R.color.grey));
               }
           }
         );
 
         btn_ResponseTime.setTextColor(getResources().getColor(R.color.storj_color_blue));
         btn_Reputation.setTextColor(getResources().getColor(R.color.grey));
+        btn_StoredBytes.setTextColor(getResources().getColor(R.color.grey));
     }
 
     private ValueLineSeries getSeriesFromDB(String dbname,  String nodeID) {
@@ -348,6 +390,15 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
                 String timeDate = getDate(Long.parseLong(timestamp));
                 series.addPoint(new ValueLinePoint(timeDate, responseTime));
             }
+        } else if (dbname.equals(NodeReaderContract.NodeStoredBytesEntry.TABLE_NAME)) {
+            series.setColor(0xFFFDD835);
+            Cursor cursor = db.getNodeStoredBytes(nodeID);
+            while (cursor.moveToNext()) {
+                String timestamp = cursor.getString(cursor.getColumnIndex(NodeReaderContract.NodeStoredBytesEntry.TIMESTAMP));
+                long storedBytes = cursor.getLong(cursor.getColumnIndex(NodeReaderContract.NodeStoredBytesEntry.STORED_BYTES));
+                String timeDate = getDate(Long.parseLong(timestamp));
+                series.addPoint(new ValueLinePoint(timeDate, bytesToGB(storedBytes)));
+            }
         }
 
         return series;
@@ -362,5 +413,16 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
         catch(Exception ex){
             return "xx";
         }
+    }
+
+    private long bytesToGB(long bytes) {
+        return bytes / 1073741824;
+    }
+
+    private boolean isStorjDashIntegrationEnabled() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean isEnabled = prefs.getBoolean("storj_dash_integration_enabled", false);
+
+        return isEnabled;
     }
 }

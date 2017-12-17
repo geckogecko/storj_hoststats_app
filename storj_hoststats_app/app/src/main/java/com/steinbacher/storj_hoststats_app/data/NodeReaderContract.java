@@ -44,4 +44,11 @@ public class NodeReaderContract {
         public static final String REPUTATION = "reputation";
         public static final String TIMESTAMP = "timestamp";
     }
+
+    public static class NodeStoredBytesEntry implements BaseColumns {
+        public static final String TABLE_NAME = "storedBytesHistory";
+        public static final String NODE_ID = "nodeID";
+        public static final String STORED_BYTES = "storedBytes";
+        public static final String TIMESTAMP = "timestamp";
+    }
 }
