@@ -75,8 +75,17 @@ public class PreferencesActivity extends AppCompatActivity {
                             public void run() {
                                 AlarmReceiver alarmReceiver = new AlarmReceiver();
                                 alarmReceiver.pullStorjDash(mContext);
+
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        AlarmReceiver alarmReceiver = new AlarmReceiver();
+                                        alarmReceiver.pullStorjNodesStats(mContext);
+                                    }
+                                }, 10000);
                             }
-                        }, 2000);
+                        }, 1000);
                     }
 
                     return true;
