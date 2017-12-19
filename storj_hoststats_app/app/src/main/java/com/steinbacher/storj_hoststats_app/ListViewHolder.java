@@ -40,21 +40,25 @@ public class ListViewHolder extends Activity{
         final View nodeView = getNodeView(nodeID);
 
         if(nodeView != null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (visible) {
-                        mCurrentLoadingNode = nodeID;
-                        nodeView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                        nodeView.findViewById(R.id.responseTimeView).setVisibility(View.GONE);
-                    } else {
-                        mCurrentLoadingNode = null;
-                        nodeView.findViewById(R.id.progressBar).setVisibility(View.GONE);
-                        nodeView.findViewById(R.id.responseTimeView).setVisibility(View.VISIBLE);
-                    }
-                }
-            });
+            runOnUIThread(visible, nodeView, nodeID);
         }
+    }
+
+    private void runOnUIThread(final boolean visible, final View nodeView, final String nodeID) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (visible) {
+                    mCurrentLoadingNode = nodeID;
+                    nodeView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                    nodeView.findViewById(R.id.responseTimeView).setVisibility(View.GONE);
+                } else {
+                    mCurrentLoadingNode = null;
+                    nodeView.findViewById(R.id.progressBar).setVisibility(View.GONE);
+                    nodeView.findViewById(R.id.responseTimeView).setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     public static String getCurrentLoadingNode() {

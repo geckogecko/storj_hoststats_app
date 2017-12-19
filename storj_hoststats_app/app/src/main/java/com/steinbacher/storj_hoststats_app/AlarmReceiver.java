@@ -80,19 +80,21 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void pullStorjNodesStats(Context context) {
         mContext = context;
 
-        if(isStorjDashIntegrationEnabled()) {
-            pullStorjDash(mContext);
+        if(!mRunning) {
+            if (isStorjDashIntegrationEnabled()) {
+                pullStorjDash(mContext);
+            }
+
+            DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+            ArrayList<StorjNode> storjNodes = new ArrayList<>();
+            Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                storjNodes.add(new StorjNode(cursor));
+            }
+
+            new StorjApiCommunicationTask().execute(storjNodes);
         }
-
-        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
-        ArrayList<StorjNode> storjNodes = new ArrayList<>();
-        Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
-
-        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            storjNodes.add(new StorjNode(cursor));
-        }
-
-        new StorjApiCommunicationTask().execute(storjNodes);
     }
 
     public void pullStorjDash(Context context) {
@@ -443,6 +445,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             br.close();
 
             String jsonString = sb.toString();
+
+            urlConnection.disconnect();
             return new JSONObject(jsonString);
         } else {
             return null;
