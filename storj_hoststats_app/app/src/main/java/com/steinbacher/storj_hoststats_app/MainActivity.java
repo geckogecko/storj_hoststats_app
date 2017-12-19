@@ -86,7 +86,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                redrawList();
+                if(!AlarmReceiver.mRunning) {
+                    redrawList();
+
+                    DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+                    ListViewHolder holder = ListViewHolder.getInstance();
+                    Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
+
+                    for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                        holder.showLoadingBar(new StorjNode(cursor).getNodeID().getValue(), false);
+                    }
+                }
                 handler.postDelayed( this, 60 * 1000 );
             }
         }, 60 * 1000 );
