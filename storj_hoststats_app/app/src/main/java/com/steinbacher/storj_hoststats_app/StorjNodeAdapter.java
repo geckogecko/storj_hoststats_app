@@ -203,7 +203,8 @@ public class StorjNodeAdapter extends ArrayAdapter<StorjNode> {
                 if(!error) {
                     StorjNode updatedNode = new StorjNode(textView_nodeId.getText().toString());
                     updatedNode.setSimpleName(textView_simpleName.getText().toString());
-                    updateNode(selectedNode, updatedNode);
+                    databaseManager.deleteNode(selectedNode);
+                    databaseManager.insertNode(updatedNode);
 
                     if(!AlarmReceiver.mRunning) {
                         pullSotrjNodeStats(mContext);
