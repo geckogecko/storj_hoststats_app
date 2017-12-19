@@ -82,6 +82,9 @@ public class PreferencesActivity extends AppCompatActivity {
                                     public void run() {
                                         AlarmReceiver alarmReceiver = new AlarmReceiver();
                                         alarmReceiver.pullStorjNodesStats(mContext);
+
+                                        AlarmReceiver alarm = new AlarmReceiver();
+                                        alarm.scheduleAlarm(mContext);
                                     }
                                 }, 10000);
                             }
