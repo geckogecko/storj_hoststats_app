@@ -24,7 +24,7 @@ Sends an alert if:
 - one of your nodes went offline
 - a new storj version got released
 
-### Integrations
+# Integrations
 ## StorjDash
 Imports all your nodes from StorjDash to additionaly display your shared disk space. Enable this Integration under `Settings`
 
