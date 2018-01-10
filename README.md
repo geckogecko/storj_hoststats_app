@@ -17,11 +17,16 @@ Monitors and analyses the following stats of your Storj-Nodes with the help of t
 - Last Contract Sent Update Time 
 - Reputation
 - Space available
+- Shared disk space (with [StorjDash Integration](www.storjdash.com))
 
 Sends an alert if:
 
 - one of your nodes went offline
 - a new storj version got released
+
+### Integrations
+## StorjDash
+Imports all your nodes from StorjDash to additionaly display your shared disk space. Enable this Integration under `Settings`
 
 # FAQ
 
