@@ -67,7 +67,7 @@ public class StorjNodeDetailActivity extends AppCompatActivity{
             finish();
         }
 
-        if(mSelectedNode.getNodeID().getValue() == null) {
+        if(mSelectedNode == null || mSelectedNode.getNodeID().getValue() == null) {
             finish();
         }
 
