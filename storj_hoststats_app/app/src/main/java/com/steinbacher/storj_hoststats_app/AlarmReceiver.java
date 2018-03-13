@@ -210,7 +210,13 @@ public class AlarmReceiver extends BroadcastReceiver {
                                 newestGithubVersion = getSavedActualStorjCoreVersion();
                             }
                         } else {
-                            newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v", ""));
+                            if(releaseInfoJson.getString("name").replace("v", "").equals("")) {
+                                //new api
+                                newestGithubVersion = new Version(releaseInfoJson.getString("tag_name").replace("v", ""));
+                            } else {
+                                //old api
+                                newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v", ""));
+                            }
                         }
 
                         if(newestGithubVersion != null && node.getUserAgent().isSet()) {
