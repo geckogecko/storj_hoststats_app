@@ -101,6 +101,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         mContext = context;
 
         new StorjDashApiTask().execute(SERVER_LSIT_URL + "?api_key=" + getStorjDashAPIKey());
+        scheduleAlarm(context);
     }
 
     public boolean isStorjDashIntegrationEnabled() {
