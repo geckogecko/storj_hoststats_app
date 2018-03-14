@@ -339,7 +339,8 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + NodeReaderContract.NodeResponseTimeEntry.TABLE_NAME + " WHERE " +
-                NodeReaderContract.NodeResponseTimeEntry.NODE_ID+" = '"+ nodeID +"' limit 1000", null);
+                NodeReaderContract.NodeResponseTimeEntry.NODE_ID+" = '"+ nodeID +
+                "' ORDER BY CAST(" + NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP + " AS INTEGER) DESC limit 1000", null);
 
         cursor.moveToFirst();
         return cursor;
@@ -359,7 +360,8 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + NodeReaderContract.NodeReputationEntry.TABLE_NAME + " WHERE " +
-                NodeReaderContract.NodeReputationEntry.NODE_ID+" = '"+ nodeID +"' limit 1000", null);
+                NodeReaderContract.NodeReputationEntry.NODE_ID+" = '"+ nodeID +
+                "' ORDER BY CAST(" + NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP + " AS INTEGER) DESC limit 1000", null);
 
         cursor.moveToFirst();
         return cursor;
@@ -379,7 +381,9 @@ public class DatabaseManager {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + NodeReaderContract.NodeStoredBytesEntry.TABLE_NAME + " WHERE " +
-                NodeReaderContract.NodeStoredBytesEntry.NODE_ID+" = '"+ nodeID +"' limit 1000", null);
+                NodeReaderContract.NodeStoredBytesEntry.NODE_ID+" = '"+ nodeID +
+                "' ORDER BY CAST(" + NodeReaderContract.NodeResponseTimeEntry.TIMESTAMP + " AS INTEGER) DESC limit 1000", null);
+
 
         cursor.moveToFirst();
         return cursor;
