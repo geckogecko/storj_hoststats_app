@@ -80,26 +80,7 @@ public class MainActivity extends AppCompatActivity {
         AlarmReceiver alarm = new AlarmReceiver();
         alarm.scheduleAlarm(mContext);
 
-        //updated the ui every minute
-        final Handler handler = new Handler();
-        handler.postDelayed( new Runnable() {
 
-            @Override
-            public void run() {
-                if(!AlarmReceiver.mRunning) {
-                    redrawList();
-
-                    DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
-                    ListViewHolder holder = ListViewHolder.getInstance();
-                    Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
-
-                    for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                        holder.showLoadingBar(new StorjNode(cursor).getNodeID().getValue(), false);
-                    }
-                }
-                handler.postDelayed( this, 60 * 1000 );
-            }
-        }, 60 * 1000 );
     }
 
     @Override
@@ -270,12 +251,6 @@ public class MainActivity extends AppCompatActivity {
                     newNode.setSimpleName(textViewSimpleName.getText().toString());
                     databaseManager.insertNode(newNode);
                     redrawList();
-
-                    if(!AlarmReceiver.mRunning) {
-                        pullStorjNodeStats(mContext);
-                    } else {
-                        AlarmReceiver.mRetrigger = true;
-                    }
                 }
             }
         });

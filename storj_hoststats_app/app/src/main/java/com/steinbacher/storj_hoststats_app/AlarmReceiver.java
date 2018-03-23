@@ -50,9 +50,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static final String NODE_URL_PRE = "https://api.storjdash.com/servers/";
     private static final String NODE_URL_AF = "/nodes/";
 
-    public static boolean mRunning = false;
-    public static boolean mRetrigger = false;
-
     private Context mContext;
 
     @Override
@@ -80,21 +77,20 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void pullStorjNodesStats(Context context) {
         mContext = context;
 
-        if(!mRunning) {
-            if (isStorjDashIntegrationEnabled()) {
-                pullStorjDash(mContext);
-            }
-
-            DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
-            ArrayList<StorjNode> storjNodes = new ArrayList<>();
-            Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
-
-            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                storjNodes.add(new StorjNode(cursor));
-            }
-
-            new StorjApiCommunicationTask().execute(storjNodes);
+        if (isStorjDashIntegrationEnabled()) {
+            pullStorjDash(mContext);
         }
+
+        DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+        ArrayList<StorjNode> storjNodes = new ArrayList<>();
+        Cursor cursor = databaseManager.queryAllNodes(getSavedSortOrder());
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            storjNodes.add(new StorjNode(cursor));
+        }
+
+        new StorjApiCommunicationTask().execute(storjNodes);
+
     }
 
     public void pullStorjDash(Context context) {
@@ -124,52 +120,50 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         @Override
         protected JSONObject doInBackground(String... strings) {
-            if(hasActiveInternetConnection()) {
-                JSONObject jsonResponse = null;
+            JSONObject jsonResponse = null;
+            try {
+                jsonResponse = getJSONObjectFromURL(strings[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if(jsonResponse != null) {
+                DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
+
                 try {
-                    jsonResponse = getJSONObjectFromURL(strings[0]);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    JSONObject embedded = jsonResponse.getJSONObject("_embedded");
+                    JSONArray servers = embedded.getJSONArray("servers");
+                    for (int i=0; i<servers.length(); i++) {
+                        JSONObject server = servers.getJSONObject(i);
+                        String server_id = server.getString("_id");
+
+                        JSONObject nodeResponse = getJSONObjectFromURL(NODE_URL_PRE + server_id + NODE_URL_AF + "?api_key=" + getStorjDashAPIKey());
+
+                        embedded = nodeResponse.getJSONObject("_embedded");
+                        JSONArray nodes = embedded.getJSONArray("nodes");
+
+                        for(int j=0; j<nodes.length(); j++) {
+                            JSONObject node = nodes.getJSONObject(j);
+
+                            Cursor cursor = databaseManager.getNode(node.getString("storj_id"));
+                            if(cursor.getCount() == 0) {
+                                StorjNode storjNode = new StorjNode(node.getString("storj_id"));
+                                storjNode.setSimpleName(node.getString("name"));
+                                databaseManager.insertNode(storjNode);
+
+                            }
+
+                            databaseManager.insertNodeStoredBytesEntry(node.getString("storj_id"),
+                                    node.getLong("stored_bytes"),
+                                    System.currentTimeMillis());
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-
-                if(jsonResponse != null) {
-                    DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
-
-                    try {
-                        JSONObject embedded = jsonResponse.getJSONObject("_embedded");
-                        JSONArray servers = embedded.getJSONArray("servers");
-                        for (int i=0; i<servers.length(); i++) {
-                            JSONObject server = servers.getJSONObject(i);
-                            String server_id = server.getString("_id");
-
-                            JSONObject nodeResponse = getJSONObjectFromURL(NODE_URL_PRE + server_id + NODE_URL_AF + "?api_key=" + getStorjDashAPIKey());
-
-                            embedded = nodeResponse.getJSONObject("_embedded");
-                            JSONArray nodes = embedded.getJSONArray("nodes");
-
-                            for(int j=0; j<nodes.length(); j++) {
-                                JSONObject node = nodes.getJSONObject(j);
-
-                                Cursor cursor = databaseManager.getNode(node.getString("storj_id"));
-                                if(cursor.getCount() == 0) {
-                                    StorjNode storjNode = new StorjNode(node.getString("storj_id"));
-                                    storjNode.setSimpleName(node.getString("name"));
-                                    databaseManager.insertNode(storjNode);
-
-                                }
-
-                                databaseManager.insertNodeStoredBytesEntry(node.getString("storj_id"),
-                                        node.getLong("stored_bytes"),
-                                        System.currentTimeMillis());
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -182,131 +176,112 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         @Override
         protected StorjNode doInBackground(List<StorjNode>... lists) {
-            mRunning = true;
             StorjNode node = null;
 
-            if(hasActiveInternetConnection()) {
-                for (StorjNode storjNode : lists[0]) {
-                    try {
+            for (StorjNode storjNode : lists[0]) {
+                try {
 
-                        if(MainActivity.mIsRunning) {
-                            //start the loading bar
-                            ListViewHolder holder = ListViewHolder.getInstance();
-                            holder.showLoadingBar(storjNode.getNodeID().getValue(), true);
+                    if(MainActivity.mIsRunning) {
+                        //start the loading bar
+                        ListViewHolder holder = ListViewHolder.getInstance();
+                        holder.showLoadingBar(storjNode.getNodeID().getValue(), true);
+                    }
+
+                    JSONObject storjApiReponse = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID().getValue());
+                    Log.d(TAG, "onReceive: " + storjApiReponse.toString());
+
+                    DatabaseManager db = DatabaseManager.getInstance(mContext);
+                    node = new StorjNode(storjApiReponse);
+                    node.setLastChecked(Calendar.getInstance().getTime());
+
+                    //check if node is outdated
+                    JSONObject releaseInfoJson = getJSONObjectFromURL("https://api.github.com/repos/Storj/core/releases/latest");
+                    Version newestGithubVersion = null;
+                    if(releaseInfoJson == null) {
+                        Version savedStorjCoreVersion = getSavedActualStorjCoreVersion();
+                        if (savedStorjCoreVersion != null) {
+                            newestGithubVersion = getSavedActualStorjCoreVersion();
                         }
-
-                        JSONObject storjApiReponse = getJSONObjectFromURL(STORJ_API_URL + "/contacts/" + storjNode.getNodeID().getValue());
-                        Log.d(TAG, "onReceive: " + storjApiReponse.toString());
-
-                        DatabaseManager db = DatabaseManager.getInstance(mContext);
-                        node = new StorjNode(storjApiReponse);
-                        node.setLastChecked(Calendar.getInstance().getTime());
-
-                        //check if node is outdated
-                        JSONObject releaseInfoJson = getJSONObjectFromURL("https://api.github.com/repos/Storj/core/releases/latest");
-                        Version newestGithubVersion = null;
-                        if(releaseInfoJson == null) {
-                            Version savedStorjCoreVersion = getSavedActualStorjCoreVersion();
-                            if (savedStorjCoreVersion != null) {
-                                newestGithubVersion = getSavedActualStorjCoreVersion();
-                            }
+                    } else {
+                        if(releaseInfoJson.getString("name").replace("v", "").equals("")) {
+                            //new api
+                            newestGithubVersion = new Version(releaseInfoJson.getString("tag_name").replace("v", ""));
                         } else {
-                            if(releaseInfoJson.getString("name").replace("v", "").equals("")) {
-                                //new api
-                                newestGithubVersion = new Version(releaseInfoJson.getString("tag_name").replace("v", ""));
-                            } else {
-                                //old api
-                                newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v", ""));
-                            }
+                            //old api
+                            newestGithubVersion = new Version(releaseInfoJson.getString("name").replace("v", ""));
                         }
+                    }
 
-                        if(newestGithubVersion != null && node.getUserAgent().isSet()) {
-                            node.setIsOutdated(!node.getUserAgent().getValue().isEqualTo(newestGithubVersion));
+                    if(newestGithubVersion != null && node.getUserAgent().isSet()) {
+                        node.setIsOutdated(!node.getUserAgent().getValue().isEqualTo(newestGithubVersion));
+                    } else {
+                        //if we cant get the newest core version and we ahve never pulled it before
+                        // set it it outdated to false and try to get the newest version next time
+                        node.setIsOutdated(false);
+                    }
+
+                    //check if we should send a notification about a new version
+                    if(getSavedActualStorjCoreVersion() == null && newestGithubVersion != null) {
+                        saveNewUserAgentVersion(newestGithubVersion);
+                    } else if (newestGithubVersion != null && getSavedActualStorjCoreVersion().isLowerThan(newestGithubVersion)) {
+                        saveNewUserAgentVersion(newestGithubVersion);
+                        sendNewUserAgentVersionNotification();
+                    }
+
+                    //get the "old" information about this node
+                    Cursor cursor = db.getNode(node.getNodeID().getValue());
+                    //its possible that we pull a node the user deleted at the "same" moment
+                    if(cursor.getCount() > 0) {
+                        StorjNode previusNode = new StorjNode(cursor);
+                        node.setSimpleName(previusNode.getSimpleName().getValue());
+
+                        //check if this node came online or was online before
+                        if(previusNode.getResponseTime().getValue() != previusNode.getResponseTime().getDefault())
+                            node.setOnlineSince(previusNode.getOnlineSince());
+
+                        //check if the lastContractSent updated
+                        //only update if its not the first time it got increased
+                        if(node.getLastContractSent().getValue() != previusNode.getLastContractSent().getValue()) {
+                            node.setLastContractSentUpdated(Calendar.getInstance().getTime());
                         } else {
-                            //if we cant get the newest core version and we ahve never pulled it before
-                            // set it it outdated to false and try to get the newest version next time
-                            node.setIsOutdated(false);
+                            node.setLastContractSentUpdated(previusNode.getLastContractSentUpdated());
                         }
 
-                        //check if we should send a notification about a new version
-                        if(getSavedActualStorjCoreVersion() == null && newestGithubVersion != null) {
-                            saveNewUserAgentVersion(newestGithubVersion);
-                        } else if (newestGithubVersion != null && getSavedActualStorjCoreVersion().isLowerThan(newestGithubVersion)) {
-                            saveNewUserAgentVersion(newestGithubVersion);
-                            sendNewUserAgentVersionNotification();
-                        }
+                        if (isNodeOffline(node)) {
+                            node.setResponseTime(node.getResponseTime().getDefault());
+                            node.setShouldSendNotification(false);
 
-                        //get the "old" information about this node
-                        Cursor cursor = db.getNode(node.getNodeID().getValue());
-                        //its possible that we pull a node the user deleted at the "same" moment
-                        if(cursor.getCount() > 0) {
-                            StorjNode previusNode = new StorjNode(cursor);
-                            node.setSimpleName(previusNode.getSimpleName().getValue());
+                            if (previusNode.getShouldSendNotification())
+                                sendNodeOfflineNotification(node);
+                        } else {
+                            //insert into history dbs
+                            db.insertNodeResponseTimeEntry(node);
+                            db.insertNodeReputationEntry(node);
 
-                            //check if this node came online or was online before
-                            if(previusNode.getResponseTime().getValue() != previusNode.getResponseTime().getDefault())
-                                node.setOnlineSince(previusNode.getOnlineSince());
-
-                            //check if the lastContractSent updated
-                            //only update if its not the first time it got increased
-                            if(node.getLastContractSent().getValue() != previusNode.getLastContractSent().getValue()) {
-                                node.setLastContractSentUpdated(Calendar.getInstance().getTime());
-                            } else {
-                                node.setLastContractSentUpdated(previusNode.getLastContractSentUpdated());
+                            if (previusNode.getResponseTime().getValue() == previusNode.getResponseTime().getDefault()) {
+                                //was the node offline before and went online now ?
+                                node.setShouldSendNotification(true);
                             }
-
-                            if (isNodeOffline(node)) {
-                                node.setResponseTime(node.getResponseTime().getDefault());
-                                node.setShouldSendNotification(false);
-
-                                if (previusNode.getShouldSendNotification())
-                                    sendNodeOfflineNotification(node);
-                            } else {
-                                //insert into history dbs
-                                db.insertNodeResponseTimeEntry(node);
-                                db.insertNodeReputationEntry(node);
-
-                                if (previusNode.getResponseTime().getValue() == previusNode.getResponseTime().getDefault()) {
-                                    //was the node offline before and went online now ?
-                                    node.setShouldSendNotification(true);
-                                }
-                            }
-
-                            db.updateNode(node);
-
-                            publishProgress(node.getNodeID().getValue());
                         }
 
-                        if(MainActivity.mIsRunning) {
-                            //start the loading bar
-                            ListViewHolder holder = ListViewHolder.getInstance();
-                            holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        if(MainActivity.mIsRunning) {
-                            //start the loading bar
-                            ListViewHolder holder = ListViewHolder.getInstance();
-                            holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
-                        }
-                        Log.i(TAG, "doInBackground: " + storjNode.getNodeID().getValue() + " not found");
+                        db.updateNode(node);
 
-                    } catch (JSONException e) {
-                        if(MainActivity.mIsRunning) {
-                            //start the loading bar
-                            ListViewHolder holder = ListViewHolder.getInstance();
-                            holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
-                        }
-                        e.printStackTrace();
+                        publishProgress(node.getNodeID().getValue());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    if(MainActivity.mIsRunning) {
+                        //start the loading bar
+                        ListViewHolder holder = ListViewHolder.getInstance();
+                        holder.showLoadingBar(storjNode.getNodeID().getValue(), false);
                     }
                 }
             }
-
-            mRunning = false;
             return node;
         }
-
-
 
         @Override
         protected void onProgressUpdate(String... nodeId) {
@@ -322,11 +297,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         @Override
         protected void onPostExecute(StorjNode receivedStorjNode) {
             super.onPostExecute(receivedStorjNode);
-
-            if(mRetrigger) {
-                pullStorjNodesStats(mContext);
-                mRetrigger = false;
-            }
 
             if(MainActivity.mIsRunning) {
                 DatabaseManager databaseManager = DatabaseManager.getInstance(mContext);
@@ -459,35 +429,5 @@ public class AlarmReceiver extends BroadcastReceiver {
             return null;
         }
 
-    }
-
-    private boolean hasActiveInternetConnection() {
-        if (isNetworkAvailable()) {
-            try {
-                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
-                urlc.setRequestProperty("User-Agent", "Test");
-                urlc.setRequestProperty("Connection", "close");
-                urlc.setConnectTimeout(1500);
-                urlc.connect();
-                int responseCode = urlc.getResponseCode();
-                urlc.disconnect();
-                return (responseCode == 200);
-            } catch (Exception e) {
-                Log.d(TAG, "Error checking internet connection", e);
-                return false;
-            }
-        } else {
-            //TODO notify the user about "No internet connection"
-            //Dont use a toast
-            Log.e(TAG, "hasActiveInternetConnection: No internet connection");
-        }
-        return false;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null;
     }
 }
